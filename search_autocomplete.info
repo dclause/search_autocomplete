@@ -1,0 +1,5 @@
+; $Id$
+name = Search Autocomplete
+description = Enable autocomplete functionality on search fields.
+version = VERSION
+dependencies = search
