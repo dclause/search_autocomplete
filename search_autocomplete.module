@@ -55,6 +55,13 @@ function search_autocomplete_admin_settings() {
 		'#return_value' => 1,
 		'#required' => FALSE
 	);
+	$form['search_autocomplete_hook']['search_autocomplete_hook_search_block'] = array(
+		'#type' => 'checkbox',
+		'#title' => t('Apply autocomplete search on the search block form. (need the module <a href="http://drupal.org/project/search_block" target="_blank">Search Block</a>)'),
+		'#default_value' => variable_get("search_autocomplete_hook_search_block", 0),
+		'#return_value' => 1,
+		'#required' => FALSE
+	);
 
 	$form['search_autocomplete_setting'] = array(
 		'#type' => 'fieldset',
@@ -160,6 +167,11 @@ function search_autocomplete_form_alter($form_id, &$form) {
 		if (variable_get("search_autocomplete_hook_search", 0)==1) {
 			if ($form_id == "search_form" && $form['module']['#value'] == "node") {
 				$form["basic"]["inline"]["keys"]["#autocomplete_path"] = 'search_autocomplete/autocomplete';
+			}
+		}
+		if (variable_get("search_autocomplete_hook_search_block", 0)==1) {
+			if ($form_id == "search_block_form") {
+				$form["search_block_form_keys"]["#autocomplete_path"] = 'search_autocomplete/autocomplete';
 			}
 		}
 	}
