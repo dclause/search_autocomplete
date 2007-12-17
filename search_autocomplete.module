@@ -75,7 +75,7 @@ function search_autocomplete_admin_settings() {
 		'#default_value' => variable_get('search_autocomplete_method', 1),
 		'#options' => array(
 			'1' => t('Natural sort (no sort)'),
-			'2' => t('Sort keyword alphabeticly'),
+			'2' => t('Sort keyword alphabetically'),
 			'3' => t('Sort by keyword\'s score'),
 			'4' => t('Sort by keyword\'s relevance (slow)'),
 		),
@@ -111,7 +111,7 @@ function search_autocomplete_admin_settings() {
 	$form['search_autocomplete_setting_test'] = array(
 		'#type' => 'fieldset',
 		'#title' => t('Test field'),
-		'#description' => t('In this field, you can check the apparence of an autocomplete search field.'),
+		'#description' => t('In this field, you can check the appearence of an autocomplete search field.'),
 		'#collapsible' => TRUE,
 		'#collapsed' => TRUE
 	);
@@ -121,7 +121,7 @@ function search_autocomplete_admin_settings() {
 		'#size' => 40,
 		'#maxlength' => 40,
 		'#default_value' => '',
-		'#description' => t("Enter a keyword and wait the result."),
+		'#description' => t("Enter a keyword and wait for the result."),
 		'#autocomplete_path' => 'search_autocomplete/autocomplete',
 		'#required' => FALSE,
 	);
