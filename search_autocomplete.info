@@ -1,5 +1,4 @@
-name = Search Autocomplete
-description = Enable autocomplete functionality on search fields.
-package = "Search"
-version = VERSION
-dependencies = search
+name = Search Autocomplete Suggestions
+description = Provides an autocomplete enhancement for search forms using suggestions.
+core = 6.x
+dependencies[] = search
