@@ -1,5 +1,4 @@
 name = Search Autocomplete
-description = Enable autocomplete functionality on search fields.
-package = "Search"
-version = VERSION
+description = "Enable autocomplete functionality on search fields."
+package = Search
 dependencies = search

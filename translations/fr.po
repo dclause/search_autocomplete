@@ -1,0 +1,134 @@
+# $Id$
+#
+# LANGUAGE translation of Drupal (general)
+# Copyright YEAR NAME <EMAIL@ADDRESS>
+# Generated from files:
+#  search_autocomplete.module: n/a
+#  search_autocomplete.info: n/a
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"POT-Creation-Date: 2011-07-26 16:56+0200\n"
+"PO-Revision-Date: 2011-07-26 15:57-0000\n"
+"Last-Translator: Miroslav <miroslav.talenberg@gmail.com>\n"
+"Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+
+#: search_autocomplete.module:19
+#: search_autocomplete.info:0
+msgid "Search Autocomplete"
+msgstr "Search Autocomplete"
+
+#: search_autocomplete.module:20
+msgid "Settings for the search autocomplete module."
+msgstr "Paramètres du module Search Aucomplete."
+
+#: search_autocomplete.module:49
+msgid "Apply autocomplete search on fields"
+msgstr "Champs auxquels appliquer l'autocomplétion"
+
+#: search_autocomplete.module:50
+msgid "Choose the field to apply search autocomplete"
+msgstr "Choisir les champs de recherche auxquels appliquer l'autocomplétion"
+
+#: search_autocomplete.module:56
+msgid "Apply autocomplete search on the search node"
+msgstr "Appliquer l'autocomplétion au formulaire de la page de recherche"
+
+#: search_autocomplete.module:63
+msgid "Apply autocomplete search on the search box form"
+msgstr "Appliquer l'autocomplétion au formulaire du bloc de recherche Drupal"
+
+#: search_autocomplete.module:70
+msgid "Apply autocomplete search on the search block form."
+msgstr "Appliquer l'autocomplétion au block de recherche."
+
+#: search_autocomplete.module:78
+msgid "Autocomplete webservice settings"
+msgstr "Options d'autocomplétion"
+
+#: search_autocomplete.module:84
+msgid "Choose a search method"
+msgstr "Choisir une méthode de recherche"
+
+#: search_autocomplete.module:87
+msgid "Natural sort (no sort)"
+msgstr "Tri naturel (résultat non trié)"
+
+#: search_autocomplete.module:88
+msgid "Sort keyword alphabetically"
+msgstr "Tri alphabétique"
+
+#: search_autocomplete.module:89
+msgid "Sort by keyword's score"
+msgstr "Tri par score"
+
+#: search_autocomplete.module:90
+msgid "Sort by keyword's relevance (slow)"
+msgstr "Tri par pertinence (lent)"
+
+#: search_autocomplete.module:92
+msgid "Caution: Some request method can be very slow !"
+msgstr "Attention: Certaines méthodes peuvent être lentes !"
+
+#: search_autocomplete.module:98
+msgid "characters"
+msgstr "caractères"
+
+#: search_autocomplete.module:102
+msgid "Minimum keyword size that uncouple autocomplete search"
+msgstr "Nombres de caractères  minimums provoquant des suggestions d'autocomplétion"
+
+#: search_autocomplete.module:110
+msgid "results"
+msgstr "résultats"
+
+#: search_autocomplete.module:114
+msgid "Limit of the autocomplete search result"
+msgstr "Nombre maximum de suggestions d'autocomplétion"
+
+#: search_autocomplete.module:123
+msgid "Test field"
+msgstr "Champ test"
+
+#: search_autocomplete.module:124
+msgid "In this field, you can check the appearence of an autocomplete search field."
+msgstr "Utilisez ce champ pour tester vos paramètres."
+
+#: search_autocomplete.module:130
+msgid "Search autocomplete test field"
+msgstr "Champ de test du module Search Autocomplete"
+
+#: search_autocomplete.module:134
+msgid "Enter a keyword and wait for the result."
+msgstr "Taper le début de votre recherche puis patienter pour utiliser les suggestions."
+
+#: search_autocomplete.module:38
+msgid "search autocomplete admin"
+msgstr "administrer Search Autocomplete"
+
+#: search_autocomplete.module:38
+msgid "search autocomplete access"
+msgstr "utiliser les suggestions Search Autocomplete"
+
+#: search_autocomplete.module:0
+msgid "search_autocomplete"
+msgstr "search_autocomplete"
+
+#: search_autocomplete.info:0
+msgid "Enable autocomplete functionality on search fields."
+msgstr "Activer les fonctions d'autocomplétion sur les champs de recherche."
+
+#: search_autocomplete.info:0
+msgid "Search"
+msgstr "Rechercher"
+
+#~ msgid ""
+#~ "Apply autocomplete search on the search block form. (need the module <a "
+#~ "href=\"http://drupal.org/project/search_block\" target=\"_blank\">Search "
+#~ "Block</a>)"
+#~ msgstr "Activer l'autocomplétion au bloc de recherche."
