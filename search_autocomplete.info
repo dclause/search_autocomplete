@@ -1,4 +1,5 @@
-name = Search Autocomplete Suggestions
-description = Provides an autocomplete enhancement for search forms using suggestions.
+name = Search Autocomplete
+description = Provides aucompletion for Drupal search forms.
 core = 6.x
+package = Search
 dependencies[] = search

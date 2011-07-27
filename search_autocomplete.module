@@ -1,228 +1,197 @@
 <?php
-require_once('cron.php');
-
 
 /**
+ * @file
+ * Search Autocomplete
+ * Enables autocomplete functionality on search fields.
+ *
+ * @authors
+ * D5 version by Arnaud Bonnevigne <http://www.bonvga.net/contact>
+ * D6 port by Joakim Stai, NodeOne <http://drupal.org/user/88701>
+ * Bug fixes and code review by Dominique CLAUSE, Miroslav <http://www.axiomcafe.fr/contact>
+ *     # fixes: search form autocompletion: wrong callback
+ *     # fixes: choosen autocomplete forms did not validate: all search forms where autocompleted
+ *     # fixes: hook_menu: module administration link did not appear in admin panel
+ *     # removed block search to conform with a strict port (block support will be added later)
+ *
+ * Sponsored by:
+ * www.axiomcafe.fr
+ */
+
+/**
+ * Implementation of hook_perm().
  * Valid permissions for this module
- * @return array An array of valid permissions for the autocomplete module
+ * @return An array of valid permissions for the autocomplete module
  */
-function autocomplete_perm() {
-  return array('use autocomplete suggestions in search form', 'administer suggestions');
-} // function autocomplete_perm()
-
+function search_autocomplete_perm() {
+  return array(t('administer Search Autocomplete'), t('search with autocomplete'));
+} // function search_autocomplete_perm()
 
 /**
- * Create administration form fro autocomplete module
- * return array describing a form
- */
-function autocomplete_admin() {
-  $form = array();
-
-  // node
-  $form['autocomplete_nodes'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Add node title to suggestions'),
-    '#default_value' => variable_get('autocomplete_nodes', TRUE),
-  );
-
-  // user
-  $form['autocomplete_users'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Add user names to suggestions'),
-    '#default_value' => variable_get('autocomplete_users', FALSE),
-  );
-
-  // taxonomy
-  $form['autocomplete_taxos'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Add taxonomy to suggestions'),
-    '#default_value' => variable_get('autocomplete_taxos', FALSE),
-  );
-  if (!module_exists('taxonomy')) {
-    $form['autocomplete_taxos']['#title'] = t('Add taxonomy to suggestions (require taxonomy module)');
-    $form['autocomplete_taxos']['#disabled'] = TRUE;
-    $form['autocomplete_taxos']['#default_value'] = FALSE;
-  }
-
-  // comment
-  $form['autocomplete_comments'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Add comment subject to suggestions'),
-    '#default_value' => variable_get('autocomplete_comments', FALSE),
-  );
-  if (!module_exists('comment')) {
-    $form['autocomplete_comments']['#title'] = t('Add comment subject to suggestions (require comment module)');
-    $form['autocomplete_comments']['#disabled'] = TRUE;
-    $form['autocomplete_comments']['#default_value'] = FALSE;
-  }
-
-  return system_settings_form($form);
-} //function autocomplete_admin()
-
-/**
- * Validate immediatly admib form
- */
-function autocomplete_admin_validate($form, &$form_state) {
-  autocomplete_cron();  //update suggestion liste
-} //function letusknow_submit
-
-/**
+ * Implementation of hook_menu().
  * Create an administration page to access admin form
  */
-function autocomplete_menu() {
-
-  $items = array();
-
-  $items['admin/settings/autocomplete'] = array(
-    'title' => 'Autocomplete Suggestions settings',
-    'description' => 'Choose suggestion items for autocompletion',
+function search_autocomplete_menu() {
+  $items['admin/build/search_autocomplete'] = array(
+    'title' => 'Search Autocomplete',
+    'description' => 'Choose settings and suggestion items for autocompletion',
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('autocomplete_admin'),
-    'access arguments' => array(t('administer suggestions')),
-    'type' => MENU_NORMAL_ITEM,
+    'page arguments' => array('search_autocomplete_admin_settings'),
+    'access arguments' => array(t('administer Search Autocomplete')),
+  );
+  $items['search_autocomplete/autocomplete'] = array(
+    'page callback' => 'search_autocomplete_autocomplete',
+    'access arguments' => array('search with autocomplete'),
+    'type' => MENU_CALLBACK,
+  );
+  return $items;
+}
+
+/**
+ * Menu callback; administration settings.
+ */
+function search_autocomplete_admin_settings() {
+  $form = array();
+  
+  $form['search_autocomplete_forms'] = array(
+    '#type' => 'checkboxes',
+    '#title' => t('Enable autocomplete on'),
+    '#description' => t('Select the search forms that should have autocomplete enabled.'),
+    '#options' => array(
+      'search_form' => t('Search page (node tab only)'),
+      'search_block_form' => t('Search block'),
+      'search_theme_form' => t('Search box (added by the theme)'),
+    ),
+    '#default_value' => variable_get('search_autocomplete_forms', array('page', 'block', 'box')),
   );
 
-  return $items;
-} // function autocomplete_menu()
-
-/**
- * This function created the autocompletion choices list according to settings
- * @return $items: an array of all choices for the setting
- */
-function autocomplete_find_autocomplete_items() {
-  $node_items = array(); 
-  $user_items = array();
-  $user_taxo = array();
-
-  // get options
-  $option_nodes =   variable_get('autocomplete_nodes', FALSE);
-  $option_users =   variable_get('autocomplete_users', FALSE);
-  $option_taxos =    variable_get('autocomplete_taxos', FALSE) && module_exists('taxonomy');
-  $option_comments =   variable_get('autocomplete_comments', FALSE) && module_exists('comment');
-
-  // initialise variables
-  $node_items = array();
-  $user_items = array();
-  $taxo_items = array();
-  $comment_items = array();
-
-  // retrive items
-  if ($option_nodes) 
-    $node_items = autocomplete_find_nodes();
-  if ($option_users)
-    $user_items = autocomplete_find_users();
-  if ($option_taxos)
-    $taxo_items = autocomplete_find_taxos();
-  if ($option_comments)
-    $comment_items = autocomplete_find_comments();
-
-  // merge suggestions
-  $items = array_merge($node_items, $user_items, $taxo_items, $comment_items);
-
-  return $items;
-}
-
-/**
- * HOOK CRON:
- * Generate the autocomplete choices according to settings
- */
-function autocomplete_cron() {
-  $directory = drupal_get_path('module', 'autocomplete');
-  $file_path = $directory . '/js/' . 'data_autocomplete.js';
-
-  // If some data already exists: delete it to renew all
-  if (file_exists($file_path)) {
-    file_delete($file_path);
+  $form['search_autocomplete_setting'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Autocomplete settings'),
+    '#collapsible' => TRUE,
+    '#collapsed' => FALSE
+  );
+  $form['search_autocomplete_setting']['search_autocomplete_method'] = array(
+    '#type' => 'radios',
+    '#title' => t('Choose a search method'),
+    '#default_value' => variable_get('search_autocomplete_method', 1),
+    '#options' => array(
+      '1' => t('Natural sort (no sort)'),
+      '2' => t('Sort keyword alphabetically'),
+      '3' => t('Sort by keyword\'s score'),
+      '4' => t('Sort by keyword\'s relevance (slow)'),
+    ),
+    '#description' => t("Caution: Some request method can be very slow !"),
+    '#autocomplete_path' => 'search_autocomplete/autocomplete',
+    '#required' => TRUE,
+  );
+  $trigger = array();
+  for ($i=1;$i<20;$i++) {
+    $trigger[$i] = $i .' '. t('characters');
   }
-  // Create the choices for autocompletion
-  $file_path = file_create_filename('js/data_autocomplete.js', $directory);
-  $fh = fopen($file_path, 'w');
-  fwrite($fh, array2str(autocomplete_find_autocomplete_items()));
-  fclose($fh);
+  $form['search_autocomplete_setting']['search_autocomplete_trigger'] = array(
+    '#type' => 'select',
+    '#title' => t('Minimum keyword size that uncouple autocomplete search'),
+    '#default_value' => variable_get('search_autocomplete_trigger', variable_get('minimum_word_size', 3)),
+    '#options' => $trigger,
+    '#multiple' => FALSE,
+    '#required' => TRUE,
+  );
+  $limit = array();
+  for ($i=1;$i<50;$i++) {
+    $limit[$i] = $i .' '. t('results');
+  }
+  $form['search_autocomplete_setting']['search_autocomplete_limit'] = array(
+    '#type' => 'select',
+    '#title' => t('Limit of the autocomplete search result'),
+    '#default_value' => variable_get('search_autocomplete_limit', 15),
+    '#options' => $limit,
+    '#multiple' => FALSE,
+    '#required' => TRUE,
+  );
+
+  $form['search_autocomplete_setting_test'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Test field'),
+    '#description' => t('In this field, you can check the appearence of an autocomplete search field.'),
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE
+  );
+  $form['search_autocomplete_setting_test']['search_autocomplete_test'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Search autocomplete test field'),
+    '#size' => 40,
+    '#maxlength' => 40,
+    '#default_value' => '',
+    '#description' => t("Enter a keyword and wait for the result."),
+    '#autocomplete_path' => 'search_autocomplete/autocomplete',
+    '#required' => FALSE,
+  );
+
+  return system_settings_form($form);
 }
 
 /**
- * This function transforms the choices into a string.
+ * Menu callback; autocomplete handler.
+ * Creates suggestions for autocompletion according to settings
  */
-function array2str($array, $pre = '', $pad = '', $sep = ',') {
-  $str = 'var search_autocomplete_items=[';
-  if (is_array($array)) {
-    if (count($array)) {
-      foreach ($array as $v) {
-        $str .= '"' . addslashes($pre . $v . $pad) . '"' . $sep;
-      }
-      $str = substr($str, 0, -strlen($sep));
+function search_autocomplete_autocomplete($string = '') {
+  $matches = array();
+
+  // Allow Drupal to parse the search query.
+  $query = search_parse_query($string);
+
+  // Check to see if we've got something to work with.
+  if ($query !== NULL && drupal_strlen($query[1][0]) >= (variable_get('search_autocomplete_trigger', variable_get('minimum_word_size', 3))) ) {
+
+    // Perform search using the chosen sort method.
+    $limit = variable_get('search_autocomplete_limit', 10);
+    $word = $query[1][0];
+    switch (variable_get('search_autocomplete_sort', 'none')) {
+      case 'none':
+        $result = db_query_range("SELECT DISTINCT s.word FROM {search_index} s, {node} n WHERE s.type = 'node' AND n.nid = s.sid AND n.status = 1 AND LOWER(s.word) LIKE LOWER('%s%%')", $word, 0, $limit);
+        break;
+      case 'alphabetical':
+        $result = db_query_range("SELECT DISTINCT i.word FROM {search_index} i, {node} n WHERE i.type = 'node' AND n.nid = i.sid AND n.status = 1 AND LOWER(i.word) LIKE LOWER('%s%%') ORDER BY i.word ASC", $word, 0, $limit);
+        break;
+      case 'score':
+        $result = db_query_range("SELECT i.word FROM {search_index} i, {node} n WHERE i.type = 'node' AND n.nid = i.sid AND n.status = 1 AND LOWER(i.word) LIKE LOWER('%s%%') GROUP BY i.word ORDER BY SUM(i.score) DESC", $word, 0, $limit);
+        break;
+      case 'relevance':
+        $result = db_query_range(db_rewrite_sql("SELECT i.word FROM {search_index} AS i INNER JOIN {search_total} AS t ON i.word = t.word INNER JOIN n AS n ON n.nid = i.sid WHERE i.type = 'node' AND n.status = 1 AND LOWER(i.word) LIKE LOWER('%s%%') GROUP BY i.word ORDER BY SUM(i.score * t.count) DESC"), $word, 0, $limit);
+        break;
     }
-  } 
-  else {
-    $str .= addslashes($pre . $array . $pad);
+
+    // Build an array of returned matches.
+    while ($match = db_fetch_object($result)) {
+      $matches[$match->word] = check_plain($match->word);
+    }
   }
-  $str .= '];';
-  return $str;
+
+  // Return matches.
+  drupal_json($matches);
 }
 
 /**
- * HOOK OF INIT:
- * add autocomplete.js on everypage
+ * Implementation of hook_form_alter().
+ * Changes the various search forms
  */
-function autocomplete_init() {
-  drupal_add_css(drupal_get_path('module', 'autocomplete') . '/css/autocomplete.css');
-  drupal_add_js(drupal_get_path('module', 'autocomplete') . '/js/data_autocomplete.js');
-  drupal_add_js(drupal_get_path('module', 'autocomplete') . '/js/autocomplete.js');
-}
+function search_autocomplete_form_alter(&$form, $form_state, $form_id) {
 
-/* ###################################################################################### *\
-|*                            Search Items for autocompletion                             *|
-\* ###################################################################################### */
+  if (user_access('search with autocomplete')) {
 
-/**
- * HELPER FOR AUTOCOMPLETE NODES:
- * Return nodes terms
- */
-function autocomplete_find_nodes() {
-  $items = array();
-  $result = db_query(db_rewrite_sql("SELECT title FROM {node} WHERE status = 1"));
-  while ($obj = db_fetch_object($result)) {
-    $items[] = html_entity_decode(check_plain($obj->title), ENT_QUOTES);
+    $enabled_forms = variable_get('search_autocomplete_forms', array());
+    if ($enabled_forms[$form_id]) {
+
+      // Search block and search box have similar form structure.
+      if ($form_id == 'search_block_form' || $form_id == 'search_theme_form') {
+        $form[$form_id]['#autocomplete_path'] = 'search_autocomplete/autocomplete';
+      }
+
+      // Search page; only add autocomplete to node search.
+      if ($form['module']['#value'] == 'node') {
+        $form['basic']['inline']['keys']['#autocomplete_path'] = 'search_autocomplete/autocomplete';
+      }
+    }
   }
-  return $items;
-}
-
-/**
- * HELPER FOR AUTOCOMPLETE USERS:
- * Return user names
- */
-function autocomplete_find_users() {
-  $items = array();
-  $result = db_query(db_rewrite_sql("SELECT name FROM {users} WHERE status = 1"));
-  while ($obj = db_fetch_object($result)) {
-    $items[] = "pseudo: " . html_entity_decode(check_plain($obj->name), ENT_QUOTES);
-  }
-  return $items;
-}
-
-/**
- * HELPER FOR AUTOCOMPLETE TAXOS:
- * Return taxonomy terms
- */
-function autocomplete_find_taxos() {
-  $items = array();
-  $result = db_query(db_rewrite_sql("SELECT name FROM {term_data}"));
-  while ($obj = db_fetch_object($result)) {
-    $items[] = "taxo: " . html_entity_decode(check_plain($obj->name), ENT_QUOTES);
-  }
-  return $items;
-}
-
-/**
- * HELPER FOR AUTOCOMPLETE COMMENTS:
- * Return comment subjects
- */
-function autocomplete_find_comments() {
-  $items = array();
-  $result = db_query(db_rewrite_sql("SELECT subject FROM {comments}"));
-  while ($obj = db_fetch_object($result)) {
-    $items[] = "comment: " . html_entity_decode(check_plain($obj->subject), ENT_QUOTES);
-  }
-  return $items;
 }
