@@ -1,0 +1,133 @@
+# $Id$
+#
+# LANGUAGE translation of Drupal (general)
+# Copyright YEAR NAME <EMAIL@ADDRESS>
+# Generated from files:
+#  search_autocomplete.module: n/a
+#  search_autocomplete.info: n/a
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"POT-Creation-Date: 2011-07-31 16:15+0100\n"
+"PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
+"Last-Translator: NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+
+#: search_autocomplete.module:23
+msgid "Administer Search Autocomplete"
+msgstr ""
+
+#: search_autocomplete.module:24
+msgid "Access administration panel for autocompletion settings."
+msgstr ""
+
+#: search_autocomplete.module:27
+msgid "Use Search Autocomplete"
+msgstr ""
+
+#: search_autocomplete.module:28
+msgid "Allow usage of autocompletion on forms."
+msgstr ""
+
+#: search_autocomplete.module:45
+msgid "administer Search Autocomplete"
+msgstr ""
+
+#: search_autocomplete.module:65
+msgid "Enable autocomplete on"
+msgstr ""
+
+#: search_autocomplete.module:66
+msgid "Select the search forms that should have autocomplete enabled."
+msgstr ""
+
+#: search_autocomplete.module:68
+msgid "Search page (node tab only)"
+msgstr ""
+
+#: search_autocomplete.module:69
+msgid "Search block"
+msgstr ""
+
+#: search_autocomplete.module:76
+msgid "Autocomplete settings"
+msgstr ""
+
+#: search_autocomplete.module:82
+msgid "Choose a search method"
+msgstr ""
+
+#: search_autocomplete.module:85
+msgid "Natural sort (no sort)"
+msgstr ""
+
+#: search_autocomplete.module:86
+msgid "Sort keyword alphabetically"
+msgstr ""
+
+#: search_autocomplete.module:87
+msgid "Sort by keyword's score"
+msgstr ""
+
+#: search_autocomplete.module:88
+msgid "Sort by keyword's relevance (slow)"
+msgstr ""
+
+#: search_autocomplete.module:90
+msgid "Caution: Some request method can be very slow !"
+msgstr ""
+
+#: search_autocomplete.module:96
+msgid "characters"
+msgstr ""
+
+#: search_autocomplete.module:100
+msgid "Minimum keyword size that uncouple autocomplete search"
+msgstr ""
+
+#: search_autocomplete.module:108
+msgid "results"
+msgstr ""
+
+#: search_autocomplete.module:112
+msgid "Limit of the autocomplete search result"
+msgstr ""
+
+#: search_autocomplete.module:121
+msgid "Test field"
+msgstr ""
+
+#: search_autocomplete.module:122
+msgid "In this field, you can check the appearence of an autocomplete search field."
+msgstr ""
+
+#: search_autocomplete.module:128
+msgid "Search autocomplete test field"
+msgstr ""
+
+#: search_autocomplete.module:132
+msgid "Enter a keyword and wait for the result."
+msgstr ""
+
+#: search_autocomplete.module:41 search_autocomplete.info:0
+msgid "Search Autocomplete"
+msgstr ""
+
+#: search_autocomplete.module:42
+msgid "Choose settings and suggestion items for autocompletion"
+msgstr ""
+
+#: search_autocomplete.info:0
+msgid "Provides aucompletion for Drupal search forms."
+msgstr ""
+
+#: search_autocomplete.info:0
+msgid "User interface"
+msgstr ""
+
