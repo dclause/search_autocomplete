@@ -1,0 +1,7 @@
+name = Search Autocomplete
+description = Provides aucompletion for Drupal search forms.
+core = 8.x
+package = User interface
+dependencies[] = search
+files[] = search_autocomplete.module
+configure = admin/config/user-interface/search_autocomplete
