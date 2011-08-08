@@ -28,7 +28,7 @@ function search_autocomplete_permission() {
       'description' => t('Allow usage of autocompletion on forms.'),
     ),
   );
-  } // function search_autocomplete_permissions()
+} // function search_autocomplete_permissions()
 
 /**
  * Implements hook_menu().
@@ -145,7 +145,7 @@ function search_autocomplete_form_alter(&$form, &$form_state, $form_id) {
 
   if (user_access('search with autocomplete')) {
 
-    $enabled_forms = variable_get('search_autocomplete_forms', array());
+  $enabled_forms = variable_get('search_autocomplete_forms', array());
 
   if (isset($enabled_forms[$form_id])) {
       // Search block and search box have similar form structure.

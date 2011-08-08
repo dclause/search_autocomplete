@@ -1,31 +1,30 @@
-
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*
-*            Welcome to Search Autocomplete v8.x-1.0 !
+                     Welcome to Search Autocomplete v8.x-1.0 !
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*
 
     !! This module has just changed maintainer. Let's give it a second life !!
- 
+
  ***
  * Search Autocomplete
  * Enables autocomplete functionality on search fields.
  ***
- 
+
  @authors
  D8 version by Miroslav (Dominique CLAUSE) <http://www.axiomcafe.fr/contact>
- 
+
  Sponsored by:
  www.axiomcafe.fr
 
---------------------------------------------------------------------------------- 
+---------------------------------------------------------------------------------
 -- 1.  Installing Search Autocomplete:
 
-Place the entirety of this directory in sites/all/modules/search_autocomplete 
+Place the entirety of this directory in sites/all/modules/search_autocomplete
 or in the equivalent directory of your Drupal installation.
 
 Navigate to administer >> modules. Enable Search Autocomplete.
 
-If you're having trouble installing this module, please ensure that your tar 
-program is not flattening the directory tree, truncating filenames or losing 
+If you're having trouble installing this module, please ensure that your tar
+program is not flattening the directory tree, truncating filenames or losing
 files.
 
 ---------------------------------------------------------------------------------
@@ -39,10 +38,10 @@ will soon be released for your convenience.
 ---------------------------------------------------------------------------------
 -- 3.  Translating Search Autocomplete
 
-Translations are available -as for every module- on "localize" platform at 
+Translations are available -as for every module- on "localize" platform at
 http://localize.drupal.org/translate/projects/search_autocomplete
 
-A .pot translation file is also given for your convenience to help in translating 
+A .pot translation file is also given for your convenience to help in translating
 the module.
 Please refer to section 4 (Helping) for typo, grammar or langage issues.
 
