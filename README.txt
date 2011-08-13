@@ -3,7 +3,7 @@
 *            Welcome to Search Autocomplete v7.x-1.0 !
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*
 
-    !! This module has just change maintener. Let's give it a second life !!
+    !! This module has just changed maintainer. Let's give it a second life !!
  
  ***
  * Search Autocomplete
@@ -39,10 +39,10 @@ will soon be released for your convenience.
 ---------------------------------------------------------------------------------
 -- 3.  Translating Search Autocomplete
 
-Translation are available -as for every module- on localize platform at 
+Translations are available -as for every module- on "localize" platform at 
 http://localize.drupal.org/translate/projects/search_autocomplete
 
-A .pot translation file is also given for you convenience to help translating 
+A .pot translation file is also given for your convenience to help in translating 
 the module.
 Please refer to section 4 (Helping) for typo, grammar or langage issues.
 
@@ -55,4 +55,4 @@ and view issues at:
 http://drupal.org/project/issues/search_autocomplete?categories=All
 
 
-The new maintener: Miroslav (Dominique CLAUSE)
+The new maintainer: Miroslav (Dominique CLAUSE)
