@@ -3,7 +3,7 @@
 *            Welcome to Search Autocomplete !
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*
 
-    !! This module as just change maintener. Let's give it a second life !!
+    !! This module has just change maintener. Let's give it a second life !!
 
 --------------------------------------------------------------------------------- 
 -- 1.  Installing Search Autocomplete:
