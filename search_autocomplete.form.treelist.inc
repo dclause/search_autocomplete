@@ -18,7 +18,7 @@
  * @return     the form
  */
 function search_autocomplete_treelist_form($form_state) {
-  $base = "admin/build/search_autocomplete";  // base URL for this module configurations
+  $base = "admin/settings/search_autocomplete";  // base URL for this module configurations
 
   $data = _search_autocomplete_get_items();  // get all forms ordered as a tree
   $form = array();
@@ -34,7 +34,7 @@ function search_autocomplete_treelist_form($form_state) {
     $weight = $values['weight'];
     $enabled = $values['enabled'];
 
-    $form['my_items'][$id] = array(        // element for this item
+    $form['my_items'][$id] = array(       // element for this item
       'title' => array(                      // -> human readeable title
         '#type' => 'markup',
         '#value' => $title,
@@ -43,9 +43,13 @@ function search_autocomplete_treelist_form($form_state) {
         '#type' => 'checkbox',
         '#default_value' => $enabled,
       ),
-      'configure' => array(                  // -> configure the item
-        '#type' => 'markup',
-        '#value' => l(t('Configure'), "$base/$id/configure"),
+      'operations' => array(
+        'configure' => array(
+          '#value' => l(t('configure'), "$base/$id/configure"),
+        ),
+        'delete' => array(
+          '#value' => l(t('delete'), "$base/$id/delete"),
+        ),
       ),
       'weight' => array(                     // -> weight of the item in hierarchy
         '#type' => 'weight',
@@ -81,8 +85,8 @@ function search_autocomplete_treelist_form($form_state) {
 function search_autocomplete_treelist_form_submit($form, &$form_state) {
   //Update the database with the new values
   foreach ($form_state['values']['my_items'] as $item) {
-    db_query_range('UPDATE {search_autocomplete_forms} SET weight = %d, parent_fid = %d, enabled = %d WHERE fid = %d',
-    0, 1, array($item['weight'], $item['parent_fid'], $item['enabled'], $item['fid']));
+    db_query('UPDATE {search_autocomplete_forms} SET weight = %d, parent_fid = %d, enabled = %d WHERE fid = %d',
+    array($item['weight'], $item['parent_fid'], $item['enabled'], $item['fid']));
   }
 } //function search_autocomplete_treelist_form_submit()
 
@@ -96,7 +100,13 @@ function theme_search_autocomplete_treelist_form($form) {
   drupal_add_tabledrag('my-draggable-table', 'order', 'sibling', 'weight-group');
   drupal_add_tabledrag('my-draggable-table', 'match', 'parent', 'parent-group', 'parent-group', 'id-group');
 
-  $header = array('Form name', 'Enabled', 'Operation', 'Weight');
+  $header[] = t('Form name');
+  $header[] = t('Enabled');
+  $header[] = array(
+    'data' => t('Operations'),
+    'colspan' => '2',
+  );
+  $header[] = t('Weight');
 
   // for each elements to anchor in the form
   foreach (element_children($form['my_items']) as $key) {
@@ -109,7 +119,8 @@ function theme_search_autocomplete_treelist_form($form) {
     $row = array();
     $row[] = theme('indentation', $element['#depth']) . drupal_render($element['title']);
     $row[] = drupal_render($element['enabled']);
-    $row[] = drupal_render($element['configure']);
+    $row[] = drupal_render($element['operations']['configure']);
+    $row[] = drupal_render($element['operations']['delete']);
     $row[] = drupal_render($element['weight']) .
               drupal_render($element['fid']) .
               drupal_render($element['parent_fid']);

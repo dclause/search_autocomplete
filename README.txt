@@ -1,10 +1,8 @@
 
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*
-*            Welcome to Search Autocomplete v6.x-1.0 !
+*            Welcome to Search Autocomplete v6.x-2.0 !
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*
 
-    !! This module has just change maintener. Let's give it a second life !!
- 
  ***
  * Search Autocomplete
  * Enables autocomplete functionality on search fields.
@@ -15,12 +13,6 @@
 
  Sponsored by:
  www.axiomcafe.fr
- 
-Known Issue:
-Drupal core autocompletion option is known to have a popup 
-position issue. It does not comes from the module itself but
-from Drupal Core. You may consider patching core to fix it:
-  http://drupal.org/node/625170
 
 --------------------------------------------------------------------------------- 
 -- 1.  Installing Search Autocomplete:
@@ -43,7 +35,7 @@ or in the equivalent directory of your Drupal installation.
 Place all files from this 2.x version in this sites/all/modules/search_autocomplete
 or equivalent folder.
 
-Run the update script. Make sure to run the 6001 udpate function.
+Run the update script. Make sure to run the udpate functions.
 
 If you're having trouble installing this module, please ensure that your tar 
 program is not flattening the directory tree, truncating filenames or losing 
@@ -52,10 +44,11 @@ files.
 ---------------------------------------------------------------------------------
 -- 3.  Setting Search Autocomplete
 
-Navigate to /admin/build/search_autocomplete
+Navigate to /admin/settings/search_autocomplete
 
 The configuration options are not as quite easy to understand as it was in previous
-version. Please consider reading the documentation soon available.
+version. Please consider reading the documentation available at:
+http://projects.axiomcafe.fr
 
 ---------------------------------------------------------------------------------
 -- 4.  Translating Search Autocomplete

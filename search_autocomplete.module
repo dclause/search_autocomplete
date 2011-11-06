@@ -21,155 +21,76 @@ include_once('search_autocomplete.finders.inc');
  * Creates suggestions for autocompletion according to settings
  */
 function search_autocomplete_autocomplete($string = '') {
-  $matches = array();
-  $word_items = array(); 
-  $node_items = array(); 
-  $user_items = array();
-  $taxo_items = array();
-  $comment_items = array();
-  static $method = 0;
+  $matches        = array();
+  $word_items     = array(); 
+  $node_items     = array(); 
+  $user_items     = array();
+  $taxo_items     = array();
+  $comment_items  = array();
   static $max_sug = 0;
   
-  // get the form calling
-  $fid = arg(1); 
-  // Allow Drupal to parse the search query.
-  $query = search_parse_query($string);
-  $word = $query[1][0];
-  // Check to see if we've got something to work with.
-  $result = db_query('SELECT * FROM {search_autocomplete_forms} f, {search_autocomplete_suggestions} s WHERE f.fid = %d AND f.fid = s.sug_fid AND s.sug_enabled = 1', $fid);
-
-  while ($item = db_fetch_array($result)) {
-    if (($query !== NULL) && (drupal_strlen($word) >= $item['min_char']) ) {
-      $prefix = $item['sug_prefix'];
-      $limit = '';
-      $method = $item['method'];
-      $max_sug = $item['max_sug'];
-      if ($method == 2) {
-        $limit = ' LIMIT ' . strval($max_sug); 
-      }
-      if ($item['sug_name'] == 'word_title') {
-        $word_items = search_autocomplete_find_words($word, $limit, $order, $prefix, $item['sort']);    
-        $matches = array_merge($matches, $word_items);
-      } 
-      elseif ($item['sug_name'] == 'node_title') {
-        $node_items = search_autocomplete_find_nodes($word, $limit, $order, $prefix, $item['sort']);
-        $matches = array_merge($matches, $node_items);
-      } 
-      elseif ($item['sug_name'] == 'comment_title') {
-        $comment_items = search_autocomplete_find_comments($word, $limit, $order, $prefix, $item['sort']);
-        $matches = array_merge($matches, $comment_items);
-      }
-      elseif ($item['sug_name'] == 'taxo_title') {
-        $taxo_items = search_autocomplete_find_taxos($word, $limit, $order, $prefix, $item['sort']);
-        $matches = array_merge($matches, $taxo_items);
-      } 
-      elseif ($item['sug_name'] == 'username') {
-        $user_items = search_autocomplete_find_users($word, $limit, $order, $prefix, $item['sort']);
-        $matches = array_merge($matches, $user_items);
-      }  
-    }
+  
+  $fid    = arg(1);                                     // get the form calling
+  $query  = search_parse_query($string);                // Allow Drupal to parse the search query.
+  $word   = $query[1][0];                               // get the first word entered in the search box
+  
+  
+  $result = db_fetch_array(db_query('SELECT min_char FROM {search_autocomplete_forms} f WHERE f.fid = %d', $fid));
+  if (drupal_strlen($word) < $result['min_char']) {    // Check if there if enough letter to start autocompletion.
+    drupal_json($matches);                              // no matches, return it empty
+    return;                                             // if there is not enough letters, stop here
   }
 
-  // Return matches.
-  if ($method == 2)
-    drupal_json(array_slice($matches, 0, $max_sug));
-  else
-    drupal_json($matches);
-}
+  // get every suggestion types associated with the form being autocompleted
+  $results = db_query('SELECT * FROM {search_autocomplete_suggestions} s WHERE s.sug_fid = %d AND s.sug_enabled = 1', $fid);
+  
+  while ($item = db_fetch_array($results)) {            // while there is suggestion types to analyse:
+    if ($query !== NULL) {
+      $prefix  = $item['sug_prefix'];                     // get the prefix for this suggestion type
+      $query   = sprintf($item['sug_query'], $word);      // get the SQL query for this suggestion type
+      $suggestions  = db_query($query);                   // get all the suggestions of this suggestion type
+      while ($obj = db_fetch_object($suggestions)) {
+        $sug_elem                 = array_shift(array_values(get_object_vars($obj)));
+        $sug                 = trim($prefix) . ' ' . html_entity_decode(check_plain($sug_elem), ENT_QUOTES);
+        $matches[trim($sug)] = trim($sug);                // add the suggestion to be returned
+      }
+    }
+  }
+  drupal_json($matches);                                // Return matches.
+}  // search_autocomplete_autocomplete()
 
 /**
- * Implementation of hook_form_alter().
- * Changes the various search forms
+ * HOOK OF INIT:
+ * add autocomplete.js on everypage
  */
-function search_autocomplete_form_alter(&$form, $form_state, $form_id) {
-
-  // if the user is authorize to use the form
-  if (user_access('search with autocomplete')) {
+function search_autocomplete_init() {
   
-    // special case of search form:
-    if ($form_id == 'search_form') {
-      if ($form['module']['#value'] == 'node') {
-        $form_id = 'search_page_node';
-      }
-      if ($form['module']['#value'] == 'user') {
-        $form_id = 'search_page_user';
-      }
-    }
-    
-    $results = db_query('SELECT * FROM {search_autocomplete_forms} WHERE form_id="%s"', $form_id);
-    // Build an array of returned matches.
-    $match = db_fetch_array($results);
-
-    // if this form has to be autocompleted
-    if ($match['enabled']) {
-      if ($match['method'] == 1) {                                        // case of jQuery plugin autocomplete
-        _activate_plugin_autocompletion(&$form, $form_id, $match);
-      } 
-      elseif ($match['method'] == 2) {                                  // case of Drupal core autocompletion
-        _activate_core_autocompletion(&$form, $form_id, $match['fid']);
-      }
-    }
-    
-  }
-}
-
-
-
-//////////////////////////////////////////////////////////
-//////////          HELPERS
-
-/**
- * Ativate Drupal Core autocompletion for the desired form
- * @param  $form    the form the input filed belongs to
- * @param  $form_id   the id of the form to autocomplete
- * @param  $fid    the fid of this form settings
- */
-function _activate_core_autocompletion($form, $form_id, $fid) {
-  // Search block and search box have similar form structure.
+  // checkout if user have authorization to access the autocompleted form
+  if (user_access('use Search Autocomplete')) {
+    // init:
+    $settings = array();
   
-  if ($form_id == 'search_block_form' || $form_id == 'search_theme_form') {
-    $form[$form_id]['#autocomplete_path'] = 'search_autocomplete/' . $fid . '/autocomplete';
-  }
-
-  if ($form_id == 'search_page_node') {
-    // Search page; only add autocomplete to node search.
-    if ($form['module']['#value'] == 'node') {
-      $form['basic']['inline']['keys']['#autocomplete_path'] = 'search_autocomplete/' . $fid . '/autocomplete';
+    // checkout if the db exists (it should)
+    if (db_table_exists('search_autocomplete_forms')) {
+      // get every form to autocomplete
+      $results = db_query('SELECT * FROM {search_autocomplete_forms} WHERE enabled=1');
+      // build the setting array to transfert to JS
+      while ($match = db_fetch_array($results)) {      
+        $form_id = 'form' . $match['fid'];
+        drupal_add_js(array('search_autocomplete' => array(
+          $form_id => array(
+            'selector' => $match['selector'],
+            'minChars' => $match['min_char'],
+            'max_sug' => $match['max_sug'],
+            'url' => $base_url . '/search_autocomplete/' . $match['fid'] . '/autocomplete',
+            'fid' => $match['fid']
+          ))), 'setting');
+      }
+      // If there is some results: need to include the css and js....
+      if ($results ) {
+        drupal_add_css(drupal_get_path('module', 'search_autocomplete') . '/css/jquery.autocomplete.css');
+        drupal_add_js(drupal_get_path('module', 'search_autocomplete') . '/js/jquery.autocomplete.js');
+      }
     }
   }
-  if ($form_id == 'search_page_user') {
-    // Search page; only add autocomplete to user search.
-    if ($form['module']['#value'] == 'user') {
-      $form['basic']['inline']['keys']['#autocomplete_path'] = 'search_autocomplete/' . $fid . '/autocomplete';
-    }
-  }
-}
-
-
-/**
- * Ativate jQuery plugin autocompletion for the desired form
- * @param  $form    the form the input filed belongs to
- * @param  $form_id   the id of the form to autocomplete
- * @param   $selector   the selector of the form to autocomplete
- * @param  $fid    the fid of this form settings
- */
-function _activate_plugin_autocompletion($form, $form_id, $match) {
-  
-  drupal_add_css(drupal_get_path('module', 'search_autocomplete') . '/css/jquery.autocomplete.css');
-  drupal_add_js(drupal_get_path('module', 'search_autocomplete') . '/js/jquery.autocomplete.js');
-
-  drupal_add_js(array('search_autocomplete' => array(
-    $form_id => array(
-      'selector' => $match['selector'],
-      'minChars' => $match['min_char'],
-      'max_sug' => $match['max_sug'],
-      'url' => $base_url . '/search_autocomplete/' . $match['fid'] . '/autocomplete',
-      'fid' => $fid,
-      'form_id' => $form_id,
-  ))), 'setting');
-}
-
-
-
-
-
+} // search_autocomplete_init()

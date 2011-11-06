@@ -17,30 +17,17 @@
  * Define the form to configure the suggestions.
  * @return  A rendered form
  */
-function search_autocomplete_suggestions_settings() {
+function search_autocomplete_form_configure() {
   $form = array();
-
+  $base = "admin/settings/search_autocomplete";  // base URL for this module configurations
   // get data from database
   $fid = arg(3);
-  $result_forms       = db_query('SELECT * FROM {search_autocomplete_forms} WHERE fid = ' . $fid);
-  $item         = db_fetch_array($result_forms);
+  $result_forms   = db_query('SELECT * FROM {search_autocomplete_forms} WHERE fid = ' . $fid);
+  $item           = db_fetch_array($result_forms);
 
   $form['fid'] = array(
     '#type' => 'hidden',
     '#value' => $fid,
-  );
-  /* ------------------------------------------------------------------ */
-  // How to populate suggestions ? (drupal core vs jquery plugin)
-  $form['method'] = array(
-    '#type' => 'radios',
-    '#title' => t('Choose how suggestions should be populated.'),
-    '#default_value' => $item['method'],
-    '#options' => array(
-      '1' => t('Use embed solution  (recommanded)'),
-      '2' => t('Use Drupal core autocompletion'),
-    ),
-    '#description' => t("Caution: There are known issues with Drupal Core solution (see <a href='http://drupal.org/node/625170'>#625170</a> for correction!)"),
-    '#required' => TRUE,
   );
   /* ------------------------------------------------------------------ */
   // HOW - How to display Search Autocomplete suggestions
@@ -49,18 +36,6 @@ function search_autocomplete_suggestions_settings() {
     '#title' => t('HOW - How to display Search Autocomplete suggestions?'),
     '#collapsible' => TRUE,
     '#collapsed' => TRUE
-  );
-  $form['search_autocomplete_how']['sorting_method'] = array(
-    '#type' => 'radios',
-    '#title' => t('Choose a search method'),
-    '#default_value' => $item['sort'],
-    '#options' => array(
-      '1' => t('Natural sort (no sort)'),
-      '2' => t('Sort keyword alphabetically'),
-      '3' => t('Sort by keyword\'s score'),
-    ),
-    '#description' => t("Caution: Some request method can be very slow !"),
-    '#required' => TRUE,
   );
   // Number of characters before suggestions
   $trigger = array();
@@ -97,54 +72,60 @@ function search_autocomplete_suggestions_settings() {
     '#description' => t('Choose which data should be added to autocompletion suggestions.'),
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
-    '#theme' => 'search_autocomplete_suggestions_settings_fieldset',
+    '#theme' => 'search_autocomplete_form_configuration_fieldset',
   );
   $form['search_autocomplete_what']['#tree'] = TRUE;
 
   // Built possible suggestions
   $result_suggestions = db_query('SELECT * FROM {search_autocomplete_suggestions} WHERE sug_fid = %d ORDER BY sug_weight ASC', $fid);
   while ($suggestion = db_fetch_array($result_suggestions)) {
-    if (drupal_strlen($suggestion['sug_module']) == 0 || module_exists($suggestion['sug_module'])) {
+    // if the module has no dependencies, or if the dependencies are enabled: activate the suggestion
+    if (drupal_strlen($suggestion['sug_dependencies']) == 0 || module_exists($suggestion['sug_dependencies'])) {
       $activate = TRUE;
       $title = $suggestion['sug_title'];
-    }
+    } // else, do not activate the suggestion and has the dependencie reason
+
     else {
       $activate = FALSE;
-      $title = $suggestion['sug_title'] . '  ' . t('(require @module module)', array('@module' => $suggestion['sug_module']));
+      $title = $suggestion['sug_title'] . '  ' . t('(require @module module)', array('@module' => $suggestion['sug_dependencies']));
     }
-    $sug_name = $suggestion['sug_name'];
+    $sid = $suggestion['sid'];
 
-    $form['search_autocomplete_what'][$sug_name]['sid'] = array(
+    $form['search_autocomplete_what'][$sid]['sid'] = array(
       '#type' => 'hidden',
-      '#value' => $suggestion['sid'],
+      '#value' => $sid,
       '#disabled' => !$activate,
     );
-    $form['search_autocomplete_what'][$sug_name]['sug_markup'] = array(
+    $form['search_autocomplete_what'][$sid]['sug_markup'] = array(
       '#type' => 'markup',
       '#value' => $title,
       '#disabled' => !$activate,
     );
-    $form['search_autocomplete_what'][$sug_name]['sug_title'] = array(
+    $form['search_autocomplete_what'][$sid]['sug_title'] = array(
       '#type' => 'hidden',
       '#value' => $title,
       '#disabled' => !$activate,
     );
-    $form['search_autocomplete_what'][$sug_name]['sug_enabled'] = array(
+    $form['search_autocomplete_what'][$sid]['sug_enabled'] = array(
       '#type' => 'checkbox',
+      '#return_value' => 1,
       '#default_value' => $suggestion['sug_enabled'],
       '#disabled' => !$activate,
     );
-    $form['search_autocomplete_what'][$sug_name]['sug_prefix'] = array(                  // -> sug_prefix
+    $form['search_autocomplete_what'][$sid]['sug_prefix'] = array(                // -> sug_prefix
       '#type' => 'textfield',
       '#default_value' => $suggestion['sug_prefix'],
       '#maxlength' => 255,
       '#size' => 35,
       '#disabled' => !$activate,
     );
-    $form['search_autocomplete_what'][$sug_name]['sug_weight'] = array(                // -> weight of the item in hierarchy
+    $form['search_autocomplete_what'][$sid]['sug_weight'] = array(                // -> weight of the item in hierarchy
       '#type' => 'weight',
       '#default_value' => $suggestion['sug_weight'],
       '#disabled' => !$activate,
+    );
+    $form['search_autocomplete_what'][$sid]['sug_edit'] = array(                  // -> weight of the item in hierarchy
+      '#value' => l(t('edit'), "$base/suggestion/" . $suggestion['sid'] . "/edit"),
     );
   }
 
@@ -159,61 +140,75 @@ function search_autocomplete_suggestions_settings() {
   $form['search_autocomplete_advanced']['selector'] = array(
     '#type' => 'textfield',
     '#title' => t('ID selector for this form'),
-    '#description' => t('Please change only if you know what you do. Read documentation first.'),
+    '#description' => t('Please change only if you know what you do, read <a href="http://projects.axiomcafe.fr/search-autocomplete">documentation</a> first.'),
     '#default_value' => $item['selector'],
     '#maxlength' => 255,
     '#size' => 35,
   );
   // Add button validation
-  $form['buttons']['submit'] = array(
+  $form['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Save configuration'),
   );
-  $form['buttons']['reset'] = array(
+  /* $form['reset'] = array(
     '#type' => 'submit',
     '#value' => t('Reset to defaults'),
-  );
+    '#submit' => array('submit_reset')
+  ); */
+
   return $form;
 }
 
-//-------------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------------
 /**
  * Implementation of hook_submit().
  * Save the changes in the database
  */
-function search_autocomplete_suggestions_settings_submit($form, &$form_state) {
+function search_autocomplete_form_configure_submit($form, &$form_state) {
   $ok_query = TRUE;  // so far so good!
   //Update the database with the new values
   $what = '';
   $sids = '';
   $weights = '';
 
+  // ###
+  // UPDATE THE FORM
+  // -> update form
   $values = $form_state['values'];
+  $ok_query &= db_query('UPDATE {search_autocomplete_forms} SET min_char = %d, max_sug = %d, selector = "%s" WHERE fid = %d',
+    array( $values['min_char'], $values['max_sug'], $values['selector'], $values['fid']));
+  // -> update each suggestions
+  foreach ($form_state['clicked_button']['#post']['search_autocomplete_what'] as $key => $item) {
+    drupal_write_record('search_autocomplete_suggestions', $values['search_autocomplete_what'][$key], 'sid');
+  }
+  // ###
+  // UPDATE CHILD LIST BUT NOT THE ADVANCED OPTIONS
   $fids = _search_autocomplete_get_all_children($values['fid']);
   // update the settings for this form + every children form
   foreach ($fids as $fid) {
-    //-> update form
-    $ok_query &= db_query('UPDATE {search_autocomplete_forms} SET method = %d, sort = %d, min_char = %d, max_sug = %d, selector = "%s" WHERE fid = %d',
-    array( $values['method'],  $values['sorting_method'], $values['min_char'], $values['max_sug'], $values['selector'], $fid));
-    //-> update each suggestions
-    foreach ($form_state['values']['search_autocomplete_what'] as $key => $item) {
-      $ok_query &= db_query("UPDATE {search_autocomplete_suggestions} SET sug_enabled = %d, sug_weight = %d, sug_prefix = '%s', sug_title = '%s' WHERE sid = %d AND sug_fid = %d", $item['sug_enabled'], $item['sug_weight'], $item['sug_prefix'], $item['sug_title'], $item['sid'], $fid);
+    // -> update form
+    $ok_query &= db_query('UPDATE {search_autocomplete_forms} SET min_char = %d, max_sug = %d WHERE fid = %d',
+    array( $values['min_char'], $values['max_sug'], $fid));
+     // -> update each suggestions
+    foreach ($form_state['clicked_button']['#post']['search_autocomplete_what'] as $key => $item) {
+      drupal_write_record('search_autocomplete_suggestions', $values['search_autocomplete_what'][$key], 'sid');
     }
   }
-  $form_state['redirect'] = 'admin/build/search_autocomplete';
+  // ###
 
+  $form_state['redirect'] = 'admin/settings/search_autocomplete';
   $ok_query ? drupal_set_message(t("Configuration success !")) : drupal_set_message(t("An error has occured while saving the settings. Please, double check your settings!"), 'error');
 }
 
 
-//-------------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------------
 /**
  * CALLBACK:
  * Theme function for this treelist form
  */
-function theme_search_autocomplete_suggestions_settings_fieldset($form) {
+function theme_search_autocomplete_form_configuration_fieldset($form) {
 
-  $header = array('Title', 'Enabled', 'Prefix of the item in suggestions', 'Weight');
+  $header = array('Title', 'Enabled', 'Prefix of the item in suggestions', 'Weight', 'Operation');
 
   // for each elements to anchor in the form
   foreach (element_children($form) as $key) {
@@ -225,8 +220,9 @@ function theme_search_autocomplete_suggestions_settings_fieldset($form) {
     $row[] = drupal_render($element['sug_enabled']);
     $row[] = drupal_render($element['sug_prefix']);
     $row[] = drupal_render($element['sug_weight']);
+    $row[] = drupal_render($element['sug_edit']);
 
-    //Add a draggable class to every table row (<tr>)
+    // Add a draggable class to every table row (<tr>)
     $rows[] = array('data' => $row, 'class' => 'draggable');
   }
 
@@ -238,22 +234,25 @@ function theme_search_autocomplete_suggestions_settings_fieldset($form) {
 
   return $output;
 
-} //function theme_search_autocomplete_suggestions_settings()
+} // function theme_search_autocomplete_form_configuration()
 
 
 
 /////////////////////////////////////////////////////////////////////////////////////////
 ////                             HELPER FUNCTIONS                                    ////
 
-//-------------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------------
 /**
- * Helper function: get the array of fids of the caller + every of his children.
+ * Helper function: get the array of fids every of his children of the caller but not
+ * caller fid.
  */
-function _search_autocomplete_get_all_children($fid, &$items = array()) {
-  $items[] = $fid;
+function _search_autocomplete_get_all_children($fid, &$items = array(), $depth = 0) {
+  if ($depth)
+    $items[] = $fid;
   $result = db_query('SELECT * FROM {search_autocomplete_forms} WHERE parent_fid = ' . $fid);
   while ($item = db_fetch_array($result)) {
-    _search_autocomplete_get_all_children($item['fid'], $items);
+    $depth++;
+    _search_autocomplete_get_all_children($item['fid'], $items, $depth);
   }
   return $items;
 }

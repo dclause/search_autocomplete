@@ -55,3 +55,21 @@
 	background-color: #0A246A;
 	color: white;
 }
+
+/* HELP PANEL CSS */
+div.help {
+  background-image: url("help.png");
+}
+div.help {
+  background-color: #F7F7F7 !important;
+  border: 1px solid #E7E7E7 !important;
+}
+div.help {
+  background-color: #FFFFFF;
+  background-position: 10px 50%;
+  background-repeat: no-repeat;
+  border: 1px solid;
+  font-weight: normal;
+  margin: 10px 0;
+  padding: 15px 10px 15px 50px;
+}
