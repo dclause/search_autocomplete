@@ -190,7 +190,7 @@ function search_autocomplete_install() {
   for ($form=0; $form <= 4; $form++) {
     $variables = array( 
       1, $form, 1, "node:", "Add node titles", "node_title", "", 1, "SELECT n.title FROM {node} n WHERE n.status = 1 AND LOWER(n.title) LIKE LOWER('%%%s%%')",
-      2, $form, 1, "user:", "Add node usernames", "username", "", 2, "SELECT u.name FROM {users} u WHERE u.status = 1 AND LOWER(u.name) LIKE LOWER('%%%s%%')",
+      2, $form, 1, "user:", "Add usernames", "username", "", 2, "SELECT u.name FROM {users} u WHERE u.status = 1 AND LOWER(u.name) LIKE LOWER('%%%s%%')",
       3, $form, 1, "vocab:", "Add taxonomies", "taxo_title", "taxonomy", 3, "SELECT t.name FROM {term_data} t WHERE LOWER(t.name) LIKE LOWER('%%%s%%')",
       4, $form, 1, "comment:", "Add node comment titles", "comment_title", "comment", 4, "SELECT c.subject FROM {comments} c WHERE c.subject LIKE LOWER('%%%s%%')",
       5, $form, 1, "", "Add all possible words (any word appearing on your website)", "word_title", "search", 5, "SELECT DISTINCT s.word FROM {search_index} s, {node} n WHERE s.type = 'node' AND n.nid = s.sid AND n.status = 1 AND LOWER(s.word) LIKE LOWER('%%%s%%')",

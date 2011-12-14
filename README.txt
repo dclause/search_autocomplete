@@ -15,7 +15,7 @@
  www.axiomcafe.fr
 
 --------------------------------------------------------------------------------- 
--- 1.  Installing Search Autocomplete:
+-- 1.  Installing Search Autocomplete :
 
 Place the entirety of this directory in sites/all/modules/search_autocomplete 
 or in the equivalent directory of your Drupal installation.
@@ -27,7 +27,7 @@ program is not flattening the directory tree, truncating filenames or losing
 files.
 
 --------------------------------------------------------------------------------- 
--- 2.  Updating Search Autocomplete:
+-- 2.  Updating Search Autocomplete :
 
 Delete every files in the module directory sites/all/modules/search_autocomplete 
 or in the equivalent directory of your Drupal installation.
@@ -35,14 +35,15 @@ or in the equivalent directory of your Drupal installation.
 Place all files from this 2.x version in this sites/all/modules/search_autocomplete
 or equivalent folder.
 
-Run the update script. Make sure to run the udpate functions.
+From 1.x to 2.0 => Run the update script. Make sure to run the udpate functions.
+From 2.0 to 2.1 => Just flush the cache.
 
 If you're having trouble installing this module, please ensure that your tar 
 program is not flattening the directory tree, truncating filenames or losing 
 files.
 
 ---------------------------------------------------------------------------------
--- 3.  Setting Search Autocomplete
+-- 3.  Setting Search Autocomplete :
 
 Navigate to /admin/settings/search_autocomplete
 
@@ -51,7 +52,7 @@ version. Please consider reading the documentation available at:
 http://projects.axiomcafe.fr
 
 ---------------------------------------------------------------------------------
--- 4.  Translating Search Autocomplete
+-- 4.  Translating Search Autocomplete :
 
 Please visit the module translation page to download translation:
 http://localize.drupal.org/translate/downloads?project=search_autocomplete.
@@ -59,7 +60,7 @@ http://localize.drupal.org/translate/downloads?project=search_autocomplete.
 Please refer to section 5 (Helping) for typo, grammar or langage issues.
 
 ---------------------------------------------------------------------------------
--- 5.  Helping and complaining on Search Autocomplete
+-- 5.  Helping and complaining on Search Autocomplete :
 
 To help this module live, please post your issues, ideas and comments at:
 http://drupal.org/node/add/project-issue/search_autocomplete

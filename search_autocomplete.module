@@ -14,7 +14,6 @@
 
 
 include_once('search_autocomplete.admin.inc');
-include_once('search_autocomplete.finders.inc');
 
 /**
  * Menu callback; autocomplete handler.
@@ -51,8 +50,14 @@ function search_autocomplete_autocomplete($string = '') {
       $suggestions  = db_query($query);                   // get all the suggestions of this suggestion type
       while ($obj = db_fetch_object($suggestions)) {
         $sug_elem                 = array_shift(array_values(get_object_vars($obj)));
-        $sug                 = trim($prefix) . ' ' . html_entity_decode(check_plain($sug_elem), ENT_QUOTES);
-        $matches[trim($sug)] = trim($sug);                // add the suggestion to be returned
+        $sug                      = html_entity_decode(check_plain($sug_elem), ENT_QUOTES);
+        $sug_pref                 = trim($prefix) . ' ' . $sug;
+        $matches[trim($sug_pref)] = trim($sug);                // add the suggestion to be returned
+        
+        $sug = html_entity_decode(check_plain($obj->title), ENT_QUOTES);
+    $pref_sug = trim($prefix) . ' ' . $sug;
+    $items[trim($pref_sug)] = trim($sug);
+        
       }
     }
   }

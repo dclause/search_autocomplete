@@ -24,7 +24,9 @@ $(document).ready(function() {
 			minChars: eval(obj + '.minChars'),
 			selectFirst: false,
 			max: eval(obj + '.max_sug'),
-		});
+		}).result(function () {
+      $(this).get(0).form.submit();
+    }).focus(); 
 	});
 });
 
@@ -455,9 +457,9 @@ $.Autocompleter.defaults = {
 	highlight: function(value, term) {
 		return value.replace(new RegExp("(?![^&;]+;)(?!<[^<>]*)(" + term.replace(/([\^\$\(\)\[\]\{\}\*\.\+\?\|\\])/gi, "\\$1") + ")(?![^<>]*>)(?![^&;]+;)", "gi"), "<strong>$1</strong>");
 	},
-    scroll: true,
-    scrollHeight: 180,
-    scrollJumpPosition: true
+  scroll: true,
+  scrollHeight: 180,
+  scrollJumpPosition: true
 };
 
 $.Autocompleter.Cache = function(options) {
