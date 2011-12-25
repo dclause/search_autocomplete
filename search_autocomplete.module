@@ -6,199 +6,92 @@
  * Enables autocomplete functionality on search fields.
  *
  * @authors
- * D7 port by Miroslav (Dominique CLAUSE), <http://www.axiomcafe.fr/contact>
+ * Miroslav Talenberg (Dominique CLAUSE) <http://www.axiomcafe.fr/contact>
  *
  * Sponsored by:
  * www.axiomcafe.fr
  */
 
-/**
- * Implements hook_permission().
- * Valid permissions for this module
- * @return An array of valid permissions for the autocomplete module
- */
-function search_autocomplete_permission() {
-  return array(
-    'administer Search Autocomplete' => array(
-      'title' => t('Administer Search Autocomplete'), 
-      'description' => t('Access administration panel for autocompletion settings.'),
-    ),
-    'search with autocomplete' => array(
-      'title' => t('Use Search Autocomplete'), 
-      'description' => t('Allow usage of autocompletion on forms.'),
-    ),
-  );
-  } // function search_autocomplete_permissions()
 
-/**
- * Implements hook_menu().
- * Create an administration page to access admin form
- */
-function search_autocomplete_menu() {
-  $items = array(); 
-
-  $items['admin/config/user-interface/search_autocomplete'] = array(
-    'title' => 'Search Autocomplete',
-    'description' => 'Choose settings and suggestion items for autocompletion',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('search_autocomplete_admin_settings'),
-    'access arguments' => array(t('administer Search Autocomplete')),
-    'type' => MENU_NORMAL_ITEM,
-  );
-  $items['search_autocomplete/autocomplete'] = array(
-    'page callback' => 'search_autocomplete_autocomplete',
-    'access arguments' => array('search with autocomplete'),
-    'type' => MENU_CALLBACK,
-  );
-  return $items;
-} // function search_autocomplete_menu()
-
-/**
- * Form function, called by drupal_get_form()
- * in current_posts_menu().
- */
-function search_autocomplete_admin_settings($form, &$form_state) {
-  $form = array();
-  
-  $form['search_autocomplete_forms'] = array(
-    '#type' => 'checkboxes',
-    '#title' => t('Enable autocomplete on'),
-    '#description' => t('Select the search forms that should have autocomplete enabled.'),
-    '#options' => array(
-      'search_form' => t('Search page (node tab only)'),
-      'search_block_form' => t('Search block'),
-    ),
-    '#default_value' => variable_get('search_autocomplete_forms', array('search_form', 'search_block_form')),
-  );
-
-  $form['search_autocomplete_setting'] = array(
-    '#type' => 'fieldset',
-    '#title' => t('Autocomplete settings'),
-    '#collapsible' => TRUE,
-    '#collapsed' => FALSE
-  );
-  $form['search_autocomplete_setting']['search_autocomplete_method'] = array(
-    '#type' => 'radios',
-    '#title' => t('Choose a search method'),
-    '#default_value' => variable_get('search_autocomplete_method', 1),
-    '#options' => array(
-      '1' => t('Natural sort (no sort)'),
-      '2' => t('Sort keyword alphabetically'),
-      '3' => t('Sort by keyword\'s score'),
-      '4' => t('Sort by keyword\'s relevance (slow)'),
-    ),
-    '#description' => t("Caution: Some request method can be very slow !"),
-    '#autocomplete_path' => 'search_autocomplete/autocomplete',
-    '#required' => TRUE,
-  );
-  $trigger = array();
-  for ($i=1;$i<20;$i++) {
-    $trigger[$i] = $i . ' ' . t('characters');
-  }
-  $form['search_autocomplete_setting']['search_autocomplete_trigger'] = array(
-    '#type' => 'select',
-    '#title' => t('Minimum keyword size that uncouple autocomplete search'),
-    '#default_value' => variable_get('search_autocomplete_trigger', variable_get('minimum_word_size', 3)),
-    '#options' => $trigger,
-    '#multiple' => FALSE,
-    '#required' => TRUE,
-  );
-  $limit = array();
-  for ($i=1;$i<50;$i++) {
-    $limit[$i] = $i . ' ' . t('results');
-  }
-  $form['search_autocomplete_setting']['search_autocomplete_limit'] = array(
-    '#type' => 'select',
-    '#title' => t('Limit of the autocomplete search result'),
-    '#default_value' => variable_get('search_autocomplete_limit', 15),
-    '#options' => $limit,
-    '#multiple' => FALSE,
-    '#required' => TRUE,
-  );
-
-  $form['search_autocomplete_setting_test'] = array(
-    '#type' => 'fieldset',
-    '#title' => t('Test field'),
-    '#description' => t('In this field, you can check the appearence of an autocomplete search field.'),
-    '#collapsible' => TRUE,
-    '#collapsed' => TRUE
-  );
-  $form['search_autocomplete_setting_test']['search_autocomplete_test'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Search autocomplete test field'),
-    '#size' => 40,
-    '#maxlength' => 40,
-    '#default_value' => '',
-    '#description' => t("Enter a keyword and wait for the result."),
-    '#autocomplete_path' => 'search_autocomplete/autocomplete',
-    '#required' => FALSE,
-  );
-
-  return system_settings_form($form);
-}
-
-/**
- * Implements hook_form_alter().
- * Changes the various search forms
- */
-function search_autocomplete_form_alter(&$form, &$form_state, $form_id) {
-
-  if (user_access('search with autocomplete')) {
-
-    $enabled_forms = variable_get('search_autocomplete_forms', array());
-
-  if (isset($enabled_forms[$form_id])) {
-      // Search block and search box have similar form structure.
-      if ($form_id == 'search_block_form') {
-        $form[$form_id]['#autocomplete_path'] = 'search_autocomplete/autocomplete';
-      }
-    
-    // Search page; only add autocomplete to node search.
-      if ($form_id == 'search_form' && $form['module']['#value'] == 'node') {
-        $form['basic']['keys']['#autocomplete_path'] = 'search_autocomplete/autocomplete';
-      }
-    }
-  }
-}
+include_once('search_autocomplete.admin.inc');
 
 /**
  * Menu callback; autocomplete handler.
  * Creates suggestions for autocompletion according to settings
+ * @param   string    the characters entered in the search boxs
  */
-function search_autocomplete_autocomplete() {
+function search_autocomplete_autocomplete($string = '') {
+  $matches        = array();
+  $word_items     = array(); 
+  $node_items     = array(); 
+  $user_items     = array();
+  $taxo_items     = array();
+  $comment_items  = array();
+  static $max_sug = 0;
 
-  $args = arg();
-  // Allow Drupal to parse the search query.
-  $query=explode(" ", $args[2]);
+  $fid    = arg(1);                                       // get the form calling
+  $words = explode(' ', $string);                         // explode the words entered in the input string
+  $word   = $words[0];                                    // get the first word entered in the search box
 
-  $matches = array();
-  
-  // Check to see if we've got something to work with.
-  if ($query !== NULL && drupal_strlen($query[0]) >= (variable_get('search_autocomplete_trigger', variable_get('minimum_word_size', 3))) ) {
-
-    // Perform search using the chosen sort method.
-    $limit = variable_get('search_autocomplete_limit', 10);
-    $word = $query[0];
-    switch (variable_get('search_autocomplete_sort', 'none')) {
-      case 'none':
-        $result = db_query_range("SELECT DISTINCT s.word FROM {search_index} s, {node} n WHERE s.type = 'node' AND n.nid = s.sid AND n.status = 1 AND LOWER(s.word) LIKE LOWER(:word)", 0, $limit, array(':word' => $word . '%'));
-        break;
-      case 'alphabetical':
-        $result = db_query_range("SELECT DISTINCT i.word FROM {search_index} i, {node} n WHERE i.type = 'node' AND n.nid = i.sid AND n.status = 1 AND LOWER(i.word) LIKE LOWER(:word) ORDER BY i.word ASC", 0, $limit, array(':word' => $word . '%'));
-        break;
-      case 'score':
-        $result = db_query_range("SELECT i.word FROM {search_index} i, {node} n WHERE i.type = 'node' AND n.nid = i.sid AND n.status = 1 AND LOWER(i.word) LIKE LOWER(:word) GROUP BY i.word ORDER BY SUM(i.score) DESC", 0, $limit, array(':word' => $word . '%'));
-        break;
-      case 'relevance':
-        $result = db_query_range("SELECT i.word FROM {search_index} AS i INNER JOIN {search_total} AS t ON i.word = t.word INNER JOIN n AS n ON n.nid = i.sid WHERE i.type = 'node' AND n.status = 1 AND LOWER(i.word) LIKE LOWER(:word) GROUP BY i.word ORDER BY SUM(i.score * t.count) DESC", 0, $limit, array(':word' => $word . '%'));
-        break;	
-    }
-
-    // Build an array of returned matches.
-    foreach ($result as $match) {
-      $matches[$match->word] = check_plain($match->word);
+  $result = db_query('SELECT min_char FROM {search_autocomplete_forms} f WHERE f.fid = :fid', array(':fid' => $fid));
+  foreach ($result as $match) {
+    if (drupal_strlen($word) < $match->min_char) {        // Check if there if enough letter to start autocompletion.
+      drupal_json_output($matches);                       // no matches, return it empty
+      return;                                             // if there is not enough letters, stop here
     }
   }
-  // Return matches.
-  drupal_json_output($matches);
-}
+  
+  // get every suggestion types associated with the form being autocompleted
+  $result = db_query('SELECT * FROM {search_autocomplete_suggestions} s WHERE s.sug_fid = :fid AND s.sug_enabled = :sug_enabled', array(':fid' => $fid, 'sug_enabled' => 1));
+  foreach ($result as $item) {                            // while there is suggestion types to analyse:
+    //if ($query != NULL) {
+      $prefix  = $item->sug_prefix;                       // get the prefix for this suggestion type
+      $query   = sprintf($item->sug_query, $word);        // get the SQL query for this suggestion type
+      $result  = db_query($query);                        // get all the suggestions of this suggestion type
+      foreach ($result as $obj) {
+        $sug_elem                   = array_shift(array_values(get_object_vars($obj)));
+        $sug                        = html_entity_decode(check_plain($sug_elem), ENT_QUOTES);
+        $sug_index                  = trim($prefix) . ' ' . $sug;
+        $matches[trim($sug_index)]  = trim($sug);         // add the suggestion to be returned
+      }
+    //}
+  }
+  drupal_json_output($matches);                           // Return matches.
+}  // search_autocomplete_autocomplete()
+
+/**
+ * HOOK OF INIT:
+ * add autocomplete.js on everypage
+ */
+function search_autocomplete_init() {
+  global $base_url;
+  
+  // checkout if user have authorization to access the autocompleted form
+  if (user_access('use Search Autocomplete')) {
+    // init:
+    $settings = array();
+  
+    // checkout if the db exists (it should)
+    if (db_table_exists('search_autocomplete_forms')) {
+      // get every form to autocomplete
+      $result = db_query('SELECT * FROM {search_autocomplete_forms} WHERE enabled=1');
+      // build the setting array to transfert to JS
+      foreach ($result as $match) {
+        $form_id = 'form' . $match->fid;
+        drupal_add_js(array('search_autocomplete' => array(
+          $form_id      => array(
+            'selector'  => $match->selector,
+            'minChars'  => $match->min_char,
+            'max_sug'   => $match->max_sug,
+            'url'       => $base_url . '/search_autocomplete/' . $match->fid . '/autocomplete',
+            'fid'       => $match->fid
+          ))), 'setting');
+      }
+      // If there is some results: need to include the css and js....
+      if ($result) {
+        drupal_add_css(drupal_get_path('module', 'search_autocomplete') . '/css/jquery.autocomplete.css');
+        drupal_add_js(drupal_get_path('module', 'search_autocomplete') . '/js/jquery.autocomplete.js');
+      }
+    }
+  }
+} // search_autocomplete_init()
