@@ -29,30 +29,30 @@ function search_autocomplete_autocomplete($string = '') {
   static $max_sug = 0;
   
   
-  $fid    = arg(1);                                     // get the form calling
-  $query  = search_parse_query($string);                // Allow Drupal to parse the search query.
-  $word   = $query[1][0];                               // get the first word entered in the search box
+  $fid    = arg(1);                                           // get the form calling
+  $query  = search_parse_query($string);                      // Allow Drupal to parse the search query.
+  $word   = $query[1][0];                                     // get the first word entered in the search box
   
   
   $result = db_fetch_array(db_query('SELECT min_char FROM {search_autocomplete_forms} f WHERE f.fid = %d', $fid));
-  if (drupal_strlen($word) < $result['min_char']) {    // Check if there if enough letter to start autocompletion.
-    drupal_json($matches);                              // no matches, return it empty
-    return;                                             // if there is not enough letters, stop here
+  if (drupal_strlen($word) < $result['min_char']) {           // Check if there if enough letter to start autocompletion.
+    drupal_json($matches);                                    // no matches, return it empty
+    return;                                                   // if there is not enough letters, stop here
   }
 
   // get every suggestion types associated with the form being autocompleted
   $results = db_query('SELECT * FROM {search_autocomplete_suggestions} s WHERE s.sug_fid = %d AND s.sug_enabled = 1', $fid);
   
-  while ($item = db_fetch_array($results)) {            // while there is suggestion types to analyse:
+  while ($item = db_fetch_array($results)) {                            // while there is suggestion types to analyse:
     if ($query !== NULL) {
-      $prefix  = $item['sug_prefix'];                     // get the prefix for this suggestion type
-      $query   = sprintf($item['sug_query'], $word);      // get the SQL query for this suggestion type
-      $suggestions  = db_query($query);                   // get all the suggestions of this suggestion type
+      $prefix  = $item['sug_prefix'];                                   // get the prefix for this suggestion type
+      $query   = str_replace('#', "LOWER('%s')", $item['sug_query']);   // get the SQL query for this suggestion type
+      $suggestions  = db_query($query, '%' . $word . '%');              // get all the suggestions of this suggestion type
       while ($obj = db_fetch_object($suggestions)) {
         $sug_elem                 = array_shift(array_values(get_object_vars($obj)));
         $sug                      = html_entity_decode(check_plain($sug_elem), ENT_QUOTES);
         $sug_pref                 = trim($prefix) . ' ' . $sug;
-        $matches[trim($sug_pref)] = trim($sug);                // add the suggestion to be returned
+        $matches[trim($sug_pref)] = trim($sug);               // add the suggestion to be returned
         
         $sug = html_entity_decode(check_plain($obj->title), ENT_QUOTES);
     $pref_sug = trim($prefix) . ' ' . $sug;
@@ -69,6 +69,7 @@ function search_autocomplete_autocomplete($string = '') {
  * add autocomplete.js on everypage
  */
 function search_autocomplete_init() {
+  global $base_url;
   
   // checkout if user have authorization to access the autocompleted form
   if (user_access('use Search Autocomplete')) {

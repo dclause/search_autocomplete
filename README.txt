@@ -1,6 +1,6 @@
 
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*
-*            Welcome to Search Autocomplete v6.x-2.0 !
+*            Welcome to Search Autocomplete v6.x-2.2 !
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*
 
  ***
@@ -37,6 +37,7 @@ or equivalent folder.
 
 From 1.x to 2.0 => Run the update script. Make sure to run the udpate functions.
 From 2.0 to 2.1 => Just flush the cache.
+From 2.1 to 2.2 => Run the update script.
 
 If you're having trouble installing this module, please ensure that your tar 
 program is not flattening the directory tree, truncating filenames or losing 
