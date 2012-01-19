@@ -185,7 +185,10 @@ function search_autocomplete_form_configure_submit($form, &$form_state) {
     ->execute();
   // -> update each suggestions
   foreach ($form_state['input']['search_autocomplete_what'] as $key => $item) {
-    drupal_write_record('search_autocomplete_suggestions', $values['search_autocomplete_what'][$key], 'sid');
+    $values['search_autocomplete_what'][$key]['sug_fid'] = $values['fid'];
+    drupal_write_record('search_autocomplete_suggestions', 
+      $values['search_autocomplete_what'][$key], 
+      array('sid','sug_fid') );
   }
   // ###
   // UPDATE CHILD LIST BUT NOT THE ADVANCED OPTIONS
@@ -202,7 +205,10 @@ function search_autocomplete_form_configure_submit($form, &$form_state) {
       ->execute();  
     // -> update each suggestions
     foreach ($form_state['input']['search_autocomplete_what'] as $key => $item) {
-      drupal_write_record('search_autocomplete_suggestions', $values['search_autocomplete_what'][$key], 'sid');
+      $values['search_autocomplete_what'][$key]['sug_fid'] = $fid;
+      drupal_write_record('search_autocomplete_suggestions', 
+        $values['search_autocomplete_what'][$key], 
+        array('sid','sug_fid') );
     }
   }
   // ###

@@ -22,7 +22,7 @@
         matchContains: true,
         minChars: eval(obj + '.minChars'),
         selectFirst: false,
-        max: eval(obj + '.max_sug'),
+        max: eval(obj + '.max_sug')
       }).result(function () {
         $(this).get(0).form.submit();
       }).focus(); 

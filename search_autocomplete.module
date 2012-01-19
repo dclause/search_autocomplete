@@ -21,6 +21,8 @@ include_once('search_autocomplete.admin.inc');
  * @param   string    the characters entered in the search boxs
  */
 function search_autocomplete_autocomplete($string = '') {
+  global $language;
+
   $matches        = array();
   $word_items     = array(); 
   $node_items     = array(); 
@@ -44,17 +46,22 @@ function search_autocomplete_autocomplete($string = '') {
   // get every suggestion types associated with the form being autocompleted
   $result = db_query('SELECT * FROM {search_autocomplete_suggestions} s WHERE s.sug_fid = :fid AND s.sug_enabled = :sug_enabled', array(':fid' => $fid, 'sug_enabled' => 1));
   foreach ($result as $item) {                            // while there is suggestion types to analyse:
-    //if ($query != NULL) {
-      $prefix  = $item->sug_prefix;                       // get the prefix for this suggestion type
-      $query   = sprintf($item->sug_query, $word);        // get the SQL query for this suggestion type
-      $result  = db_query($query);                        // get all the suggestions of this suggestion type
+
+      $query    = $item->sug_query;
+      $prefix   = t($item->sug_prefix);                    // get the prefix for this suggestion type
+      $params   = array(':like_word' => '%'.$word.'%');
+      if (strpos($query,':curr_lang')!== false) {
+        $params[':curr_lang'] = $language->language;
+      }
+
+      $result = db_query($query,$params);
+
       foreach ($result as $obj) {
         $sug_elem                   = array_shift(array_values(get_object_vars($obj)));
         $sug                        = html_entity_decode(check_plain($sug_elem), ENT_QUOTES);
         $sug_index                  = trim($prefix) . ' ' . $sug;
         $matches[trim($sug_index)]  = trim($sug);         // add the suggestion to be returned
       }
-    //}
   }
   drupal_json_output($matches);                           // Return matches.
 }  // search_autocomplete_autocomplete()

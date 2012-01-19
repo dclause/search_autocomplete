@@ -88,7 +88,7 @@ function search_autocomplete_suggestion_configure($form, &$form_state, $sid = -1
     '#maxlength'      => 255,
     '#required'       => FALSE,
   );
-  $descr =  t('The query to perform to retrieve suggestions. If you are not sure what to do, please look at examples in <a href="http://projects.axiomcafe.fr/search-autocomplete">the documentation</a> and/or ask for help');
+  $descr =  t('The query to perform to retrieve suggestions.') . '<br />' . t('You can use the placeholders :like_word for the input sequence and :curr_lang for the current language.') . '<br />' .t('If you are not sure what to do, please look at examples in <a href="http://projects.axiomcafe.fr/search-autocomplete">the documentation</a> and/or ask for help');
   $form['query'] = array(
     '#title'          => t('Query performed to get suggestion'),
     '#description'    => $descr,

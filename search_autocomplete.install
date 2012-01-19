@@ -209,7 +209,7 @@ function search_autocomplete_install() {
       'sug_name'          => "node_title",
       'sug_dependencies'  => "",
       'sug_weight'        => 1,
-      'sug_query'         => "SELECT n.title FROM {node} n WHERE n.status = 1 AND LOWER(n.title) LIKE LOWER('%%%s%%')"
+      'sug_query'         => "SELECT n.title FROM {node} n WHERE n.status = 1 AND LOWER(n.title) LIKE LOWER(:like_word)"
     )); 
     // values for username default form
     $insert->values(array(
@@ -221,7 +221,7 @@ function search_autocomplete_install() {
       'sug_name'          => "username",
       'sug_dependencies'  => "",
       'sug_weight'        => 2,
-      'sug_query'         => "SELECT u.name FROM {users} u WHERE u.status = 1 AND LOWER(u.name) LIKE LOWER('%%%s%%')"
+      'sug_query'         => "SELECT u.name FROM {users} u WHERE u.status = 1 AND LOWER(u.name) LIKE LOWER(:like_word)"
     ));
     // values for taxonomies default form
     $insert->values(array(
@@ -233,7 +233,7 @@ function search_autocomplete_install() {
       'sug_name'          => "taxo_title",
       'sug_dependencies'  => "taxonomy",
       'sug_weight'        => 3,
-      'sug_query'         => "SELECT t.name FROM {taxonomy_term_data} t WHERE LOWER(t.name) LIKE LOWER('%%%s%%')"
+      'sug_query'         => "SELECT t.name FROM {taxonomy_term_data} t WHERE LOWER(t.name) LIKE LOWER(:like_word)"
     )); 
     // values for comment title default form
     $insert->values(array(
@@ -245,7 +245,7 @@ function search_autocomplete_install() {
       'sug_name'          => "comment_title",
       'sug_dependencies'  => "comment",
       'sug_weight'        => 4,
-      'sug_query'         => "SELECT c.subject FROM {comment} c WHERE c.subject LIKE LOWER('%%%s%%')"
+      'sug_query'         => "SELECT c.subject FROM {comment} c WHERE c.subject LIKE LOWER(:like_word)"
     ));
     // values for comment title default form
     $insert->values(array(
@@ -257,7 +257,7 @@ function search_autocomplete_install() {
       'sug_name'          => "word_title",
       'sug_dependencies'  => "search",
       'sug_weight'        => 5,
-      'sug_query'         => "SELECT DISTINCT s.word FROM {search_index} s, {node} n WHERE s.type = 'node' AND n.nid = s.sid AND n.status = 1 AND LOWER(s.word) LIKE LOWER('%%%s%%')"
+      'sug_query'         => "SELECT DISTINCT s.word FROM {search_index} s, {node} n WHERE s.type = 'node' AND n.nid = s.sid AND n.status = 1 AND LOWER(s.word) LIKE LOWER(:like_word)"
     ));
     $insert->execute();
   }
@@ -268,21 +268,19 @@ function search_autocomplete_install() {
 
 // -----------------------------------------------------------------------------------------------
 /**
- * Implementation of hook_update_N().
- * Get ready from version 1.x to 2.x
+ * Get ready for 2.x
  */
-function search_autocomplete_update_6200() {
+function search_autocomplete_update_7200() {
   // if tables does'not already exists: run install
   $ret = array();
   $ok_result = TRUE;  // so far so good
   
-  $results = drupal_install_schema('search_autocomplete');        //Install the database specified in  'function search_autocomplete_schema'
-  foreach ($results as $result) {                                 // Check eventual errors that could have occured
-    if (!$result->success)
-      drupal_set_message(st('An error has occured during table creation, please retry. If the problem persist please post an issue and report the code: #err_code:400 @query', $result['query']), 'error');
-  }
-  
-  if (db_table_exists('search_autocomplete_forms') && db_table_exists('search_autocomplete_suggestions')) {
+  if (!(db_table_exists('search_autocomplete_forms') && db_table_exists('search_autocomplete_suggestions'))) {
+    $results = drupal_install_schema('search_autocomplete');        //Install the database specified in  'function search_autocomplete_schema'
+    foreach ($results as $result) {                                 // Check eventual errors that could have occured
+      if (!$result->success)
+        drupal_set_message(st('An error has occured during table creation, please retry. If the problem persist please post an issue and report the code: #err_code:400 @query', $result['query']), 'error');
+    }
     search_autocomplete_install();
   }
 
@@ -296,5 +294,18 @@ function search_autocomplete_update_6200() {
   system_rebuild_module_data();
   system_rebuild_theme_data();
 
+  return $ret;
+}
+
+/**
+ * Get ready for version 2.0 to 2.1
+ */
+function search_autocomplete_update_7201() {
+  $ret = array();
+  $results = db_query('SELECT sug_query FROM {search_autocomplete_suggestions}');
+  foreach ($results as $item) {
+    $new_query = str_replace("LIKE LOWER('%%%s%%')", "LIKE(:like_word)", $item->sug_query);
+    db_query('UPDATE {search_autocomplete_suggestions} SET sug_query = :sug_query WHERE sug_query = :new_query', array(':sug_query' => $new_query, ':new_query' => $item->sug_query));
+  }
   return $ret;
 }
