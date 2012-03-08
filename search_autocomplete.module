@@ -21,6 +21,7 @@ include_once('search_autocomplete.admin.inc');
  * @param   string    the characters entered in the search boxs
  */
 function search_autocomplete_autocomplete($string = '') {
+  global $user;
   global $language;
 
   $matches        = array();
@@ -44,18 +45,21 @@ function search_autocomplete_autocomplete($string = '') {
   }
   
   // get every suggestion types associated with the form being autocompleted
-  $result = db_query('SELECT * FROM {search_autocomplete_suggestions} s WHERE s.sug_fid = :fid AND s.sug_enabled = :sug_enabled', array(':fid' => $fid, 'sug_enabled' => 1));
+  $result = db_query('SELECT * FROM {search_autocomplete_suggestions} s WHERE s.sug_fid = :fid AND s.sug_enabled = :sug_enabled ORDER BY s.sug_weight ASC', array(':fid' => $fid, 'sug_enabled' => 1));
   foreach ($result as $item) {                            // while there is suggestion types to analyse:
 
       $query    = $item->sug_query;
       $prefix   = t($item->sug_prefix);                    // get the prefix for this suggestion type
       $params   = array(':like_word' => '%'.$word.'%');
-      if (strpos($query,':curr_lang')!== false) {
+      if (strpos($query, ':curr_lang')!== false) {
         $params[':curr_lang'] = $language->language;
       }
-
+      if (strpos($query, ':roles') !== false) {
+        $params[':roles'] = implode(',', array_keys($user->roles));
+      }
+      
       $result = db_query($query,$params);
-
+      
       foreach ($result as $obj) {
         $sug_elem                   = array_shift(array_values(get_object_vars($obj)));
         $sug                        = html_entity_decode(check_plain($sug_elem), ENT_QUOTES);
@@ -72,6 +76,7 @@ function search_autocomplete_autocomplete($string = '') {
  */
 function search_autocomplete_init() {
   global $base_url;
+  global $language;
   
   // checkout if user have authorization to access the autocompleted form
   if (user_access('use Search Autocomplete')) {
@@ -85,6 +90,12 @@ function search_autocomplete_init() {
       // build the setting array to transfert to JS
       foreach ($result as $match) {
         $form_id = 'form' . $match->fid;
+        $params   = array(':lang_code'    => $language->language,
+                          ':lang_prefix'  => $language->prefix,
+                          ':lang_domain'  => $language->domain
+                          );
+        search_autocomplete_replaceArguments($match->selector, $params);
+        
         drupal_add_js(array('search_autocomplete' => array(
           $form_id      => array(
             'selector'  => $match->selector,
@@ -102,3 +113,17 @@ function search_autocomplete_init() {
     }
   }
 } // search_autocomplete_init()
+
+/**
+ * HELP FUNCTION: replace placeholders in the input string
+ * @param $input  the string to be replaced
+ * @param $args   the array of placeholders and values
+ */
+ function search_autocomplete_replaceArguments(&$input, &$args) {
+  $modified = FALSE;
+  foreach ($args as $key => $data) {
+    $input = preg_replace('#' . $key . '#', $data, $input);
+    $modified = TRUE;
+  }
+  return $modified;
+}

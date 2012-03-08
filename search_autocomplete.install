@@ -150,9 +150,11 @@ function search_autocomplete_schema() {
  */
 function search_autocomplete_install() {
   
-  $limit      = variable_get('search_autocomplete_limit', 15);
-  $trigger    = variable_get('search_autocomplete_trigger', 3);
-  $enabled    = 1;
+  $limit            = variable_get('search_autocomplete_limit', 15);
+  $trigger          = variable_get('search_autocomplete_trigger', 3);
+  $enabled          = 1;
+  $enable_taxo      = module_exists("taxonomy") ? 1 : 0;
+  $enable_comment   = module_exists("comment") ? 1 : 0;
 
   // ----------------
   // declare insertion statement
@@ -227,7 +229,7 @@ function search_autocomplete_install() {
     $insert->values(array(
       'sid'               => 3,
       'sug_fid'           => $form,
-      'sug_enabled'       => 1,
+      'sug_enabled'       => $enable_taxo,
       'sug_prefix'        => "taxo:",
       'sug_title'         => "Add taxonomies",
       'sug_name'          => "taxo_title",
@@ -239,7 +241,7 @@ function search_autocomplete_install() {
     $insert->values(array(
       'sid'               => 4,
       'sug_fid'           => $form,
-      'sug_enabled'       => 1,
+      'sug_enabled'       => $enable_comment,
       'sug_prefix'        => "comment:",
       'sug_title'         => "Add comment titles",
       'sug_name'          => "comment_title",
