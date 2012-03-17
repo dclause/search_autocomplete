@@ -44,21 +44,24 @@ function search_autocomplete_autocomplete($string = '') {
   $results = db_query('SELECT * FROM {search_autocomplete_suggestions} s WHERE s.sug_fid = %d AND s.sug_enabled = 1', $fid);
   
   while ($item = db_fetch_array($results)) {                            // while there is suggestion types to analyse:
-    if ($query !== NULL) {
-      $prefix  = $item['sug_prefix'];                                   // get the prefix for this suggestion type
-      $query   = str_replace('#', "LOWER('%s')", $item['sug_query']);   // get the SQL query for this suggestion type
-      $suggestions  = db_query($query, '%' . $word . '%');              // get all the suggestions of this suggestion type
-      while ($obj = db_fetch_object($suggestions)) {
-        $sug_elem                 = array_shift(array_values(get_object_vars($obj)));
-        $sug                      = html_entity_decode(check_plain($sug_elem), ENT_QUOTES);
-        $sug_pref                 = trim($prefix) . ' ' . $sug;
-        $matches[trim($sug_pref)] = trim($sug);               // add the suggestion to be returned
-        
-        $sug = html_entity_decode(check_plain($obj->title), ENT_QUOTES);
-    $pref_sug = trim($prefix) . ' ' . $sug;
-    $items[trim($pref_sug)] = trim($sug);
-        
-      }
+
+    $query   = $item['sug_query'];                    // get the SQL query for this suggestion type
+    $prefix  = t($item['sug_prefix']);                // get the prefix for this suggestion type                          
+    $params   = array(':like_word' => "'%s'",
+                      ':curr_lang' => $language->language);
+    
+    $query = strtr($query, $params);
+    $suggestions = db_query($query, '%' . $word . '%');
+    
+    while ($obj = db_fetch_object($suggestions)) {
+      $sug_elem                 = array_shift(array_values(get_object_vars($obj)));
+      $sug                      = html_entity_decode(check_plain($sug_elem), ENT_QUOTES);
+      $sug_pref                 = trim($prefix) . ' ' . $sug;
+      $matches[trim($sug_pref)] = trim($sug);               // add the suggestion to be returned
+
+      $sug = html_entity_decode(check_plain($obj->title), ENT_QUOTES);
+      $pref_sug = trim($prefix) . ' ' . $sug;
+      $items[trim($pref_sug)] = trim($sug);
     }
   }
   drupal_json($matches);                                // Return matches.
@@ -70,6 +73,7 @@ function search_autocomplete_autocomplete($string = '') {
  */
 function search_autocomplete_init() {
   global $base_url;
+  global $language;
   
   // checkout if user have authorization to access the autocompleted form
   if (user_access('use Search Autocomplete')) {
@@ -83,6 +87,12 @@ function search_autocomplete_init() {
       // build the setting array to transfert to JS
       while ($match = db_fetch_array($results)) {      
         $form_id = 'form' . $match['fid'];
+        $params   = array(':lang_code'    => $language->language,
+                          ':lang_prefix'  => $language->prefix,
+                          ':lang_domain'  => $language->domain
+                          );   
+        search_autocomplete_replaceArguments($match[selector], $params);
+
         drupal_add_js(array('search_autocomplete' => array(
           $form_id => array(
             'selector' => $match['selector'],
@@ -100,3 +110,17 @@ function search_autocomplete_init() {
     }
   }
 } // search_autocomplete_init()
+
+/**
++ * HELP FUNCTION: replace placeholders in the input string
++ * @param $input  the string to be replaced
++ * @param $args   the array of placeholders and values
++ */
+function search_autocomplete_replaceArguments(&$input, &$args) {
+  $modified = FALSE;
+  foreach ($args as $key => $data) {
+    $input = preg_replace('#' . $key . '#', $data, $input);
+    $modified = TRUE;
+  }
+  return $modified;
+}

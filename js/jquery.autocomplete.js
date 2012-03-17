@@ -11,26 +11,22 @@
  * See changelog for details.
  *
  */
-$(document).ready(function() {
-	
-	$.each(Drupal.settings.search_autocomplete, function(key, value) { 
-		var obj = 'Drupal.settings.search_autocomplete.' + key;
-		$(eval(obj + '.selector') + ' input:first').autocomplete(
-			eval(obj + '.url'), {
-			//"http://sited6.axiomcafe.fr/search_autocomplete/1/autocomplete/l", {
-			dataType: "json",
-			cacheLength : 20,
-			matchContains: true,
-			minChars: eval(obj + '.minChars'),
-			selectFirst: false,
-			max: eval(obj + '.max_sug'),
-		}).result(function () {
-      $(this).get(0).form.submit();
-    }).focus(); 
-	});
-});
-
-;(function($) {
+Drupal.behaviors.search_autocomplete = function(context) {
+	$.each(Drupal.settings.search_autocomplete, function(key, value) {
+		$(Drupal.settings.search_autocomplete[key].selector + ' input:first').filter(':not(.search_autocomplete_processed)').addClass('search_autocomplete_processed').autocomplete(
+		   Drupal.settings.search_autocomplete[key].url, {
+			   dataType: "json",
+			   cacheLength : 20,
+			   matchContains: true,
+			   minChars: Drupal.settings.search_autocomplete[key].minChars,
+			   selectFirst: false,
+			   max: Drupal.settings.search_autocomplete[key].max_sug
+		   }
+		 ).result(function () {
+      $(this).submit();
+    });
+  });
+};
 	
 $.fn.extend({
 	autocomplete: function(urlOrData, options) {
@@ -843,5 +839,3 @@ $.fn.selection = function(start, end) {
 		}
 	}
 };
-
-})(jQuery);

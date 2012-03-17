@@ -162,6 +162,8 @@ function search_autocomplete_install() {
   $limit      = variable_get('search_autocomplete_limit', 15);
   $trigger    = variable_get('search_autocomplete_trigger', 3);
   $enabled    = 1;
+  $enable_taxo      = module_exists("taxonomy") ? 1 : 0;
+  $enable_comment   = module_exists("comment") ? 1 : 0;
 
   // ----------------
   // create possible default forms
@@ -189,11 +191,11 @@ function search_autocomplete_install() {
   $ok_result2 = TRUE;
   for ($form=0; $form <= 4; $form++) {
     $variables = array( 
-      1, $form, 1, "node:", "Add node titles", "node_title", "", 1, "SELECT n.title FROM {node} n WHERE n.status = 1 AND LOWER(n.title) LIKE #",
-      2, $form, 1, "user:", "Add usernames", "username", "", 2, "SELECT u.name FROM {users} u WHERE u.status = 1 AND LOWER(u.name) LIKE #",
-      3, $form, 1, "vocab:", "Add taxonomies", "taxo_title", "taxonomy", 3, "SELECT t.name FROM {term_data} t WHERE LOWER(t.name) LIKE #",
-      4, $form, 1, "comment:", "Add node comment titles", "comment_title", "comment", 4, "SELECT c.subject FROM {comments} c WHERE c.subject LIKE #",
-      5, $form, 1, "", "Add all possible words (any word appearing on your website)", "word_title", "search", 5, "SELECT DISTINCT s.word FROM {search_index} s, {node} n WHERE s.type = 'node' AND n.nid = s.sid AND n.status = 1 AND LOWER(s.word) LIKE #",
+      1, $form, 1, "node:", "Add node titles", "node_title", "", 1, "SELECT n.title FROM {node} n WHERE n.status = 1 AND LOWER(n.title) LIKE LOWER(:like_word)",
+      2, $form, 1, "user:", "Add usernames", "username", "", 2, "SELECT u.name FROM {users} u WHERE u.status = 1 AND LOWER(u.name) LIKE LOWER(:like_word)",
+      3, $form, $enable_taxo, "vocab:", "Add taxonomies", "taxo_title", "taxonomy", 3, "SELECT t.name FROM {term_data} t WHERE LOWER(t.name) LIKE LOWER(:like_word)",
+      4, $form, $enable_comment, "comment:", "Add node comment titles", "comment_title", "comment", 4, "SELECT c.subject FROM {comments} c WHERE c.subject LIKE LOWER(:like_word)",
+      5, $form, 1, "", "Add all possible words (any word appearing on your website)", "word_title", "search", 5, "SELECT DISTINCT s.word FROM {search_index} s, {node} n WHERE s.type = 'node' AND n.nid = s.sid AND n.status = 1 AND LOWER(s.word) LIKE LOWER(:like_word)",
     );
     $ok_result2 &= db_query($sql, $variables);
   }
@@ -277,11 +279,11 @@ function search_autocomplete_update_6201() {
         'default' => '',
       )
     );
-    $ok_result &= db_query('UPDATE {search_autocomplete_suggestions} SET sug_query = "%s" WHERE sid = 1', "SELECT n.title FROM {node} n WHERE n.status = 1 AND LOWER(n.title) LIKE #");
-    $ok_result &= db_query('UPDATE {search_autocomplete_suggestions} SET sug_query = "%s" WHERE sid = 2', "SELECT u.name FROM {users} u WHERE u.status = 1 AND LOWER(u.name) LIKE #");
-    $ok_result &= db_query('UPDATE {search_autocomplete_suggestions} SET sug_query = "%s" WHERE sid = 3', "SELECT t.name FROM {term_data} t WHERE LOWER(t.name) LIKE #");
-    $ok_result &= db_query('UPDATE {search_autocomplete_suggestions} SET sug_query = "%s" WHERE sid = 4', "SELECT c.subject FROM {comments} c WHERE c.subject LIKE #");
-    $ok_result &= db_query('UPDATE {search_autocomplete_suggestions} SET sug_query = "%s" WHERE sid = 5', "SELECT DISTINCT s.word FROM {search_index} s, {node} n WHERE s.type = 'node' AND n.nid = s.sid AND n.status = 1 AND LOWER(s.word) LIKE #");
+    $ok_result &= db_query('UPDATE {search_autocomplete_suggestions} SET sug_query = "%s" WHERE sid = 1', "SELECT n.title FROM {node} n WHERE n.status = 1 AND LOWER(n.title) LIKE LOWER(:like_word)");
+    $ok_result &= db_query('UPDATE {search_autocomplete_suggestions} SET sug_query = "%s" WHERE sid = 2', "SELECT u.name FROM {users} u WHERE u.status = 1 AND LOWER(u.name) LIKE LOWER(:like_word)");
+    $ok_result &= db_query('UPDATE {search_autocomplete_suggestions} SET sug_query = "%s" WHERE sid = 3', "SELECT t.name FROM {term_data} t WHERE LOWER(t.name) LIKE LOWER(:like_word)");
+    $ok_result &= db_query('UPDATE {search_autocomplete_suggestions} SET sug_query = "%s" WHERE sid = 4', "SELECT c.subject FROM {comments} c WHERE c.subject LIKE LOWER(:like_word)");
+    $ok_result &= db_query('UPDATE {search_autocomplete_suggestions} SET sug_query = "%s" WHERE sid = 5', "SELECT DISTINCT s.word FROM {search_index} s, {node} n WHERE s.type = 'node' AND n.nid = s.sid AND n.status = 1 AND LOWER(s.word) LIKE LOWER(:like_word)");
 
     // Add the default (zero fid) suggestions
     $sql = 'INSERT INTO {search_autocomplete_suggestions} (sid, sug_fid, sug_enabled, sug_prefix, sug_title, sug_name, sug_dependencies, sug_weight, sug_query) VALUES '.
@@ -292,11 +294,11 @@ function search_autocomplete_update_6201() {
             '(%d, %d, %d, "%s", "%s", "%s", "%s", %d, "%s")';
 
     $variables = array( 
-      1, 0, 1, "node:", "Add node titles", "node_title", "", 1, "SELECT n.title FROM {node} n WHERE n.status = 1 AND LOWER(n.title) LIKE #",
-      2, 0, 1, "user:", "Add node usernames", "username", "", 2, "SELECT u.name FROM {users} u WHERE u.status = 1 AND LOWER(u.name) LIKE #",
-      3, 0, 1, "vocab:", "Add taxonomies", "taxo_title", "taxonomy", 3, "SELECT t.name FROM {term_data} t WHERE LOWER(t.name) LIKE #",
-      4, 0, 1, "comment:", "Add node comment titles", "comment_title", "comment", 4, "SELECT c.subject FROM {comments} c WHERE c.subject LIKE #",
-      5, 0, 1, "", "Add all possible words (any word appearing on your website)", "word_title", "search", 5, "SELECT DISTINCT s.word FROM {search_index} s, {node} n WHERE s.type = 'node' AND n.nid = s.sid AND n.status = 1 AND LOWER(s.word) LIKE #",
+      1, 0, 1, "node:", "Add node titles", "node_title", "", 1, "SELECT n.title FROM {node} n WHERE n.status = 1 AND LOWER(n.title) LIKE LOWER(:like_word)",
+      2, 0, 1, "user:", "Add node usernames", "username", "", 2, "SELECT u.name FROM {users} u WHERE u.status = 1 AND LOWER(u.name) LIKE LOWER(:like_word)",
+      3, 0, 1, "vocab:", "Add taxonomies", "taxo_title", "taxonomy", 3, "SELECT t.name FROM {term_data} t WHERE LOWER(t.name) LIKE LOWER(:like_word)",
+      4, 0, 1, "comment:", "Add node comment titles", "comment_title", "comment", 4, "SELECT c.subject FROM {comments} c WHERE c.subject LIKE LOWER(:like_word)",
+      5, 0, 1, "", "Add all possible words (any word appearing on your website)", "word_title", "search", 5, "SELECT DISTINCT s.word FROM {search_index} s, {node} n WHERE s.type = 'node' AND n.nid = s.sid AND n.status = 1 AND LOWER(s.word) LIKE LOWER(:like_word)",
     );
     $ok_result &= db_query($sql, $variables);
   }
@@ -319,6 +321,19 @@ function search_autocomplete_update_6202() {
   $results = db_query('SELECT sug_query FROM {search_autocomplete_suggestions}');
   while ($item = db_fetch_array($results)) {
     $new_query = str_replace("LIKE LOWER('%%%s%%')", "LIKE #", $item['sug_query']);
+    db_query('UPDATE {search_autocomplete_suggestions} SET sug_query = "%s" WHERE sug_query = "%s"', $new_query, $item['sug_query']);
+  }
+  return $ret;
+}
+
+/**
+ * Get ready for version 2.2 to 2.3
+ */
+function search_autocomplete_update_6203() {
+  $ret = array();
+  $results = db_query('SELECT sug_query FROM {search_autocomplete_suggestions}');
+  while ($item = db_fetch_array($results)) {
+    $new_query = str_replace("LIKE #", "LIKE LOWER(:like_word)", $item['sug_query']);
     db_query('UPDATE {search_autocomplete_suggestions} SET sug_query = "%s" WHERE sug_query = "%s"', $new_query, $item['sug_query']);
   }
   return $ret;
