@@ -268,6 +268,27 @@ function search_autocomplete_install() {
 
 } // function search_autocomplete_install
 
+
+function search_autocomplete_update_7000() {
+  $t = get_t();
+  // In Drupal 6 the permissions were wrapped in t(), but in Drupal 7 they are
+  // not. So we want to make sure the database is storing the untranslated
+  // permission or we could run into issues on upgraded Drupal 7 sites.
+  db_update('role_permission')
+    ->fields(array(
+      'permission' => 'administer Search Autocomplete',
+    ))
+    ->condition('permission', $t('administer Search Autocomplete'))
+    ->execute();
+
+  db_update('role_permission')
+    ->fields(array(
+      'permission' => 'use Search Autocomplete',
+    ))
+    ->condition('permission', $t('use Search Autocomplete'))
+    ->execute();
+}
+
 // -----------------------------------------------------------------------------------------------
 /**
  * Get ready for 2.x
@@ -309,5 +330,15 @@ function search_autocomplete_update_7201() {
     $new_query = str_replace("LIKE LOWER('%%%s%%')", "LIKE(:like_word)", $item->sug_query);
     db_query('UPDATE {search_autocomplete_suggestions} SET sug_query = :sug_query WHERE sug_query = :new_query', array(':sug_query' => $new_query, ':new_query' => $item->sug_query));
   }
+  return $ret;
+}
+
+
+/**
+ * Get ready for version 2.3 to 2.4
+ */
+function search_autocomplete_update_7204() {
+  $ret = array();
+  cache_clear_all();
   return $ret;
 }

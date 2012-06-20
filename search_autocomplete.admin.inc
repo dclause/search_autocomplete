@@ -59,13 +59,12 @@ function search_autocomplete_menu() {
     'description'       => 'Choose settings and suggestion items for autocompletion in input forms.',    
     'page callback'     => 'drupal_get_form',
     'page arguments'    => array('search_autocomplete_treelist_form'),
-    'access arguments'  => array(t('administer Search Autocomplete')),
-    'access callback'   => TRUE,
+    'access arguments'  => array('administer Search Autocomplete'),
     'file'              => 'search_autocomplete.form.treelist.inc',
   );
   $items['admin/config/search/search_autocomplete/treelist'] = array(
     'title'             => 'Search Autocomplete',
-    'access arguments'  => array(t('administer Search Autocomplete')),
+    'access arguments'  => array('administer Search Autocomplete'),
     'type'              => MENU_DEFAULT_LOCAL_TASK,
     'weight'            => -1,
   );
@@ -74,7 +73,7 @@ function search_autocomplete_menu() {
     'title'             => 'Add a form',
     'page callback'     => 'drupal_get_form',
     'page arguments'    => array('search_autocomplete_form_add'),
-    'access arguments'  => array(t('administer Search Autocomplete')),
+    'access arguments'  => array('administer Search Autocomplete'),
     'file'              => 'search_autocomplete.form.add.inc',
     'type'              => MENU_LOCAL_TASK,
   );
@@ -83,7 +82,7 @@ function search_autocomplete_menu() {
     'title'             => 'Search Autocomplete - Configuration',
     'page callback'     => 'drupal_get_form',
     'page arguments'    => array('search_autocomplete_form_configure'),
-    'access arguments'  => array(t('administer Search Autocomplete')),
+    'access arguments'  => array('administer Search Autocomplete'),
     'file'              => 'search_autocomplete.form.configure.inc',
   );
   // create an admin setting page: delete a form
@@ -91,7 +90,7 @@ function search_autocomplete_menu() {
     'title'             => 'Search Autocomplete - Delete',
     'page callback'     => 'drupal_get_form',
     'page arguments'    => array('search_autocomplete_form_delete', 4, 6),
-    'access arguments'  => array(t('administer Search Autocomplete')),
+    'access arguments'  => array('administer Search Autocomplete'),
     'file'              => 'search_autocomplete.form.delete.inc',
   );
   // create an admin setting page: add a new suggestion
@@ -99,7 +98,7 @@ function search_autocomplete_menu() {
     'title'             => 'Add a suggestion type',
     'page callback'     => 'drupal_get_form',
     'page arguments'    => array('search_autocomplete_suggestion_new'),
-    'access arguments'  => array(t('administer Search Autocomplete')),
+    'access arguments'  => array('administer Search Autocomplete'),
     'file'              => 'search_autocomplete.suggestion.configure.inc',
     'type'              => MENU_LOCAL_TASK,
   );
@@ -108,7 +107,7 @@ function search_autocomplete_menu() {
     'title'             => 'Search Autocomplete - Configuration',
     'page callback'     => 'drupal_get_form',
     'page arguments'    => array('search_autocomplete_suggestion_configure'),
-    'access arguments'  => array(t('administer Search Autocomplete')),
+    'access arguments'  => array('administer Search Autocomplete'),
     'file'              => 'search_autocomplete.suggestion.configure.inc',
   );
   // create the admin setting page: delete a suggestion
@@ -116,7 +115,7 @@ function search_autocomplete_menu() {
     'title'             => 'Search Autocomplete - Delete',
     'page callback'     => 'drupal_get_form',
     'page arguments'    => array('search_autocomplete_suggestion_delete'),
-    'access arguments'  => array(t('administer Search Autocomplete')),
+    'access arguments'  => array('administer Search Autocomplete'),
     'file'              => 'search_autocomplete.suggestion.delete.inc',
   );
   // create a callback page for JSON suggestions
