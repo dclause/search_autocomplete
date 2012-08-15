@@ -40,10 +40,7 @@ function search_autocomplete_theme($existing, $type, $theme, $path) {
   return array(
     'search_autocomplete_treelist_form' => array(                    // register theme function for draggable treelist search forms
       'render element' => 'form',
-    ),
-    'search_autocomplete_form_configuration_fieldset' => array(      // register theme function for suggestions list
-      'render element' => 'form',
-    ),
+    )
   );
 } // function search_autocomplete_theme($existing, $type, $theme, $path)
 
@@ -63,12 +60,12 @@ function search_autocomplete_menu() {
     'access callback'   => TRUE,
     'file'              => 'search_autocomplete.form.treelist.inc',
   );
-  $items['admin/config/search/search_autocomplete/treelist'] = array(
+  /*$items['admin/config/search/search_autocomplete/treelist'] = array(
     'title'             => 'Search Autocomplete',
     'access arguments'  => array(t('administer Search Autocomplete')),
     'type'              => MENU_DEFAULT_LOCAL_TASK,
     'weight'            => -1,
-  );
+  );*/
   // create an admin setting page: add a new form
   $items['admin/config/search/search_autocomplete/add'] = array(
     'title'             => 'Add a form',
@@ -94,37 +91,6 @@ function search_autocomplete_menu() {
     'access arguments'  => array(t('administer Search Autocomplete')),
     'file'              => 'search_autocomplete.form.delete.inc',
   );
-  // create an admin setting page: add a new suggestion
-  $items['admin/config/search/search_autocomplete/new'] = array(
-    'title'             => 'Add a suggestion type',
-    'page callback'     => 'drupal_get_form',
-    'page arguments'    => array('search_autocomplete_suggestion_new'),
-    'access arguments'  => array(t('administer Search Autocomplete')),
-    'file'              => 'search_autocomplete.suggestion.configure.inc',
-    'type'              => MENU_LOCAL_TASK,
-  );
-  // create the admin setting page: configure a suggestion
-  $items['admin/config/search/search_autocomplete/suggestion/%/edit'] = array(
-    'title'             => 'Search Autocomplete - Configuration',
-    'page callback'     => 'drupal_get_form',
-    'page arguments'    => array('search_autocomplete_suggestion_configure'),
-    'access arguments'  => array(t('administer Search Autocomplete')),
-    'file'              => 'search_autocomplete.suggestion.configure.inc',
-  );
-  // create the admin setting page: delete a suggestion
-  $items['admin/config/search/search_autocomplete/suggestion/%/delete'] = array(
-    'title'             => 'Search Autocomplete - Delete',
-    'page callback'     => 'drupal_get_form',
-    'page arguments'    => array('search_autocomplete_suggestion_delete'),
-    'access arguments'  => array(t('administer Search Autocomplete')),
-    'file'              => 'search_autocomplete.suggestion.delete.inc',
-  );
-  // create a callback page for JSON suggestions
-    $items['search_autocomplete/%/autocomplete'] = array(
-    'page callback'     => 'search_autocomplete_autocomplete',
-    'access arguments'  => array('use Search Autocomplete'),
-    'type'              => MENU_CALLBACK,
-  );
   return $items;
 } // function search_autocomplete_menu()
 
@@ -141,7 +107,6 @@ function search_autocomplete_help($path, $arg) {
       $help  = '<div>' . t('Search Autocomplete helps you to enhance your search forms with autocompleted suggestions.') . '</div>';
       $help .= '<div>' . t('Use this form to activate the forms you want to autocomplete.') . '</div>';
       $help .= '<div>' . t('You may want to add new possible form to autocomplete. To do so, please use the tab <a href="search_autocomplete/add">Add a form</a>.') . '</div>';
-      $help .= '<div>' . t('You may also want to add a new possible suggestion. To do so, please use the tab <a href="search_autocomplete/new">Add a suggestion</a>.') . '</div>';
       break;
     case 'admin/config/search/search_autocomplete/add':
       $help  = '<div>' . t('This page allows you to add a new form to be autocompleted with the Search Autocomplete module.') . '</div>';
