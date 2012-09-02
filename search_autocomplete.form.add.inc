@@ -18,6 +18,7 @@
  * @return  A rendered form
  */
 function search_autocomplete_form_add() {
+
   $form = array();
   /* ------------------------------------------------------------------ */
   $form['title'] = array(

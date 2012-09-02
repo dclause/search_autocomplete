@@ -19,7 +19,7 @@
  */
 function search_autocomplete_treelist_form($form, &$form_state) {
   $base = "admin/config/search/search_autocomplete";  // base URL for this module configurations
-
+ 
   $data = _search_autocomplete_get_items();  // get all forms ordered as a tree;
   $form['my_items'] = array();
   $form['my_items']['#tree'] = TRUE;
