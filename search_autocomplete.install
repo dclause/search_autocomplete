@@ -178,6 +178,29 @@ function search_autocomplete_install() {
 } // function search_autocomplete_install
 
 /**
+ * Permission fix for update process from 6.x
+ */
+function search_autocomplete_update_7000() {
+  $t = get_t();
+  // In Drupal 6 the permissions were wrapped in t(), but in Drupal 7 they are
+  // not. So we want to make sure the database is storing the untranslated
+  // permission or we could run into issues on upgraded Drupal 7 sites.
+  db_update('role_permission')
+    ->fields(array(
+      'permission' => 'administer Search Autocomplete',
+    ))
+    ->condition('permission', $t('administer Search Autocomplete'))
+    ->execute();
+
+  db_update('role_permission')
+    ->fields(array(
+      'permission' => 'use Search Autocomplete',
+    ))
+    ->condition('permission', $t('use Search Autocomplete'))
+    ->execute();
+}
+
+/**
   * Get ready for Search Autocomplete 7.3-x
   */
 function search_autocomplete_update_7300(&$sandbox) {
@@ -221,6 +244,15 @@ function search_autocomplete_update_7301(&$sandbox) {
 
   // In case of an error, simply throw an exception with an error message.
   throw new DrupalUpdateException('Something went wrong. Please uninstall and install the module again.');
+  return $ret;
+}
+
+/**
+  * Get ready for Search Autocomplete 7.x-3.0-rc3
+  */
+function search_autocomplete_update_7302(&$sandbox) {
+  $ret = array();
+  cache_clear_all();
   return $ret;
 }
 

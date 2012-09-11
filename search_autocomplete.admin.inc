@@ -56,22 +56,15 @@ function search_autocomplete_menu() {
     'description'       => 'Choose settings and suggestion items for autocompletion in input forms.',    
     'page callback'     => 'drupal_get_form',
     'page arguments'    => array('search_autocomplete_treelist_form'),
-    'access arguments'  => array(t('administer Search Autocomplete')),
-    'access callback'   => TRUE,
+    'access arguments'  => array('administer Search Autocomplete'),
     'file'              => 'search_autocomplete.form.treelist.inc',
   );
-  /*$items['admin/config/search/search_autocomplete/treelist'] = array(
-    'title'             => 'Search Autocomplete',
-    'access arguments'  => array(t('administer Search Autocomplete')),
-    'type'              => MENU_DEFAULT_LOCAL_TASK,
-    'weight'            => -1,
-  );*/
   // create an admin setting page: add a new form
   $items['admin/config/search/search_autocomplete/add'] = array(
     'title'             => 'Add a form',
     'page callback'     => 'drupal_get_form',
     'page arguments'    => array('search_autocomplete_form_add'),
-    'access arguments'  => array(t('administer Search Autocomplete')),
+    'access arguments'  => array('administer Search Autocomplete'),
     'file'              => 'search_autocomplete.form.add.inc',
     'type'              => MENU_LOCAL_TASK,
   );
@@ -80,7 +73,7 @@ function search_autocomplete_menu() {
     'title'             => 'Search Autocomplete - Configuration',
     'page callback'     => 'drupal_get_form',
     'page arguments'    => array('search_autocomplete_form_configure'),
-    'access arguments'  => array(t('administer Search Autocomplete')),
+    'access arguments'  => array('administer Search Autocomplete'),
     'file'              => 'search_autocomplete.form.configure.inc',
   );
   // create an admin setting page: delete a form
@@ -88,7 +81,7 @@ function search_autocomplete_menu() {
     'title'             => 'Search Autocomplete - Delete',
     'page callback'     => 'drupal_get_form',
     'page arguments'    => array('search_autocomplete_form_delete', 4, 6),
-    'access arguments'  => array(t('administer Search Autocomplete')),
+    'access arguments'  => array('administer Search Autocomplete'),
     'file'              => 'search_autocomplete.form.delete.inc',
   );
   return $items;
