@@ -83,29 +83,6 @@ function search_autocomplete_form_add_submit($form, &$form_state) {
           ))
           ->execute();
 
-  // Connect default suggestions to this form
-  $result = db_select('search_autocomplete_suggestions', 's')
-    ->fields('s')
-    ->condition('sug_fid', 0)
-    ->execute()
-    ->fetchAllAssoc('sid');
-
-  foreach ($result as $match) {
-    db_insert('search_autocomplete_suggestions')
-      ->fields(array(
-        'sid'               => $match->sid,
-        'sug_fid'           => $fid,
-        'sug_enabled'       => $match->sug_enabled,
-        'sug_prefix'        => $match->sug_prefix,
-        'sug_title'         => $match->sug_title,
-        'sug_name'          => $match->sug_name,
-        'sug_dependencies'  => $match->sug_dependencies,
-        'sug_weight'        => $match->sug_weight,
-        'sug_query'         => $match->sug_query
-      ))
-      ->execute();
-  }
-
   // redirect to configuration page
   $form_state['redirect'] = 'admin/config/search/search_autocomplete/' . $fid . '/configure';
 
