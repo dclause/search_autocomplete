@@ -369,10 +369,7 @@ function _search_autocomplete_json_encode($rows, $bitmask = NULL) {
        $json = str_replace(array('\/'), array('/'), $json);
     }
   } else {
-    $json = json_encode($rows);
-    
-    print("look at json: " . $json);
-
+    $json = json_encode($rows); 
     $json = str_replace(array('\/'), array('/'), $json);
   }
   return $json;
