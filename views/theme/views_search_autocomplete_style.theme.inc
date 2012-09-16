@@ -41,7 +41,7 @@ function template_preprocess_views_search_autocomplete_style(&$vars) {
         $link   = $base_root . $matches[2];
         $value  = $matches[3];
 
-        if ($arg == '' || stripos($value, $arg)  !== FALSE ) {
+        if ($arg == '' || mb_stripos($value, $arg, 0, 'UTF-8')  !== FALSE ) {
 
           $label = "";
           if ($field->label)
