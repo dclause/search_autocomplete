@@ -23,7 +23,7 @@ Drupal.behaviors.search_autocomplete = function(context) {
 			   max: Drupal.settings.search_autocomplete[key].max_sug
 		   }
 		 ).result(function () {
-      $(this).submit();
+      window.location.href = $(Drupal.settings.search_autocomplete[key].selector + ' input:first').val();
     });
   });
 };
@@ -66,7 +66,7 @@ $.fn.extend({
 });
 
 $.Autocompleter = function(input, options) {
-
+  
 	var KEY = {
 		UP: 38,
 		DOWN: 40,
