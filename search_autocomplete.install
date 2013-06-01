@@ -270,7 +270,7 @@ function search_autocomplete_update_6201() {
   // add the query column
   if (!db_column_exists('search_autocomplete_suggestions', 'sug_query')) {
     $ret = array();
-    db_add_field(&$ret, 'search_autocomplete_suggestions', 'sug_query', 
+    db_add_field($ret, 'search_autocomplete_suggestions', 'sug_query', 
       array( 
         'description' => 'The database query for this suggestion',
         'type' => 'varchar',
