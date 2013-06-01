@@ -102,3 +102,17 @@ function search_autocomplete_replaceArguments(&$input, &$args) {
   }
   return $modified;
 }
+
+/**
+ * Helper function: get from database if suggestions should be translited
+ */
+function search_autocomplete_get_translite() {
+// get data in database and fetch it
+  $result = db_select('search_autocomplete_forms', 'f')
+    ->fields('f', array('translite'))
+    ->range(0, 1)
+    ->execute()
+    ->fetchField();
+
+  return $result;
+}

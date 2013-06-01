@@ -31,6 +31,7 @@ function search_autocomplete_treelist_form($form, &$form_state) {
     $weight     = $values->weight;
     $enabled    = $values->enabled;
     $parent_fid = $values->parent_fid;
+    $translite  = $values->translite;
 
     $form['my_items'][$fid] = array(       // element for this item
       'title' => array(                      // -> human readeable title
@@ -68,6 +69,18 @@ function search_autocomplete_treelist_form($form, &$form_state) {
     );
   }
 
+  // translite option
+  $title = t('Translite special characters.') . ' ('.  t('Requires <a href="https://drupal.org/project/transliteration">Transliteration</a> module.') . ' :  ';
+  $title .= module_exists('transliteration') ? '<b>' . t('Installed') . '</b>' : '<b>' . t('Not installed') . '</b>';
+  $title .= ')';
+  $form['translite'] = array(
+    '#type'           => 'checkbox',
+    '#title'          => $title,
+    '#description'    => t('If enabled, the user will be suggested with all special characters suggestions when using standard characters. In other word, when entering "foo", suggestions may contain also "f&oacute;&ocirc;bar", "fo&otilde;bar", ...'),
+    '#disabled'       => module_exists('transliteration') ? FALSE : TRUE,
+    '#default_value'  => $translite
+  );
+    
   // submit buton
   $form['submit'] = array(
     '#type' => 'submit',
@@ -89,6 +102,7 @@ function search_autocomplete_treelist_form_submit($form, &$form_state) {
         'weight' => $item['weight'],
         'parent_fid' => $item['parent_fid'],
         'enabled' => $item['enabled'],
+        'translite' => $form_state['values']['translite']
       ))
       ->condition('fid', $item['fid'])
       ->execute();
@@ -152,8 +166,8 @@ function theme_search_autocomplete_treelist_form($variables) {
   ));
   // Themize the table and render the form
   $output  = theme('table', array('header' => $header, 'rows' => $rows, 'attributes' => array('id' => 'my-draggable-table')));
-  $output .= drupal_render($form['submit']);
   $output .= drupal_render_children($form);
+  $output .= drupal_render($form['submit']);
   
   return $output;
 } //function theme_search_autocomplete_treelist_form()

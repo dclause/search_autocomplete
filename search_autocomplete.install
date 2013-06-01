@@ -83,6 +83,12 @@
         'not null'    => TRUE,
         'default'     => 1,
       ),
+      'translite'    => array(
+        'description' => 'Define if suggestion searches should be translited',
+        'type'        => 'int',
+        'not null'    => TRUE,
+        'default'     => 1,
+      ),
       'data_source'  => array(
         'description' => 'Should data come from callback or from static resource',
         'type'        => 'int',
@@ -135,6 +141,7 @@ function search_autocomplete_install() {
     'enabled'       => $enabled,
     'min_char'      => $trigger,
     'max_sug'       => $limit,
+    'translite'     => 1,
     'auto_submit'   => 1,
     'auto_redirect' => 1,
     'data_source'   => 1,
@@ -149,6 +156,7 @@ function search_autocomplete_install() {
     'enabled'   => $enabled,
     'min_char'  => $trigger,
     'max_sug'   => $limit,
+    'translite'     => 1,
     'auto_submit'   => 1,
     'auto_redirect' => 1,
     'data_source'   => 1,
@@ -163,6 +171,7 @@ function search_autocomplete_install() {
     'enabled'   => $enabled,
     'min_char'  => $trigger,
     'max_sug'   => $limit,
+    'translite'     => 1,
     'auto_submit'   => 1,
     'auto_redirect' => 1,
     'data_source'   => 1,
@@ -253,6 +262,26 @@ function search_autocomplete_update_7301(&$sandbox) {
 function search_autocomplete_update_7302(&$sandbox) {
   $ret = array();
   cache_clear_all();
+  return $ret;
+}
+/**
+  * Get ready for Search Autocomplete 7.x-3.1
+  */
+function search_autocomplete_update_7310(&$sandbox) {
+  $ret = array();
+
+  $spec = array(
+    'description' => 'Define if form should be autosubmitted when suggestion is choosen',
+    'type'        => 'int',
+    'not null'    => TRUE,
+    'default'     => 1,
+  ); 
+  db_add_field( 'search_autocomplete_forms', 'translite', $spec);
+  
+  return t('Update has:<br/>- add a column "translite" in the search autocomplete database.<br/> Done with success.');
+
+  // In case of an error, simply throw an exception with an error message.
+  throw new DrupalUpdateException('Something went wrong. Please uninstall and install the module again.');
   return $ret;
 }
 

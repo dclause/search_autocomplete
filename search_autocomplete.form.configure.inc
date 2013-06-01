@@ -85,6 +85,11 @@ function search_autocomplete_form_configure($form, &$form_state) {
       '#collapsed'      => FALSE,
       '#theme'          => 'search_autocomplete_form_configuration_fieldset'
     );
+    $form['search_autocomplete_what']['specialchars'] = array(
+      '#type' => 'item',
+      '#title' => t('Special characters'),
+      '#description' => t('Choose how special characters (&eacute;, &ntilde;, &uacute;, &aring;, &ccedil;, ...) should be handled.')
+    );
     $form['search_autocomplete_what']['suggestions'] = array(
       '#type' => 'item',
       '#title' => t('Suggestion source'),
