@@ -1,6 +1,6 @@
 
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*
-*            Welcome to Search Autocomplete v6.x-2.3 !
+*            Welcome to Search Autocomplete v6.x-2.4 !
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*
 
  ***
@@ -35,7 +35,7 @@ or in the equivalent directory of your Drupal installation.
 Place all files from this 2.x version in this sites/all/modules/search_autocomplete
 or equivalent folder.
 
-From 1.x to 2.0 => Run the update script. Make sure to run the udpate functions.
+From 1.x to 2.0 => Run the update script. Make sure to run the update functions.
 From 2.0 to 2.1 => Just flush the cache.
 From 2.1 to 2.2 => Run the update script.
 
@@ -58,7 +58,7 @@ http://projects.axiomcafe.fr
 Please visit the module translation page to download translation:
 http://localize.drupal.org/translate/downloads?project=search_autocomplete.
 
-Please refer to section 5 (Helping) for typo, grammar or langage issues.
+Please refer to section 5 (Helping) for typo, grammar or language issues.
 
 ---------------------------------------------------------------------------------
 -- 5.  Helping and complaining on Search Autocomplete :
@@ -69,4 +69,4 @@ and view issues at:
 http://drupal.org/project/issues/search_autocomplete?categories=All
 
 
-The new maintener: Miroslav
+The new maintainer: Miroslav
