@@ -26,7 +26,7 @@
                   // Only return the number of values set in the settings.
                   response(results.slice(0, Drupal.settings.search_autocomplete[key].max_sug));
                 });
-              } else if (Drupal.settings.search_autocomplete[key].type == 2) {      // static ressources
+              } else if (Drupal.settings.search_autocomplete[key].type == 2) {      // static resources
                 var results = $.ui.autocomplete.filter( Drupal.settings.search_autocomplete[key].datas, request.term );
                 // Only return the number of values set in the settings.
                 response(results.slice(0, Drupal.settings.search_autocomplete[key].max_sug));

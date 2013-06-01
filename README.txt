@@ -41,7 +41,7 @@ or in the equivalent directory of your Drupal installation.
 Place all files from this 3.x version in this sites/all/modules/search_autocomplete
 or equivalent folder.
 
-Run the update script. Make sure to run the udpate functions.
+Run the update script. Make sure to run the update functions.
 
 If you're having trouble installing this module, please ensure that your tar 
 program is not flattening the directory tree, truncating filenames or losing 
@@ -64,7 +64,7 @@ http://projects.axiomcafe.fr
 Please visit the module translation page to download translation:
 http://localize.drupal.org/translate/downloads?project=search_autocomplete.
 
-Please refer to section 5 (Helping) for typo, grammar or langage issues.
+Please refer to section 5 (Helping) for typo, grammar or language issues.
 
 ---------------------------------------------------------------------------------
 -- 5.  Helping and complaining on Search Autocomplete
@@ -75,4 +75,4 @@ and view issues at:
 http://drupal.org/project/issues/search_autocomplete?categories=All
 
 
-The maintener: Miroslav
+The maintainer: Miroslav

@@ -84,7 +84,7 @@
         'default'     => 1,
       ),
       'data_source'  => array(
-        'description' => 'Should data come from callback or from static ressource',
+        'description' => 'Should data come from callback or from static resource',
         'type'        => 'int',
         'not null'    => TRUE,
         'default'     => 1,

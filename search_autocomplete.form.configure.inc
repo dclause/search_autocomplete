@@ -88,7 +88,7 @@ function search_autocomplete_form_configure($form, &$form_state) {
     $form['search_autocomplete_what']['suggestions'] = array(
       '#type' => 'item',
       '#title' => t('Suggestion source'),
-      '#description' => t('Choose the source of sugggestions to display in this form')
+      '#description' => t('Choose the source of suggestions to display in this form')
     );
     // use a callback
     $form['search_autocomplete_what']['suggestions']['callback'] = array( );
@@ -108,17 +108,17 @@ function search_autocomplete_form_configure($form, &$form_state) {
       '#suffix' => '',       // End of the "form-radios" style.
       '#attributes' => array('onClick' => '$("input[name=suggestions][value=1]").attr("checked", true);')
     );
-    // use a static ressource
+    // use a static resource
 
-    $form['search_autocomplete_what']['suggestions']['staticressource'] = array( );
-    $form['search_autocomplete_what']['staticressource']['staticressource_option'] = array(
+    $form['search_autocomplete_what']['suggestions']['staticresource'] = array( );
+    $form['search_autocomplete_what']['staticresource']['staticresource_option'] = array(
       '#type' => 'radio',
-      '#title' => t('Static ressource :'),
+      '#title' => t('Static resource :'),
       '#return_value' => 2,
       '#default_value' => $item->data_source<2 ? 1 : 2,
       '#parents' => array('suggestions')
     );
-    $form['search_autocomplete_what']['staticressource']['staticressource_textfield'] = array(
+    $form['search_autocomplete_what']['staticresource']['staticresource_textfield'] = array(
       '#type' => 'textarea',
       '#description'    => t('Please enter one suggestion per line. You can use the syntax: "foo => http://bar" per line if you wish to add a jumping to URL for the suggestion. Please refer to <a href="http://projects.axiomcafe.fr">documentation</a>.'),
       '#default_value' => $item->data_static,
@@ -226,7 +226,7 @@ function search_autocomplete_form_configure_submit($form, &$form_state) {
       'selector'        => $values['selector'],
       'data_source'     => $data_type,
       'data_callback'   => $callback,
-      'data_static'     => $values['staticressource_textfield'],
+      'data_static'     => $values['staticresource_textfield'],
       'theme'           => $values['theme']
     ))
     ->condition('fid', $values['fid'])
