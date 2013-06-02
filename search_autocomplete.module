@@ -17,8 +17,8 @@ include_once('search_autocomplete.view_autocomplete.inc');
 
 
 /**
- * HOOK OF INIT:
- * add autocomplete.js on everypage
+ * Implements hook_init().
+ * Add autocomplete.js on everypage.
  */
 function search_autocomplete_init() {
 
@@ -43,14 +43,15 @@ function search_autocomplete_init() {
             $object['label']  = trim(substr($input_data[$i], 0, $cut));
             $object['value']  = trim(substr($input_data[$i], 0, $cut));
             $object['link']   = trim(substr($input_data[$i], $cut+2, strlen($input_data[$i])));
-          } else {
+          } 
+          else {
             $object['label']  = trim($input_data[$i]);
             $object['value']  = trim($input_data[$i]);
           }
           $data_static[] = $object;
         }
         
-        $themeID      = preg_replace("/\\.[^.\\s]{3,4}$/", "", $match->theme);
+        $theme_id      = preg_replace("/\\.[^.\\s]{3,4}$/", "", $match->theme);
         $data_source  = $match->data_callback;
         if ($match->data_source == 1 && !url_is_external($match->data_callback)) {
           $data_source = url($match->data_callback, array('absolute' => TRUE));
@@ -65,7 +66,7 @@ function search_autocomplete_init() {
             'type'          => $match->data_source,
             'datas'         => $match->data_source > 1 ? $data_static : $data_source,
             'fid'           => $match->fid,
-            'theme'         => str_replace(' ', '-', strtolower($themeID)),    // get the css filename with '-' instead of ' ', lower case and no '.css'
+            'theme'         => str_replace(' ', '-', strtolower($theme_id)),    // get the css filename with '-' instead of ' ', lower case and no '.css'
             'auto_submit'   => $match->auto_submit,
             'auto_redirect' => $match->auto_redirect
           )

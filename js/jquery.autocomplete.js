@@ -1,6 +1,9 @@
-/*
+/**
+ * @file
  * SEARCH AUTOCOMPLETE (version 7.3-x)
- *
+ */
+ 
+/*
  * @authors
  * Miroslav Talenberg (Dominique CLAUSE) <http://www.axiomcafe.fr/contact>
  *

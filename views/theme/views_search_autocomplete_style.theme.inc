@@ -26,7 +26,7 @@ function template_preprocess_views_search_autocomplete_style(&$vars) {
   $objects = array();
 
   $vars['bitmask'] = NULL;
-  
+
   $should_translite = search_autocomplete_get_translite();
 
   foreach ($rows as $row) {
@@ -42,7 +42,7 @@ function template_preprocess_views_search_autocomplete_style(&$vars) {
 
         $link   = $base_root . $matches[2];
         $value  = $matches[3];
-        
+
         //hack to romanize accents, this needs module transliteration enabled
         if (function_exists('transliteration_get') && $should_translite) {
           $romanised = transliteration_get($value, '?', language_default('language'));
@@ -61,7 +61,7 @@ function template_preprocess_views_search_autocomplete_style(&$vars) {
           $object['value'] = $romanised;
 
           $objects[] = $object;
-  
+
         }
       }
     }

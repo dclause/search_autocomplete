@@ -11,7 +11,7 @@
  * Sponsored by:
  * www.axiomcafe.fr
  */
- 
+
 /**
  * Implements hook_views_api().
  */
@@ -35,7 +35,7 @@ function search_autocomplete_views_pre_render(&$view) {
         foreach ($view->field as $field_name => $field) {
           if ($field instanceof views_handler_field_field) {
             if ($field->field_info['type'] == 'video') {
-              
+
               // Get the Video URL.
               $video  = $field->get_value($view->result[$row]);
               $url    = file_create_url($video[0]['uri']);
@@ -86,7 +86,7 @@ function _search_autocomplete_render_multiple_field($field, $values) {
           break;
         }
       }
-      $count_skipped++;
+      ++$count_skipped;
     }
 
     // Build a pseudo-node from the retrieved values.
@@ -192,22 +192,24 @@ function _search_autocomplete_render_fields($view, $row) {
         // Respect the 'empty' value if empty and "No results text" is given.
         if (empty($field_output) && $field->options['empty']) {
           $object->content = $field->options['empty'];
-        } else {
+        }
+        else {
           $object->content = $field_output;
         }
         $object->raw = $field_raw;
         $object->class = drupal_clean_css_identifier(strtolower($id));//views_css_safe($id);
-        
+
         $object->label = check_plain($view->field[$id]->label());
-                
+
         if ($object->label) {
           if ($view->field[$id]->options['element_label_colon']) {
             $object->label .= ': ';
-          } else {
+          }
+          else {
             $object->label .= ' ';
           }
         }
-        
+
         $object->is_multiple = $field_is_multiple;
         $rendered_fields[$id] = $object;
 
@@ -341,25 +343,23 @@ function _search_autocomplete_debug_stop($var, $location) {
  *   Integer to use as the $bitmask parameter for json_encode().
  */
 function _search_autocomplete_json_encode($rows, $bitmask = NULL) {
-  
+
   if (PHP_MAJOR_VERSION >= 5 && PHP_MINOR_VERSION >= 3) {
     $json = json_encode($rows, $bitmask);
     // Encoding features not supported before 5.4.x.
     if (PHP_MINOR_VERSION <= 4) {
-       $json = str_replace(array('\/'), array('/'), $json);
+      $json = str_replace(array('\/'), array('/'), $json);
     }
-  } else {
-    $json = json_encode($rows); 
+  }
+  else {
+    $json = json_encode($rows);
     $json = str_replace(array('\/'), array('/'), $json);
   }
   return $json;
 }
 
-
-
 /**
  * Implements hook_views_default_views().
- * 
  * Creates a defaults view as a user helper
  */
 function search_autocomplete_views_default_views() {
@@ -445,7 +445,7 @@ function search_autocomplete_view_autocomplete() {
     t('Page'),
   );
   $views[$view_nodes->name] = $view_nodes;
-  
+
   // AUTOCOMPLETE USER VIEW
   $view_users = new view;
   $view_users->name = 'autocomplete_users';
@@ -514,6 +514,6 @@ function search_autocomplete_view_autocomplete() {
     t('Page'),
   );
   $views[$view_users->name] = $view_users;
-  
+
   return $views;
 }

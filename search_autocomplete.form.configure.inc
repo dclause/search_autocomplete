@@ -151,7 +151,7 @@ function search_autocomplete_form_configure($form, &$form_state) {
     );
 
 
-    // ------------------------------------------------------------------ 
+    // ------------------------------------------------------------------
     // ADVANCED - Advanced options
     $form['search_autocomplete_advanced'] = array(
       '#type'             => 'fieldset',
@@ -177,11 +177,11 @@ function search_autocomplete_form_configure($form, &$form_state) {
 }
 // -------------------------------------------------------------------------------------
 /**
- * Implementation of hook_validate().
+ * Implements hook_validate().
  * Save the changes in the database
  */
 function search_autocomplete_form_configure_validate($form, &$form_state) {
-  
+
   $values = $form_state['values'];
   if ($values['suggestions'] == 1) {
     if (!drupal_valid_path($values['callback_textfield'])) {
@@ -192,7 +192,7 @@ function search_autocomplete_form_configure_validate($form, &$form_state) {
 
 // -------------------------------------------------------------------------------------
 /**
- * Implementation of hook_submit().
+ * Implements hook_submit().
  * Save the changes in the database
  */
 function search_autocomplete_form_configure_submit($form, &$form_state) {
@@ -214,10 +214,12 @@ function search_autocomplete_form_configure_submit($form, &$form_state) {
       if (strcmp(substr($callback, 0, strlen($base_url)), $base_url) === 0) {       // if path is internal:
         $callback = str_replace($base_url . "/", "", $callback);                    // get it relative
         $data_type = 1;                                                             // type = 1
-      } else {                                                                  // if external: type = 0
+      }
+      else {                                                                  // if external: type = 0
         $data_type = 0;
       }
-    } else {                                                                    // if path is not absolute:
+    }
+    else {                                                                    // if path is not absolute:
       $data_type = 1;
     }
   }
@@ -257,7 +259,7 @@ function search_autocomplete_form_configure_submit($form, &$form_state) {
         'theme'           => $values['theme']
       ))
       ->condition('fid', $fid)
-      ->execute();  
+      ->execute();
   }
   // ###
   drupal_clear_css_cache();
@@ -285,7 +287,7 @@ function _search_autocomplete_get_all_children($fid, &$items = array(), $depth =
       ->fetchAllAssoc('fid');
 
   foreach ($result as $item) {
-    $depth++;
+    ++$depth;
     _search_autocomplete_get_all_children($item->fid, $items, $depth);
   }
   return $items;

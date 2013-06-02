@@ -13,11 +13,11 @@
 
 // -----------------------------------------------------------------------------------------------
 /**
- * Implementation of hook_schema().
+ * Implements hook_schema().
  * Set the schema of database
  * @return the schema for of the table to create
  */
- function search_autocomplete_schema() {
+function search_autocomplete_schema() {
   // schema for search_autocomplete database
   $schema['search_autocomplete_forms'] = array(
     'description' => t('Store the forms to autocomplete using Search Autocomplete.'),
@@ -128,7 +128,7 @@
 
 //-----------------------------------------------------------------------------------------------
 /**
- * Implementation of hook_install().
+ * Implements hook_install().
  */
 function search_autocomplete_install() {
   global $base_url;
@@ -140,7 +140,7 @@ function search_autocomplete_install() {
   // ----------------
   // declare insertion statement
   $insert = db_insert('search_autocomplete_forms')
-         ->fields(array('title', 'selector', 'weight', 'enabled', 'min_char', 'max_sug', 'auto_submit', 'auto_redirect', 'data_source', 'data_callback', 'data_static', 'theme'));     
+                ->fields(array('title', 'selector', 'weight', 'enabled', 'min_char', 'max_sug', 'auto_submit', 'auto_redirect', 'data_source', 'data_callback', 'data_static', 'theme'));     
   $insert->values(array(
     'title' => st('Search page - Node Tab') . "  (search/node/%)",
     'selector'      => '#search-form[action="/search/node"] #edit-keys',
