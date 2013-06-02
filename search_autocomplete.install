@@ -71,6 +71,13 @@
         'not null'    => TRUE,
         'default'     => 15,
       ),
+      'no_results'   => array(
+        'description' => 'Maximum number of suggestions',
+        'type'        => 'varchar',
+        'length'      => 50,
+        'not null'    => FALSE,
+        'default'     => '-- no results --',
+      ),
       'auto_submit'   => array(
         'description' => 'Define if form should be autosubmitted when suggestion is choosen',
         'type'        => 'int',
@@ -270,19 +277,27 @@ function search_autocomplete_update_7302(&$sandbox) {
 function search_autocomplete_update_7310(&$sandbox) {
   $ret = array();
 
-  $spec = array(
-    'description' => 'Define if form should be autosubmitted when suggestion is choosen',
+  $translite_field = array(
+    'description' => 'Define if suggestion searches should be translited',
     'type'        => 'int',
     'not null'    => TRUE,
     'default'     => 1,
   ); 
-  db_add_field( 'search_autocomplete_forms', 'translite', $spec);
+  db_add_field( 'search_autocomplete_forms', 'translite', $translite_field);
+  $no_results_field = array(
+    'description' => 'Maximum number of suggestions',
+    'type'        => 'varchar',
+    'length'      => 50,
+    'not null'    => FALSE,
+    'default'     => '-- no results --',
+  ); 
+  db_add_field( 'search_autocomplete_forms', 'no_results', $no_results_field);
   
-  return t('Update has:<br/>- add a column "translite" in the search autocomplete database.<br/> Done with success.');
+  drupal_clear_js_cache();
+  return t('Update has:<br/>- add a column "translite" in the search autocomplete database.<br/>- add a column "no_results" in the search autocomplete database.<br/> Done with success.');
 
   // In case of an error, simply throw an exception with an error message.
   throw new DrupalUpdateException('Something went wrong. Please uninstall and install the module again.');
   return $ret;
 }
-
 // -----------------------------------------------------------------------------------------------

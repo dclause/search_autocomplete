@@ -61,6 +61,7 @@ function search_autocomplete_init() {
             'selector'      => $match->selector,
             'minChars'      => $match->min_char,
             'max_sug'       => $match->max_sug,
+            'no_results'    => $match->no_results,
             'type'          => $match->data_source,
             'datas'         => $match->data_source > 1 ? $data_static : $data_source,
             'fid'           => $match->fid,

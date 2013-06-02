@@ -61,6 +61,15 @@ function search_autocomplete_form_configure($form, &$form_state) {
       '#required'       => TRUE
     );
     // check if form should be autosubmitted
+    $form['search_autocomplete_how']['no_results'] = array(
+      '#type'           => 'textfield',
+      '#title'          => t('Behaviour when no suggestions are found'),
+      '#description'    => t('Enter a message to display when no results are found. Leave empty for no message.'),
+      '#default_value'  => $item->no_results,
+      '#maxlength'      => 50,
+      '#required'       => FALSE
+    );
+    // check if form should be autosubmitted
     $form['search_autocomplete_how']['auto_submit'] = array(
       '#type'           => 'checkbox',
       '#title'          => t('Auto Submit'),
@@ -223,6 +232,7 @@ function search_autocomplete_form_configure_submit($form, &$form_state) {
       'max_sug'         => $values['max_sug'],
       'auto_submit'     => $values['auto_submit'],
       'auto_redirect'   => $values['auto_redirect'],
+      'no_results'      => $values['no_results'],
       'selector'        => $values['selector'],
       'data_source'     => $data_type,
       'data_callback'   => $callback,
@@ -241,6 +251,7 @@ function search_autocomplete_form_configure_submit($form, &$form_state) {
       ->fields(array(
         'min_char'        => $values['min_char'],
         'max_sug'         => $values['max_sug'],
+        'no_results'      => $values['no_results'],
         'auto_submit'     => $values['auto_submit'],
         'auto_redirect'   => $values['auto_redirect'],
         'theme'           => $values['theme']
