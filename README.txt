@@ -31,7 +31,7 @@ files.
 --------------------------------------------------------------------------------- 
 -- 2.  Updating Search Autocomplete:
 
-BEWARE: Update to 7.x-3.x will lose every previous configuration. Please make
+BEWARE: Update to 7.x-3.x from 7.x-2.x will lose every previous configuration. Please make
 sure you can produce the suggestion set you need using views. This should be 
 easy !
 
@@ -49,6 +49,12 @@ files.
 You can also perform a full and complete uninstall of Search Autocomplete and try to
 re-install.
 
+Another solution would be to refer to the documentation: 
+http://projects.axiomcafe.fr/search-autocomplete
+
+Finally, you can also post an issue at:
+https://drupal.org/project/issues/search_autocomplete
+
 ---------------------------------------------------------------------------------
 -- 3.  Setting Search Autocomplete
 
@@ -56,7 +62,7 @@ Navigate to /admin/config/search/search_autocomplete
 
 The configuration options are not as quite easy to understand as it was in previous
 version. Please consider reading the documentation available at:
-http://projects.axiomcafe.fr
+http://projects.axiomcafe.fr/search-autocomplete
 
 ---------------------------------------------------------------------------------
 -- 4.  Translating Search Autocomplete
@@ -72,7 +78,7 @@ Please refer to section 5 (Helping) for typo, grammar or language issues.
 To help this module live, please post your issues, ideas and comments at:
 http://drupal.org/node/add/project-issue/search_autocomplete
 and view issues at:
-http://drupal.org/project/issues/search_autocomplete?categories=All
+http://drupal.org/project/issues/search_autocomplete
 
 
 The maintainer: Miroslav

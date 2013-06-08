@@ -129,7 +129,7 @@ function search_autocomplete_form_configure($form, &$form_state) {
     );
     $form['search_autocomplete_what']['staticresource']['staticresource_textfield'] = array(
       '#type' => 'textarea',
-      '#description'    => t('Please enter one suggestion per line. You can use the syntax: "foo => http://bar" per line if you wish to add a jumping to URL for the suggestion. Please refer to <a href="http://projects.axiomcafe.fr">documentation</a>.'),
+      '#description'    => t('Please enter one suggestion per line. You can use the syntax: "foo => http://bar" per line if you wish to add a jumping to URL for the suggestion. Please refer to <a href="http://projects.axiomcafe.fr/search-autocomplete">documentation</a>.'),
       '#default_value' => $item->data_static,
       '#size' => 20,         // The default size is a bit large...
       '#suffix' => '</div>',  // End of the "form-radios" style.
