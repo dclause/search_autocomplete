@@ -111,6 +111,7 @@ function search_autocomplete_schema() {
       'data_static'  => array(
         'description' => 'Static text as a data',
         'type'        => 'text',
+        'size'         => 'big',
       ),
       'theme'  => array(
         'description' => 'Theme to use with this form',
@@ -301,3 +302,22 @@ function search_autocomplete_update_7310(&$sandbox) {
   return $ret;
 }
 // -----------------------------------------------------------------------------------------------
+
+/**
+  * Get ready for Search Autocomplete 7.x-3.2
+  */
+function search_autocomplete_update_7320(&$sandbox) {
+  // Create the definition for the field
+  $new_field = array(
+    'description' => 'Static text as a data',
+    'type'        => 'text',
+    'size'        => 'big',
+  );
+  db_change_field('search_autocomplete_forms', 'data_static', 'data_static', $new_field);
+  
+  return (t('Update has:') . '<br/>' . t('- changed column type "data_static" from TEXT to LONGTEXT.'));
+
+  
+  // In case of an error, simply throw an exception with an error message.
+  throw new DrupalUpdateException('Something went wrong. Please uninstall and install the module again.');
+}
