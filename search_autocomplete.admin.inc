@@ -58,6 +58,14 @@ function search_autocomplete_menu() {
     'page arguments'    => array('search_autocomplete_treelist_form'),
     'access arguments'  => array('administer Search Autocomplete'),
     'file'              => 'search_autocomplete.form.treelist.inc',
+    'type'              => MENU_NORMAL_ITEM,
+    'weight'            => 0
+  );
+  // create a tab for settings
+  $items['admin/config/search/search_autocomplete/settings'] = array(
+    'title'             => 'Search Autocomplete settings',
+    'type'              => MENU_DEFAULT_LOCAL_TASK,
+    'weight'            => 1
   );
   // create an admin setting page: add a new form
   $items['admin/config/search/search_autocomplete/add'] = array(
@@ -67,6 +75,7 @@ function search_autocomplete_menu() {
     'access arguments'  => array('administer Search Autocomplete'),
     'file'              => 'search_autocomplete.form.add.inc',
     'type'              => MENU_LOCAL_TASK,
+    'weight'            => 2
   );
   // create an admin setting page: configure a form
   $items['admin/config/search/search_autocomplete/%/configure'] = array(
