@@ -371,7 +371,7 @@ function search_autocomplete_views_default_views() {
 function search_autocomplete_view_autocomplete() {
 
   // AUTOCOMPLETE NODE VIEW
-  $view_nodes = new view;
+  $view_nodes = new view();
   $view_nodes->name = 'autocomplete_nodes';
   $view_nodes->description = '';
   $view_nodes->tag = 'default';
@@ -380,17 +380,18 @@ function search_autocomplete_view_autocomplete() {
   $view_nodes->core = 7;
   $view_nodes->api_version = '3.0';
   $view_nodes->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
-
   /* Display: Master */
   $handler = $view_nodes->new_display('default', 'Master', 'default');
   $handler->display->display_options['title'] = 'Node title suggestions for autocompletion';
+  $handler->display->display_options['use_more_always'] = FALSE;
   $handler->display->display_options['access']['type'] = 'perm';
   $handler->display->display_options['cache']['type'] = 'none';
   $handler->display->display_options['query']['type'] = 'views_query';
   $handler->display->display_options['query']['options']['query_comment'] = FALSE;
   $handler->display->display_options['exposed_form']['type'] = 'basic';
-  $handler->display->display_options['exposed_form']['options']['reset_button_label'] = 'Reset';
-  $handler->display->display_options['pager']['type'] = 'none';
+  $handler->display->display_options['exposed_form']['options']['reset_button_label'] = 'Réinitialiser';
+  $handler->display->display_options['pager']['type'] = 'some';
+  $handler->display->display_options['pager']['options']['items_per_page'] = '15';
   $handler->display->display_options['pager']['options']['offset'] = '0';
   $handler->display->display_options['style_plugin'] = 'search_autocomplete';
   /* Champ: Contenu: Titre */
@@ -398,25 +399,8 @@ function search_autocomplete_view_autocomplete() {
   $handler->display->display_options['fields']['title']['table'] = 'node';
   $handler->display->display_options['fields']['title']['field'] = 'title';
   $handler->display->display_options['fields']['title']['label'] = 'title';
-  $handler->display->display_options['fields']['title']['alter']['alter_text'] = 0;
-  $handler->display->display_options['fields']['title']['alter']['make_link'] = 0;
-  $handler->display->display_options['fields']['title']['alter']['absolute'] = 0;
-  $handler->display->display_options['fields']['title']['alter']['external'] = 0;
-  $handler->display->display_options['fields']['title']['alter']['replace_spaces'] = 0;
-  $handler->display->display_options['fields']['title']['alter']['trim_whitespace'] = 0;
-  $handler->display->display_options['fields']['title']['alter']['nl2br'] = 0;
-  $handler->display->display_options['fields']['title']['alter']['word_boundary'] = 0;
-  $handler->display->display_options['fields']['title']['alter']['ellipsis'] = 0;
-  $handler->display->display_options['fields']['title']['alter']['more_link'] = 0;
-  $handler->display->display_options['fields']['title']['alter']['strip_tags'] = 0;
-  $handler->display->display_options['fields']['title']['alter']['trim'] = 0;
-  $handler->display->display_options['fields']['title']['alter']['html'] = 0;
-  $handler->display->display_options['fields']['title']['element_label_colon'] = 1;
-  $handler->display->display_options['fields']['title']['element_default_classes'] = 1;
-  $handler->display->display_options['fields']['title']['hide_empty'] = 0;
-  $handler->display->display_options['fields']['title']['empty_zero'] = 0;
-  $handler->display->display_options['fields']['title']['hide_alter_empty'] = 1;
-  $handler->display->display_options['fields']['title']['link_to_node'] = 1;
+  $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
+  $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
   /* Sort criterion: Contenu: Titre */
   $handler->display->display_options['sorts']['title']['id'] = 'title';
   $handler->display->display_options['sorts']['title']['table'] = 'node';
@@ -428,6 +412,21 @@ function search_autocomplete_view_autocomplete() {
   $handler->display->display_options['filters']['status']['value'] = 1;
   $handler->display->display_options['filters']['status']['group'] = 1;
   $handler->display->display_options['filters']['status']['expose']['operator'] = FALSE;
+  /* Filter criterion: Content revision: Titre */
+  $handler->display->display_options['filters']['title']['id'] = 'title';
+  $handler->display->display_options['filters']['title']['table'] = 'node_revision';
+  $handler->display->display_options['filters']['title']['field'] = 'title';
+  $handler->display->display_options['filters']['title']['operator'] = 'contains';
+  $handler->display->display_options['filters']['title']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['title']['expose']['operator_id'] = 'title_op';
+  $handler->display->display_options['filters']['title']['expose']['label'] = 'title';
+  $handler->display->display_options['filters']['title']['expose']['operator'] = 'title_op';
+  $handler->display->display_options['filters']['title']['expose']['identifier'] = 'filter';
+  $handler->display->display_options['filters']['title']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    3 => 0,
+  );
 
   /* Display: Page */
   $handler = $view_nodes->new_display('page', 'Page', 'page');
@@ -437,17 +436,18 @@ function search_autocomplete_view_autocomplete() {
     t('Node title suggestions for autocompletion'),
     t('more'),
     t('Apply'),
-    t('Reset'),
+    t('Réinitialiser'),
     t('Sort by'),
     t('Asc'),
     t('Desc'),
     t('title'),
     t('Page'),
   );
+  /* Add the view */
   $views[$view_nodes->name] = $view_nodes;
 
   // AUTOCOMPLETE USER VIEW
-  $view_users = new view;
+  $view_users = new view();
   $view_users->name = 'autocomplete_users';
   $view_users->description = '';
   $view_users->tag = 'default';
@@ -456,18 +456,19 @@ function search_autocomplete_view_autocomplete() {
   $view_users->core = 7;
   $view_users->api_version = '3.0';
   $view_users->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
-
   /* Display: Master */
   $handler = $view_users->new_display('default', 'Master', 'default');
   $handler->display->display_options['title'] = 'autocomplete_users';
+  $handler->display->display_options['use_more_always'] = FALSE;
   $handler->display->display_options['access']['type'] = 'perm';
   $handler->display->display_options['access']['perm'] = 'access user profiles';
   $handler->display->display_options['cache']['type'] = 'none';
   $handler->display->display_options['query']['type'] = 'views_query';
   $handler->display->display_options['query']['options']['query_comment'] = FALSE;
   $handler->display->display_options['exposed_form']['type'] = 'basic';
-  $handler->display->display_options['exposed_form']['options']['reset_button_label'] = 'Reset';
-  $handler->display->display_options['pager']['type'] = 'none';
+  $handler->display->display_options['exposed_form']['options']['reset_button_label'] = 'Réinitialiser';
+  $handler->display->display_options['pager']['type'] = 'some';
+  $handler->display->display_options['pager']['options']['items_per_page'] = '15';
   $handler->display->display_options['pager']['options']['offset'] = '0';
   $handler->display->display_options['style_plugin'] = 'search_autocomplete';
   /* Champ: Utilisateur: Nom */
@@ -475,18 +476,8 @@ function search_autocomplete_view_autocomplete() {
   $handler->display->display_options['fields']['name']['table'] = 'users';
   $handler->display->display_options['fields']['name']['field'] = 'name';
   $handler->display->display_options['fields']['name']['label'] = '';
-  $handler->display->display_options['fields']['name']['alter']['alter_text'] = 0;
-  $handler->display->display_options['fields']['name']['alter']['make_link'] = 0;
-  $handler->display->display_options['fields']['name']['alter']['absolute'] = 0;
-  $handler->display->display_options['fields']['name']['alter']['word_boundary'] = 0;
-  $handler->display->display_options['fields']['name']['alter']['ellipsis'] = 0;
-  $handler->display->display_options['fields']['name']['alter']['strip_tags'] = 0;
-  $handler->display->display_options['fields']['name']['alter']['trim'] = 0;
-  $handler->display->display_options['fields']['name']['alter']['html'] = 0;
-  $handler->display->display_options['fields']['name']['hide_empty'] = 0;
-  $handler->display->display_options['fields']['name']['empty_zero'] = 0;
-  $handler->display->display_options['fields']['name']['link_to_user'] = 1;
-  $handler->display->display_options['fields']['name']['overwrite_anonymous'] = 0;
+  $handler->display->display_options['fields']['name']['alter']['word_boundary'] = FALSE;
+  $handler->display->display_options['fields']['name']['alter']['ellipsis'] = FALSE;
   /* Sort criterion: Utilisateur: Nom */
   $handler->display->display_options['sorts']['name']['id'] = 'name';
   $handler->display->display_options['sorts']['name']['table'] = 'users';
@@ -498,7 +489,21 @@ function search_autocomplete_view_autocomplete() {
   $handler->display->display_options['filters']['status']['value'] = '1';
   $handler->display->display_options['filters']['status']['group'] = 1;
   $handler->display->display_options['filters']['status']['expose']['operator'] = FALSE;
-
+  /* Filter criterion: Utilisateur: Name (raw) */
+  $handler->display->display_options['filters']['name']['id'] = 'name';
+  $handler->display->display_options['filters']['name']['table'] = 'users';
+  $handler->display->display_options['filters']['name']['field'] = 'name';
+  $handler->display->display_options['filters']['name']['operator'] = 'contains';
+  $handler->display->display_options['filters']['name']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['name']['expose']['operator_id'] = 'name_op';
+  $handler->display->display_options['filters']['name']['expose']['label'] = 'Authenticated user name (raw)';
+  $handler->display->display_options['filters']['name']['expose']['operator'] = 'name_op';
+  $handler->display->display_options['filters']['name']['expose']['identifier'] = 'filter';
+  $handler->display->display_options['filters']['name']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    3 => 0,
+  );
   /* Display: Page */
   $handler = $view_users->new_display('page', 'Page', 'page');
   $handler->display->display_options['path'] = 'autocomplete-users';
@@ -507,10 +512,11 @@ function search_autocomplete_view_autocomplete() {
     t('autocomplete_users'),
     t('more'),
     t('Apply'),
-    t('Reset'),
+    t('Réinitialiser'),
     t('Sort by'),
     t('Asc'),
     t('Desc'),
+    t('Authenticated user name (raw)'),
     t('Page'),
   );
   $views[$view_users->name] = $view_users;

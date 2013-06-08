@@ -54,7 +54,7 @@ function search_autocomplete_init() {
         $theme_id      = preg_replace("/\\.[^.\\s]{3,4}$/", "", $match->theme);
         $data_source  = $match->data_callback;
         if ($match->data_source == 1 && !url_is_external($match->data_callback)) {
-          $data_source = url($match->data_callback, array('absolute' => TRUE));
+          $data_source = urldecode(url($match->data_callback, array('absolute' => TRUE)));
         }
 
         drupal_add_js(array('search_autocomplete' => array(

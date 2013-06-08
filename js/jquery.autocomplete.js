@@ -29,7 +29,7 @@
                   response(results.slice(0, Drupal.settings.search_autocomplete[key].max_sug));
                 });
               } else if (Drupal.settings.search_autocomplete[key].type == 1) {      // internal URL
-                $.getJSON(Drupal.settings.search_autocomplete[key].datas + '/' + request.term, { }, function (results) {
+                $.getJSON(Drupal.settings.search_autocomplete[key].datas + request.term, { }, function (results) {
                   // Only return the number of values set in the settings.
                   if (!results.length && NoResultsLabel) {
                       results = [NoResultsLabel];

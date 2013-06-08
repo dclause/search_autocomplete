@@ -69,7 +69,7 @@ function search_autocomplete_schema() {
         'description' => 'Maximum number of suggestions',
         'type'        => 'int',
         'not null'    => TRUE,
-        'default'     => 15,
+        'default'     => 10,
       ),
       'no_results'   => array(
         'description' => 'Maximum number of suggestions',
@@ -134,7 +134,7 @@ function search_autocomplete_schema() {
 function search_autocomplete_install() {
   global $base_url;
   
-  $limit            = variable_get('search_autocomplete_limit', 15);
+  $limit            = variable_get('search_autocomplete_limit', 10);
   $trigger          = variable_get('search_autocomplete_trigger', 3);
   $enabled          = 1;
 
@@ -153,7 +153,7 @@ function search_autocomplete_install() {
     'auto_submit'   => 1,
     'auto_redirect' => 1,
     'data_source'   => 1,
-    'data_callback' => 'autocomplete-nodes',
+    'data_callback' => 'autocomplete-nodes?filter=',
     'data_static'   => '',
     'theme'         => 'classic.css'
   ));
@@ -168,7 +168,7 @@ function search_autocomplete_install() {
     'auto_submit'   => 1,
     'auto_redirect' => 1,
     'data_source'   => 1,
-    'data_callback' => 'autocomplete-users',
+    'data_callback' => 'autocomplete-users?filter=',
     'data_static'   => '',
     'theme'         => 'classic.css'
   ));
@@ -183,7 +183,7 @@ function search_autocomplete_install() {
     'auto_submit'   => 1,
     'auto_redirect' => 1,
     'data_source'   => 1,
-    'data_callback' => 'autocomplete-nodes',
+    'data_callback' => 'autocomplete-nodes?filter=',
     'data_static'   => '',
     'theme'         => 'classic.css'
   ));
@@ -315,9 +315,24 @@ function search_autocomplete_update_7320(&$sandbox) {
   );
   db_change_field('search_autocomplete_forms', 'data_static', 'data_static', $new_field);
   
-  return (t('Update has:') . '<br/>' . t('- changed column type "data_static" from TEXT to LONGTEXT.'));
+  // Select data_callbacks of 
+  $result = db_select('search_autocomplete_forms', 'f')
+    ->fields('f', array('fid', 'data_callback'))
+    ->execute()
+    ->fetchAll();
+  foreach ($result as $item) {
+    db_update('search_autocomplete_forms')
+      ->fields(array(
+        'data_callback'   => $item->data_callback . '?filter=')
+      )
+      ->condition('data_callback', array('autocomplete-nodes', 'autocomplete-users'), 'IN')
+      ->execute();
+  }
 
+  return (t('Update has:') . '<br/>' . t('- changed column type "data_static" from TEXT to LONGTEXT.')
+                           . '<br/>' . t('- Add filter to VIEWS callback for performance improvement.'));
   
   // In case of an error, simply throw an exception with an error message.
   throw new DrupalUpdateException('Something went wrong. Please uninstall and install the module again.');
+  return $ret;
 }
