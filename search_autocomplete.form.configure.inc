@@ -95,45 +95,51 @@ function search_autocomplete_form_configure($form, &$form_state) {
       '#theme'          => 'search_autocomplete_form_configuration_fieldset'
     );
     $form['search_autocomplete_what']['suggestions'] = array(
-      '#type' => 'item',
-      '#title' => t('Suggestion source'),
-      '#description' => t('Choose the source of suggestions to display in this form')
+      '#type'           => 'item',
+      '#title'          => t('Suggestion source'),
+      '#description'    => t('Choose the source of suggestions to display in this form')
     );
     // use a callback
     $form['search_autocomplete_what']['suggestions']['callback'] = array( );
     $form['search_autocomplete_what']['callback']['callback_option'] = array(
-      '#type' => 'radio',
-      '#title' => t('Callback URL:'),
-      '#return_value' => 1,
-      '#default_value' => $item->data_source<2 ? 1 : 2,
-      '#prefix'       => '<div class="form-radios">',
-      '#parents' => array('suggestions')
+      '#type'           => 'radio',
+      '#title'          => t('Callback URL:'),
+      '#return_value'   => 1,
+      '#default_value'  => $item->data_source<2 ? 1 : 2,
+      '#prefix'         => '<div class="form-radios">',
+      '#parents'        => array('suggestions')
     );
+    $descr =  t('Enter the url where to retrieve suggestions. It can be internal (absolute or relative) or external.') . '<br/>' .
+              t('To make an easy internal suggestion url, create a view using "Autocompletion JSON" view style ! (<a href="http://projects.axiomcafe.fr/search-autocomplete/advanced-configuration/add-suggestion-type-version-3x">see documentation</a>)') . '<br/>' .
+              t('Available views are:') . '<br/>' .
+              'autocomplete-nodes :  ' . t('suggest node titles'). '<br/>' .
+              'autocomplete-users :  ' . t('suggest user names'). '<br/>' .
+              'autocomplete-words :  ' . t('suggest the node titles for nodes containing the user input');
     $form['search_autocomplete_what']['callback']['callback_textfield'] = array(
-      '#type' => 'textfield',
-      '#description'    => t('Enter the url where to retrieve suggestions. It can be internal (absolute or relative) or external. To make an easy internal suggestion url, create a view using "Autocompletion JSON" view style !'),
-      '#default_value' => $item->data_callback,
-      '#size' => 80,         // The default size is a bit large...
-      '#suffix' => '',       // End of the "form-radios" style.
-      '#attributes' => array('onClick' => '$("input[name=suggestions][value=1]").attr("checked", true);')
+      '#type'           => 'textfield',
+      '#description'    =>  $descr,
+      '#default_value'  => $item->data_callback,
+      '#size'           => 80,         // The default size is a bit large...
+      '#suffix'         => '',       // End of the "form-radios" style.
+      '#attributes'     => array('onClick' => '$("input[name=suggestions][value=1]").attr("checked", true);')
     );
     // use a static resource
 
     $form['search_autocomplete_what']['suggestions']['staticresource'] = array( );
     $form['search_autocomplete_what']['staticresource']['staticresource_option'] = array(
-      '#type' => 'radio',
-      '#title' => t('Static resource :'),
-      '#return_value' => 2,
-      '#default_value' => $item->data_source<2 ? 1 : 2,
-      '#parents' => array('suggestions')
+      '#type'           => 'radio',
+      '#title'          => t('Static resource :'),
+      '#return_value'   => 2,
+      '#default_value'  => $item->data_source<2 ? 1 : 2,
+      '#parents'        => array('suggestions')
     );
     $form['search_autocomplete_what']['staticresource']['staticresource_textfield'] = array(
-      '#type' => 'textarea',
+      '#type'           => 'textarea',
       '#description'    => t('Please enter one suggestion per line. You can use the syntax: "foo => http://bar" per line if you wish to add a jumping to URL for the suggestion. Please refer to <a href="http://projects.axiomcafe.fr/search-autocomplete">documentation</a>.'),
-      '#default_value' => $item->data_static,
-      '#size' => 20,         // The default size is a bit large...
-      '#suffix' => '</div>',  // End of the "form-radios" style.
-      '#attributes' => array('onClick' => '$("input[name=suggestions][value=2]").attr("checked", true);')
+      '#default_value'  => $item->data_static,
+      '#size'           => 20,         // The default size is a bit large...
+      '#suffix'         => '</div>',  // End of the "form-radios" style.
+      '#attributes'     => array('onClick' => '$("input[name=suggestions][value=2]").attr("checked", true);')
     );
 
     // template to use
@@ -143,11 +149,11 @@ function search_autocomplete_form_configure($form, &$form_state) {
       if ($file->name != 'jquery.autocomplete') $themes[$file->filename] = $file->name;
     }
     $form['search_autocomplete_what']['theme'] = array(
-      '#type' => 'select',
-      '#title' => t('Select a theme for your suggestions'),
-      '#options' => $themes,
-      '#default_value' => $item->theme,
-      '#description' => t('Choose the theme to use for autocompletion dropdown popup. Read <a href="http://projects.axiomcafe.fr/search-autocomplete">documentation</a> to learn how to make your own.'),
+      '#type'           => 'select',
+      '#title'          => t('Select a theme for your suggestions'),
+      '#options'        => $themes,
+      '#default_value'  => $item->theme,
+      '#description'    => t('Choose the theme to use for autocompletion dropdown popup. Read <a href="http://projects.axiomcafe.fr/search-autocomplete">documentation</a> to learn how to make your own.'),
     );
 
 
@@ -184,8 +190,9 @@ function search_autocomplete_form_configure_validate($form, &$form_state) {
 
   $values = $form_state['values'];
   if ($values['suggestions'] == 1) {
-    if (!drupal_valid_path($values['callback_textfield'])) {
-      form_set_error('url', 'callback url is not valid: ' . $values['callback_textfield']);
+    $new_url = preg_replace('/\?[^=]*=[^&]*/', '', $values['callback_textfield']);
+    if (!drupal_valid_path($new_url)) {
+      form_set_error('url', 'callback url is not valid: ' . $new_url);
     }
   }
 }

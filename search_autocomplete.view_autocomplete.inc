@@ -376,7 +376,7 @@ function search_autocomplete_view_autocomplete() {
   $view_nodes->description = '';
   $view_nodes->tag = 'default';
   $view_nodes->base_table = 'node';
-  $view_nodes->human_name = 'autocomplete_nodes';
+  $view_nodes->human_name = 'autocomplete-nodes';
   $view_nodes->core = 7;
   $view_nodes->api_version = '3.0';
   $view_nodes->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
@@ -452,7 +452,7 @@ function search_autocomplete_view_autocomplete() {
   $view_users->description = '';
   $view_users->tag = 'default';
   $view_users->base_table = 'users';
-  $view_users->human_name = 'autocomplete_users';
+  $view_users->human_name = 'autocomplete-users';
   $view_users->core = 7;
   $view_users->api_version = '3.0';
   $view_users->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
@@ -520,6 +520,80 @@ function search_autocomplete_view_autocomplete() {
     t('Page'),
   );
   $views[$view_users->name] = $view_users;
+
+  // AUTOCOMPLETE NODE WORDS
+  $view_words = new view();
+  $view_words->name = 'autocomplete_words';
+  $view_words->description = '';
+  $view_words->tag = 'default';
+  $view_words->base_table = 'node';
+  $view_words->human_name = 'autocomplete-words';
+  $view_words->core = 7;
+  $view_words->api_version = '3.0';
+  $view_words->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
+
+  /* Display: Master */
+  $handler = $view_words->new_display('default', 'Master', 'default');
+  $handler->display->display_options['title'] = 'autocomplete-words';
+  $handler->display->display_options['use_more_always'] = FALSE;
+  $handler->display->display_options['access']['type'] = 'perm';
+  $handler->display->display_options['cache']['type'] = 'none';
+  $handler->display->display_options['query']['type'] = 'views_query';
+  $handler->display->display_options['exposed_form']['type'] = 'basic';
+  $handler->display->display_options['pager']['type'] = 'some';
+  $handler->display->display_options['pager']['options']['items_per_page'] = '15';
+  $handler->display->display_options['style_plugin'] = 'search_autocomplete';
+  /* Field: Content: Title */
+  $handler->display->display_options['fields']['title']['id'] = 'title';
+  $handler->display->display_options['fields']['title']['table'] = 'node';
+  $handler->display->display_options['fields']['title']['field'] = 'title';
+  $handler->display->display_options['fields']['title']['label'] = 'is contained in';
+  $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
+  $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
+  /* Sort criterion: Content: Post date */
+  $handler->display->display_options['sorts']['created']['id'] = 'created';
+  $handler->display->display_options['sorts']['created']['table'] = 'node';
+  $handler->display->display_options['sorts']['created']['field'] = 'created';
+  $handler->display->display_options['sorts']['created']['order'] = 'DESC';
+  /* Filter criterion: Content: Published */
+  $handler->display->display_options['filters']['status']['id'] = 'status';
+  $handler->display->display_options['filters']['status']['table'] = 'node';
+  $handler->display->display_options['filters']['status']['field'] = 'status';
+  $handler->display->display_options['filters']['status']['value'] = 1;
+  $handler->display->display_options['filters']['status']['group'] = 1;
+  $handler->display->display_options['filters']['status']['expose']['operator'] = FALSE;
+  /* Filter criterion: Content: Body (body) */
+  $handler->display->display_options['filters']['body_value']['id'] = 'body_value';
+  $handler->display->display_options['filters']['body_value']['table'] = 'field_data_body';
+  $handler->display->display_options['filters']['body_value']['field'] = 'body_value';
+  $handler->display->display_options['filters']['body_value']['operator'] = 'contains';
+  $handler->display->display_options['filters']['body_value']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['body_value']['expose']['operator_id'] = 'body_value_op';
+  $handler->display->display_options['filters']['body_value']['expose']['label'] = 'Body (body)';
+  $handler->display->display_options['filters']['body_value']['expose']['operator'] = 'body_value_op';
+  $handler->display->display_options['filters']['body_value']['expose']['identifier'] = 'filter';
+  $handler->display->display_options['filters']['body_value']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    3 => 0,
+  );
+  /* Display: Page */
+  $handler = $view_words->new_display('page', 'Page', 'page');
+  $handler->display->display_options['path'] = 'autocomplete-words';
+  $translatables['autocomplete_words'] = array(
+    t('Master'),
+    t('autocomplete-words'),
+    t('more'),
+    t('Apply'),
+    t('Reset'),
+    t('Sort by'),
+    t('Asc'),
+    t('Desc'),
+    t('is contained in'),
+    t('Body (body)'),
+    t('Page'),
+  );
+  $views[$view_words->name] = $view_words;
 
   return $views;
 }
