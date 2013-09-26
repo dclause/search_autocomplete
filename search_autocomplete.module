@@ -60,17 +60,6 @@ function search_autocomplete_autocomplete($string = '') {
       $sug_url                  = html_entity_decode(check_plain($sug_link), ENT_QUOTES);
       $sug_pref                 = trim($prefix) . ' ' . $sug;
       $matches[trim($sug_pref)] = url(trim($sug_url));               // add the suggestion to be returned
-
-     /*
-      $match =  array();
-      $match['text'] = trim($sug_pref);
-      $match['url']  = trim($sug);               // add the suggestion to be returned
-      
-      $matches[] = $match;               // add the suggestion to be returned
-      
-      $sug = html_entity_decode(check_plain($obj->title), ENT_QUOTES);
-      $pref_sug = trim($prefix) . ' ' . $sug;
-      $items[trim($pref_sug)] = trim($sug);*/
     }
   }
   drupal_json($matches);                                // Return matches.
