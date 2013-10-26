@@ -15,7 +15,7 @@
 .ui-autocomplete {
   position: absolute;
   cursor: default;
-} 
+}
 * html .ui-autocomplete {
   width: 1px; /* without this, the menu expands to 100% in IE6 */
 }
