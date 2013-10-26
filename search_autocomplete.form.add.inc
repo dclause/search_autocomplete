@@ -12,7 +12,8 @@
 /**
  * MENU CALLBACK: Define the page to add a form.
  *
- * @return  A rendered form
+ * @return  
+ *   A rendered form
  */
 function search_autocomplete_form_add() {
 
@@ -59,7 +60,7 @@ function search_autocomplete_form_add_submit($form, &$form_state) {
   // Check if aready existing records.
   $result = db_select('search_autocomplete_forms', 'f')
     ->fields('f')
-    ->condition('title',    $values['title'])
+    ->condition('title', $values['title'])
     ->condition('selector', $values['selector'])
     ->execute()
     ->fetchAll();

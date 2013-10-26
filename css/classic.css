@@ -15,7 +15,7 @@
   cursor: default;
 }
 * html .ui-autocomplete {
-  width:1px; /* without this, the menu expands to 100% in IE6 */
+  width: 1px; /* without this, the menu expands to 100% in IE6 */
 }
 .ui-autocomplete-input {
   background-image: url("images/throbber.gif");
@@ -28,17 +28,17 @@
   background-repeat: no-repeat;
 }
 .ui-menu {
-  list-style:none;
+  list-style: none;
   padding: 2px;
   margin: 0;
-  display:block;
+  display: block;
   float: left;
 }
 .ui-menu .ui-menu {
   margin-top: -3px;
 }
 .ui-menu .ui-menu-item {
-  margin:0;
+  margin: 0;
   padding: 0;
   zoom: 1;
   float: left;
@@ -46,11 +46,11 @@
   width: 100%;
 }
 .ui-menu .ui-menu-item a {
-  text-decoration:none;
+  text-decoration: none;
   display:block;
-  padding:.2em .4em;
-  line-height:1.5;
-  zoom:1;
+  padding: .2em .4em;
+  line-height: 1.5;
+  zoom: 1;
 }
 .ui-menu .ui-menu-item a {
   font-weight: normal;
@@ -65,7 +65,7 @@
 /* Component containers */
 #ui-theme-classic {
   font-family: Trebuchet MS, Tahoma, Verdana, Arial, sans-serif;
- font-size: 1.1em;
+  font-size: 1.1em;
 }
 #ui-theme-classic a {
   color: #333333;
@@ -74,9 +74,9 @@
 /* Corner radius */
 #ui-theme-classic .ui-corner-all {
   -moz-border-radius-topleft: 4px;
- -webkit-border-top-left-radius: 4px;
- -khtml-border-top-left-radius: 4px;
- border-top-left-radius: 4px;
+  -webkit-border-top-left-radius: 4px;
+  -khtml-border-top-left-radius: 4px;
+  border-top-left-radius: 4px;
 }
 #ui-theme-classic .ui-corner-all {
   -moz-border-radius-topright: 4px;
@@ -102,6 +102,6 @@
   font-weight: normal;
   border: none;
   background-image: none;
-  background-color: #0a246a ;
+  background-color: #0a246a;
   color: white;
 }

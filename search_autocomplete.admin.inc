@@ -26,7 +26,7 @@ function search_autocomplete_permission() {
       'description' => t('Allow usage of autocompletion on forms.'),
     ),
   );
-} // Function search_autocomplete_permissions().
+}
 
 /**
  * Implements hook_theme().
@@ -34,13 +34,13 @@ function search_autocomplete_permission() {
  * Define the function to render our forms.
  */
 function search_autocomplete_theme($existing, $type, $theme, $path) {
-  // Register theme function for draggable treelist search forms
+  // Register theme function for draggable treelist search forms.
   return array(
     'search_autocomplete_treelist_form' => array(
       'render element' => 'form',
     ),
   );
-} // Function search_autocomplete_theme($existing, $type, $theme, $path).
+}
 
 /**
  * Implements hook_menu().
@@ -58,13 +58,13 @@ function search_autocomplete_menu() {
     'access arguments'  => array('administer Search Autocomplete'),
     'file'              => 'search_autocomplete.form.treelist.inc',
     'type'              => MENU_NORMAL_ITEM,
-    'weight'            => 0
+    'weight'            => 0,
   );
   // Create a tab for settings.
   $items['admin/config/search/search_autocomplete/settings'] = array(
     'title'             => 'Search Autocomplete settings',
     'type'              => MENU_DEFAULT_LOCAL_TASK,
-    'weight'            => 1
+    'weight'            => 1,
   );
   // Create an admin setting page: add a new form.
   $items['admin/config/search/search_autocomplete/add'] = array(
@@ -74,7 +74,7 @@ function search_autocomplete_menu() {
     'access arguments'  => array('administer Search Autocomplete'),
     'file'              => 'search_autocomplete.form.add.inc',
     'type'              => MENU_LOCAL_TASK,
-    'weight'            => 2
+    'weight'            => 2,
   );
   // Create an admin setting page: configure a form.
   $items['admin/config/search/search_autocomplete/%/configure'] = array(
@@ -93,7 +93,7 @@ function search_autocomplete_menu() {
     'file'              => 'search_autocomplete.form.delete.inc',
   );
   return $items;
-} // Function search_autocomplete_menu().
+}
 
 /**
  * Implements hook_help().
