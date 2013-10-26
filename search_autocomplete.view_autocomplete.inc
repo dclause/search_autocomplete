@@ -416,18 +416,6 @@ function search_autocomplete_view_autocomplete() {
   /* Display: Page */
   $handler = $view_nodes->new_display('page', 'Page', 'page');
   $handler->display->display_options['path'] = 'autocomplete-nodes';
-  $translatables['autocomplete_nodes'] = array(
-    t('Master'),
-    t('Node title suggestions for autocompletion'),
-    t('more'),
-    t('Apply'),
-    t('Reset'),
-    t('Sort by'),
-    t('Asc'),
-    t('Desc'),
-    t('title'),
-    t('Page'),
-  );
   /* Add the view */
   $views[$view_nodes->name] = $view_nodes;
 

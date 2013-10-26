@@ -17,7 +17,8 @@
           $(Drupal.settings.search_autocomplete[key].selector).addClass('ui-autocomplete-processed').autocomplete({
             minLength: Drupal.settings.search_autocomplete[key].minChars,
             source: function(request, response) {
-              if (Drupal.settings.search_autocomplete[key].type == 0) {             // external URL
+              // external URL
+              if (Drupal.settings.search_autocomplete[key].type == 0) {
                 $.getJSON(Drupal.settings.search_autocomplete[key].datas, { q: request.term }, function (results) {
                   // Only return the number of values set in the settings.
                   if (!results.length && NoResultsLabel) {
@@ -25,7 +26,9 @@
                   }
                   response(results.slice(0, Drupal.settings.search_autocomplete[key].max_sug));
                 });
-              } else if (Drupal.settings.search_autocomplete[key].type == 1) {      // internal URL
+              }
+              // internal URL
+              else if (Drupal.settings.search_autocomplete[key].type == 1) {
                 $.getJSON(Drupal.settings.search_autocomplete[key].datas + request.term, { }, function (results) {
                   // Only return the number of values set in the settings.
                   if (!results.length && NoResultsLabel) {
@@ -33,8 +36,10 @@
                   }
                   response(results.slice(0, Drupal.settings.search_autocomplete[key].max_sug));
                 });
-              } else if (Drupal.settings.search_autocomplete[key].type == 2) {      // static resources
-                var results = $.ui.autocomplete.filter( Drupal.settings.search_autocomplete[key].datas, request.term );
+              }
+              // static resources
+              else if (Drupal.settings.search_autocomplete[key].type == 2) {
+                var results = $.ui.autocomplete.filter(Drupal.settings.search_autocomplete[key].datas, request.term );
                     if (!results.length && NoResultsLabel) {
                     results = [NoResultsLabel];
                 }

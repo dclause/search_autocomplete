@@ -17,7 +17,7 @@
 function search_autocomplete_form_add() {
 
   $form = array();
-  /* ------------------------------------------------------------------ */
+  // ------------------------------------------------------------------.
   $form['title'] = array(
     '#title'          => t('Title'),
     '#description'    => 'Please enter a title for this form',
@@ -35,7 +35,7 @@ function search_autocomplete_form_add() {
     '#maxlength'      => 255,
     '#required'       => TRUE,
   );
-  // submit buton
+  // Submit buton.
   $form['submit'] = array(
     '#type'           => 'submit',
     '#value'          => t('Save'),
@@ -43,18 +43,19 @@ function search_autocomplete_form_add() {
   return $form;
 }
 
-// -------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------.
 /**
  * Implements hook_submit().
- * Save the new form in database
+ *
+ * Save the new form in database.
  */
 function search_autocomplete_form_add_submit($form, &$form_state) {
   $ok_query = TRUE;  // so far so good!
 
-  // Get the form values
+  // Get the form values.
   $values = $form_state['values'];
 
-  // Check if aready existing records
+  // Check if aready existing records.
   $result = db_select('search_autocomplete_forms', 'f')
     ->fields('f')
     ->condition('title',    $values['title'])
@@ -63,11 +64,11 @@ function search_autocomplete_form_add_submit($form, &$form_state) {
     ->fetchAll();
 
   foreach ($result as $selector) {
-    drupal_set_message(t("The title or the selector @selector already exists. Please choose another one.", array('@selector' => $selector);, 'error');
+    drupal_set_message(t("The title or the selector @selector already exists. Please choose another one.", array('@selector' => $selector)), 'error');
     return;
   }
 
-  // Insert the new form in database
+  // Insert the new form in database.
   $fid = db_insert('search_autocomplete_forms')
           ->fields(array(
             'title' => $values['title'],
@@ -75,9 +76,9 @@ function search_autocomplete_form_add_submit($form, &$form_state) {
           ))
           ->execute();
 
-  // redirect to configuration page
+  // Redirect to configuration page.
   $form_state['redirect'] = 'admin/config/search/search_autocomplete/' . $fid . '/configure';
 
-  // Give a return to the user
+  // Give a return to the user.
   $ok_query ? drupal_set_message(t('The form has been created successfully !') . '<br/>' . t('Please check its configuration.')) : drupal_set_message(t("An error has occured while creating the form. Please, double check your settings!"), 'error');
 }

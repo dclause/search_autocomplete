@@ -30,15 +30,15 @@ function search_autocomplete_form_configure($form, &$form_state) {
       '#type' => 'hidden',
       '#value' => $fid,
     );
-    // ------------------------------------------------------------------
-    // HOW - How to display Search Autocomplete suggestions
+    // ------------------------------------------------------------------.
+    // HOW - How to display Search Autocomplete suggestions.
     $form['search_autocomplete_how'] = array(
       '#type'           => 'fieldset',
       '#title'          => t('HOW - How to display Search Autocomplete suggestions?'),
       '#collapsible'    => TRUE,
       '#collapsed'      => TRUE
     );
-    // Minimum characters to set autocompletion on
+    // Minimum characters to set autocompletion on.
     $form['search_autocomplete_how']['min_char'] = array(
       '#type'           => 'textfield',
       '#title'          => t('Minimum keyword size that uncouple autocomplete search'),
@@ -47,7 +47,7 @@ function search_autocomplete_form_configure($form, &$form_state) {
       '#maxlength'      => 2,
       '#required'       => TRUE
     );
-    // Number of suggestions to display
+    // Number of suggestions to display.
     $form['search_autocomplete_how']['max_sug'] = array(
       '#type'           => 'textfield',
       '#title'          => t('Limit of the autocomplete search result'),
@@ -56,7 +56,7 @@ function search_autocomplete_form_configure($form, &$form_state) {
       '#maxlength'      => 2,
       '#required'       => TRUE
     );
-    // check if form should be autosubmitted
+    // Check if form should be autosubmitted.
     $form['search_autocomplete_how']['no_results'] = array(
       '#type'           => 'textfield',
       '#title'          => t('Behaviour when no suggestions are found'),
@@ -65,14 +65,14 @@ function search_autocomplete_form_configure($form, &$form_state) {
       '#maxlength'      => 50,
       '#required'       => FALSE
     );
-    // check if form should be autosubmitted
+    // Check if form should be autosubmitted.
     $form['search_autocomplete_how']['auto_submit'] = array(
       '#type'           => 'checkbox',
       '#title'          => t('Auto Submit'),
       '#description'    => t('If enabled, the form will be submitted automatically as soon as your user choose a suggestion in the popup list.'),
       '#default_value'  => $item->auto_submit
     );
-    // check if form should be autoredirected
+    // Check if form should be autoredirected.
     $form['search_autocomplete_how']['auto_redirect'] = array(
       '#type'           => 'checkbox',
       '#title'          => t('Auto Redirect'),
@@ -80,8 +80,8 @@ function search_autocomplete_form_configure($form, &$form_state) {
       '#default_value'  => $item->auto_redirect
     );
 
-    // ------------------------------------------------------------------
-    // WHAT - What to display in Search Autocomplete suggestions
+    // ------------------------------------------------------------------.
+    // WHAT - What to display in Search Autocomplete suggestions.
     $form['search_autocomplete_what'] = array(
       '#type'           => 'fieldset',
       '#title'          => t('WHAT - What to display in Search Autocomplete suggestions?'),
@@ -95,7 +95,7 @@ function search_autocomplete_form_configure($form, &$form_state) {
       '#title'          => t('Suggestion source'),
       '#description'    => t('Choose the source of suggestions to display in this form')
     );
-    // use a callback
+    // Use a callback.
     $form['search_autocomplete_what']['suggestions']['callback'] = array( );
     $form['search_autocomplete_what']['callback']['callback_option'] = array(
       '#type'           => 'radio',
@@ -119,7 +119,7 @@ function search_autocomplete_form_configure($form, &$form_state) {
       '#suffix'         => '',       // End of the "form-radios" style.
       '#attributes'     => array('onClick' => '$("input[name=suggestions][value=1]").attr("checked", true);')
     );
-    // use a static resource
+    // Use a static resource.
 
     $form['search_autocomplete_what']['suggestions']['staticresource'] = array( );
     $form['search_autocomplete_what']['staticresource']['staticresource_option'] = array(
@@ -138,7 +138,7 @@ function search_autocomplete_form_configure($form, &$form_state) {
       '#attributes'     => array('onClick' => '$("input[name=suggestions][value=2]").attr("checked", true);')
     );
 
-    // template to use
+    // Template to use.
     $themes = array();
     $files = file_scan_directory( drupal_get_path('module', 'search_autocomplete') . '/css', '/.*\.css\z/', array('recurse' => FALSE));
     foreach ($files as $file) {
@@ -153,8 +153,8 @@ function search_autocomplete_form_configure($form, &$form_state) {
     );
 
 
-    // ------------------------------------------------------------------
-    // ADVANCED - Advanced options
+    // ------------------------------------------------------------------.
+    // ADVANCED - Advanced options.
     $form['search_autocomplete_advanced'] = array(
       '#type'             => 'fieldset',
       '#title'            => t('ADVANCED - Advanced options'),
@@ -177,10 +177,11 @@ function search_autocomplete_form_configure($form, &$form_state) {
   }
   return $form;
 }
-// -------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------.
 /**
  * Implements hook_validate().
- * Save the changes in the database
+ *
+ * Save the changes in the database.
  */
 function search_autocomplete_form_configure_validate($form, &$form_state) {
 
@@ -188,7 +189,7 @@ function search_autocomplete_form_configure_validate($form, &$form_state) {
   if ($values['suggestions'] == 1) {
     $new_url = preg_replace('/\?[^=]*=[^&]*/', '', $values['callback_textfield']);
     if (!drupal_valid_path($new_url)) {
-      form_set_error('url', 'callback url is not valid: ' . $new_url);
+      form_set_error('url', t('callback url is not valid: @new_url', array(@new_url => $new_url)));
     }
   }
 }
@@ -196,36 +197,37 @@ function search_autocomplete_form_configure_validate($form, &$form_state) {
 // -------------------------------------------------------------------------------------
 /**
  * Implements hook_submit().
- * Save the changes in the database
+ *
+ * Save the changes in the database.
  */
 function search_autocomplete_form_configure_submit($form, &$form_state) {
   global $base_url;
 
-  $ok_query = TRUE;  // so far so good!
-  // get form submission values
+  $ok_query = TRUE;  // So far so good!
+  // Get form submission values.
   $values = $form_state['values'];
 
   // analyse incoming callback
   $callback = $values['callback_textfield'];
-  $data_type = 2;                                                               // if static resource => type = 2
+  $data_type = 2; // if static resource => type = 2
   if ($callback != '') {
-    if (url_is_external($callback)) {                                           // if path is absolute:
-      if (strcmp(substr($callback, 0, strlen($base_url)), $base_url) === 0) {       // if path is internal:
-        $callback = str_replace($base_url . "/", "", $callback);                    // get it relative
-        $data_type = 1;                                                             // type = 1
+    if (url_is_external($callback)) { // if path is absolute:
+      if (strcmp(substr($callback, 0, strlen($base_url)), $base_url) === 0) { // if path is internal:
+        $callback = str_replace($base_url . "/", "", $callback); // get it relative
+        $data_type = 1; // type = 1
       }
-      else {                                                                  // if external: type = 0
+      else { // if external: type = 0
         $data_type = 0;
       }
     }
-    else {                                                                    // if path is not absolute:
+    else { // if path is not absolute:
       $data_type = 1;
     }
   }
   if ($values['suggestions'] == 2) $data_type = 2;
 
   // ###
-  // UPDATE THE FORM
+  // UPDATE THE FORM.
   // -> update form
   db_update('search_autocomplete_forms')
     ->fields(array(
@@ -245,7 +247,7 @@ function search_autocomplete_form_configure_submit($form, &$form_state) {
   // ###
   // UPDATE CHILD LIST BUT NOT THE ADVANCED OPTIONS
   $fids = _search_autocomplete_get_all_children($values['fid']);
-  // update the settings for this form + every children form
+  // Update the settings for this form + every children form.
   foreach ($fids as $fid) {
     // -> update form
     db_update('search_autocomplete_forms')
@@ -266,13 +268,13 @@ function search_autocomplete_form_configure_submit($form, &$form_state) {
   $ok_query ? drupal_set_message(t("Configuration success !")) : drupal_set_message(t("An error has occured while saving the settings. Please, double check your settings!"), 'error');
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////
-////                             HELPER FUNCTIONS                                    ////
+///////////////////////////////////////////////////////////////////////////////
+////                        HELPER FUNCTIONS                               ////
 
-// -------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 /**
- * Helper function: get the array of fids every of his children of the caller but not
- * caller fid.
+ * Helper function: get the array of fids every of his children of 
+ * the caller but not caller fid.
  */
 function _search_autocomplete_get_all_children($fid, &$items = array(), $depth = 0) {
   if ($depth)

@@ -12,9 +12,8 @@
 
 /**
  * Implements hook_permission().
- * Valid permissions for this module
- * @return
- *   An array of valid permissions for the autocomplete module
+ *
+ * Valid permissions for this module.
  */
 function search_autocomplete_permission() {
   return array(
@@ -27,23 +26,26 @@ function search_autocomplete_permission() {
       'description' => t('Allow usage of autocompletion on forms.'),
     ),
   );
-} // function search_autocomplete_permissions()
+} // Function search_autocomplete_permissions()
 
 /**
  * Implements hook_theme().
- * Define the function to render our forms
+ *
+ * Define the function to render our forms.
  */
 function search_autocomplete_theme($existing, $type, $theme, $path) {
+  // Register theme function for draggable treelist search forms
   return array(
-    'search_autocomplete_treelist_form' => array(                    // register theme function for draggable treelist search forms
+    'search_autocomplete_treelist_form' => array(
       'render element' => 'form',
     )
   );
-} // function search_autocomplete_theme($existing, $type, $theme, $path)
+} // Function search_autocomplete_theme($existing, $type, $theme, $path)
 
 /**
  * Implements hook_menu().
- * Create an administration page to access admin form
+ *
+ * Create an administration page to access admin form.
  */
 function search_autocomplete_menu() {
 
@@ -99,22 +101,27 @@ function search_autocomplete_menu() {
 function search_autocomplete_help($path, $arg) {
   $help = '';
   switch ($path) {
+  
     case 'admin/modules#description':
       $help = t('Allows the users with the right permission to use advanced autocompletion features on forms.');
       break;
+      
     case 'admin/config/search/search_autocomplete':
       $help  = '<div>' . t('Search Autocomplete helps you to enhance your search forms with autocompleted suggestions.') . '</div>';
       $help .= '<div>' . t('Use this form to activate the forms you want to autocomplete.') . '</div>';
       $help .= '<div>' . t('You may want to add new possible form to autocomplete. To do so, please use the tab <a href="search_autocomplete/add">Add a form</a>.') . '</div>';
       break;
+      
     case 'admin/config/search/search_autocomplete/add':
       $help  = '<div>' . t('This page allows you to add a new form to be autocompleted with the Search Autocomplete module.') . '</div>';
       $help .= '<div>' . t('This is an advanced feature configuration. Use it only if you know what you are doing and after reading <a href="http://projects.axiomcafe.fr/search-autocomplete">documentation</a>. If you wish help, please ask for a new default form to be added in the next release of Search Autocomplete module.') . '</div>';
       break;
+      
     case 'admin/config/search/search_autocomplete/%/configure':
       $help  = '<div>' . t('You are currently configuring the options to autocomplete a form.') . '</div>';
       $help .= '<div>' . t('Every children forms will be modified as well.') . '</div>';
       break;
+      
   }
   return $help;
 }
