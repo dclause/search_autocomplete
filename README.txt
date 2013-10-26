@@ -11,42 +11,42 @@
  Sponsored by:
  www.axiomcafe.fr
 
--------------------------------------------------------------------------------- 
+--------------------------------------------------------------------------------
 -- 1.  Installing Search Autocomplete:
 
-Place the entirety of this directory in sites/all/modules/search_autocomplete 
-or in the equivalent directory of your Drupal installation.
+Place the entirety of this directory in sites/all/modules/search_autocomplete
+or in the equivalent directory of your Drupal installation
 
 Make sure all dependency modules are available: Drupal Search Core and Views
 
 Navigate to administer >> build >> modules. Enable Search Autocomplete.
 
-If you're having trouble installing this module, please ensure that your tar 
-program is not flattening the directory tree, truncating filenames or losing 
+If you're having trouble installing this module, please ensure that your tar
+program is not flattening the directory tree, truncating filenames or losing
 files.
 
--------------------------------------------------------------------------------- 
+--------------------------------------------------------------------------------
 -- 2.  Updating Search Autocomplete:
 
-BEWARE: Update to 7.x-3.x from 7.x-2.x will lose every previous configuration. 
-Please make sure you can produce the suggestion set you need using views. This 
+BEWARE: Update to 7.x-3.x from 7.x-2.x will lose every previous configuration.
+Please make sure you can produce the suggestion set you need using views. This
 should be easy !
 
-Delete every files in the module directory sites/all/modules/search_autocomplete 
+Delete every files in the module directory sites/all/modules/search_autocomplete
 or in the equivalent directory of your Drupal installation.
 
-Place all files from this 3.x version in this 
+Place all files from this 3.x version in this
 sites/all/modules/search_autocomplete or equivalent folder.
 
 Run the update script. Make sure to run the update functions.
 
-If you're having trouble installing this module, please ensure that your tar 
-program is not flattening the directory tree, truncating filenames or losing 
+If you're having trouble installing this module, please ensure that your tar
+program is not flattening the directory tree, truncating filenames or losing
 files.
-You can also perform a full and complete uninstall of Search Autocomplete and 
+You can also perform a full and complete uninstall of Search Autocomplete and
 try to re-install.
 
-Another solution would be to refer to the documentation: 
+Another solution would be to refer to the documentation:
 http://projects.axiomcafe.fr/search-autocomplete
 
 Finally, you can also post an issue at:
@@ -57,7 +57,7 @@ https://drupal.org/project/issues/search_autocomplete
 
 Navigate to /admin/config/search/search_autocomplete
 
-The configuration options are not as quite easy to understand as it was in 
+The configuration options are not as quite easy to understand as it was in
 previous version. Please consider reading the documentation available at:
 http://projects.axiomcafe.fr/search-autocomplete
 

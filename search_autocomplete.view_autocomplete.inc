@@ -480,18 +480,7 @@ function search_autocomplete_view_autocomplete() {
   /* Display: Page */
   $handler = $view_users->new_display('page', 'Page', 'page');
   $handler->display->display_options['path'] = 'autocomplete-users';
-  $translatables['autocomplete_users'] = array(
-    t('Master'),
-    t('autocomplete_users'),
-    t('more'),
-    t('Apply'),
-    t('Reset'),
-    t('Sort by'),
-    t('Asc'),
-    t('Desc'),
-    t('Authenticated user name (raw)'),
-    t('Page'),
-  );
+  
   $views[$view_users->name] = $view_users;
 
   // AUTOCOMPLETE NODE WORDS
@@ -553,19 +542,7 @@ function search_autocomplete_view_autocomplete() {
   /* Display: Page */
   $handler = $view_words->new_display('page', 'Page', 'page');
   $handler->display->display_options['path'] = 'autocomplete-words';
-  $translatables['autocomplete_words'] = array(
-    t('Master'),
-    t('autocomplete-words'),
-    t('more'),
-    t('Apply'),
-    t('Reset'),
-    t('Sort by'),
-    t('Asc'),
-    t('Desc'),
-    t('is contained in'),
-    t('Body (body)'),
-    t('Page'),
-  );
+  
   $views[$view_words->name] = $view_words;
 
   return $views;

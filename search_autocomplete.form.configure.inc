@@ -10,13 +10,13 @@
  */
 
 /**
- * MENU CALLBACK:
- * Define the form to configure the suggestions.
+ * MENU CALLBACK: Define the form to configure the suggestions.
+ *
  * @return  A rendered form
  */
 function search_autocomplete_form_configure($form, &$form_state) {
 
-  // get data from database
+  // Get data from database.
   $fid = arg(4);
 
   $result = db_select('search_autocomplete_forms', 'f')
@@ -36,7 +36,7 @@ function search_autocomplete_form_configure($form, &$form_state) {
       '#type'           => 'fieldset',
       '#title'          => t('HOW - How to display Search Autocomplete suggestions?'),
       '#collapsible'    => TRUE,
-      '#collapsed'      => TRUE
+      '#collapsed'      => TRUE,
     );
     // Minimum characters to set autocompletion on.
     $form['search_autocomplete_how']['min_char'] = array(
@@ -45,7 +45,7 @@ function search_autocomplete_form_configure($form, &$form_state) {
       '#description'    => t('Please enter the minimum number of character a user must input before autocompletion starts.'),
       '#default_value'  => $item->min_char,
       '#maxlength'      => 2,
-      '#required'       => TRUE
+      '#required'       => TRUE,
     );
     // Number of suggestions to display.
     $form['search_autocomplete_how']['max_sug'] = array(
@@ -54,7 +54,7 @@ function search_autocomplete_form_configure($form, &$form_state) {
       '#description'    => t('Please enter the maximim number of suggestion to display.'),
       '#default_value'  => $item->max_sug,
       '#maxlength'      => 2,
-      '#required'       => TRUE
+      '#required'       => TRUE,
     );
     // Check if form should be autosubmitted.
     $form['search_autocomplete_how']['no_results'] = array(
@@ -63,21 +63,21 @@ function search_autocomplete_form_configure($form, &$form_state) {
       '#description'    => t('Enter a message to display when no results are found. Leave empty for no message.'),
       '#default_value'  => $item->no_results,
       '#maxlength'      => 50,
-      '#required'       => FALSE
+      '#required'       => FALSE,
     );
     // Check if form should be autosubmitted.
     $form['search_autocomplete_how']['auto_submit'] = array(
       '#type'           => 'checkbox',
       '#title'          => t('Auto Submit'),
       '#description'    => t('If enabled, the form will be submitted automatically as soon as your user choose a suggestion in the popup list.'),
-      '#default_value'  => $item->auto_submit
+      '#default_value'  => $item->auto_submit,
     );
     // Check if form should be autoredirected.
     $form['search_autocomplete_how']['auto_redirect'] = array(
       '#type'           => 'checkbox',
       '#title'          => t('Auto Redirect'),
       '#description'    => t('If enabled, the user will be directly routed to the suggestion he choosed instead of performing form validation process. Only works if "link" attribute is existing and if "Auto Submit" is enabled.'),
-      '#default_value'  => $item->auto_redirect
+      '#default_value'  => $item->auto_redirect,
     );
 
     // ------------------------------------------------------------------.
@@ -88,22 +88,22 @@ function search_autocomplete_form_configure($form, &$form_state) {
       '#description'    => t('Choose which data should be added to autocompletion suggestions.'),
       '#collapsible'    => TRUE,
       '#collapsed'      => FALSE,
-      '#theme'          => 'search_autocomplete_form_configuration_fieldset'
+      '#theme'          => 'search_autocomplete_form_configuration_fieldset',
     );
     $form['search_autocomplete_what']['suggestions'] = array(
       '#type'           => 'item',
       '#title'          => t('Suggestion source'),
-      '#description'    => t('Choose the source of suggestions to display in this form')
+      '#description'    => t('Choose the source of suggestions to display in this form'),
     );
     // Use a callback.
-    $form['search_autocomplete_what']['suggestions']['callback'] = array( );
+    $form['search_autocomplete_what']['suggestions']['callback'] = array();
     $form['search_autocomplete_what']['callback']['callback_option'] = array(
       '#type'           => 'radio',
       '#title'          => t('Callback URL:'),
       '#return_value'   => 1,
-      '#default_value'  => $item->data_source<2 ? 1 : 2,
+      '#default_value'  => $item->data_source < 2 ? 1 : 2,
       '#prefix'         => '<div class="form-radios">',
-      '#parents'        => array('suggestions')
+      '#parents'        => array('suggestions'),
     );
     $descr =  t('Enter the url where to retrieve suggestions. It can be internal (absolute or relative) or external.') . '<br/>' .
               t('To make an easy internal suggestion url, create a view using "Autocompletion JSON" view style ! (<a href="http://projects.axiomcafe.fr/search-autocomplete/advanced-configuration/add-suggestion-type-version-3x">see documentation</a>)') . '<br/>' .
@@ -117,17 +117,17 @@ function search_autocomplete_form_configure($form, &$form_state) {
       '#default_value'  => $item->data_callback,
       '#size'           => 80,         // The default size is a bit large...
       '#suffix'         => '',       // End of the "form-radios" style.
-      '#attributes'     => array('onClick' => '$("input[name=suggestions][value=1]").attr("checked", true);')
+      '#attributes'     => array('onClick' => '$("input[name=suggestions][value=1]").attr("checked", true);'),
     );
     // Use a static resource.
 
-    $form['search_autocomplete_what']['suggestions']['staticresource'] = array( );
+    $form['search_autocomplete_what']['suggestions']['staticresource'] = array();
     $form['search_autocomplete_what']['staticresource']['staticresource_option'] = array(
       '#type'           => 'radio',
       '#title'          => t('Static resource :'),
       '#return_value'   => 2,
-      '#default_value'  => $item->data_source<2 ? 1 : 2,
-      '#parents'        => array('suggestions')
+      '#default_value'  => $item->data_source < 2 ? 1 : 2,
+      '#parents'        => array('suggestions'),
     );
     $form['search_autocomplete_what']['staticresource']['staticresource_textfield'] = array(
       '#type'           => 'textarea',
@@ -135,12 +135,12 @@ function search_autocomplete_form_configure($form, &$form_state) {
       '#default_value'  => $item->data_static,
       '#size'           => 20,         // The default size is a bit large...
       '#suffix'         => '</div>',  // End of the "form-radios" style.
-      '#attributes'     => array('onClick' => '$("input[name=suggestions][value=2]").attr("checked", true);')
+      '#attributes'     => array('onClick' => '$("input[name=suggestions][value=2]").attr("checked", true);'),
     );
 
     // Template to use.
     $themes = array();
-    $files = file_scan_directory( drupal_get_path('module', 'search_autocomplete') . '/css', '/.*\.css\z/', array('recurse' => FALSE));
+    $files = file_scan_directory(drupal_get_path('module', 'search_autocomplete') . '/css', '/.*\.css\z/', array('recurse' => FALSE));
     foreach ($files as $file) {
       if ($file->name != 'jquery.autocomplete') $themes[$file->filename] = $file->name;
     }
@@ -159,7 +159,7 @@ function search_autocomplete_form_configure($form, &$form_state) {
       '#type'             => 'fieldset',
       '#title'            => t('ADVANCED - Advanced options'),
       '#collapsible'      => TRUE,
-      '#collapsed'        => TRUE
+      '#collapsed'        => TRUE,
     );
     $form['search_autocomplete_advanced']['selector'] = array(
       '#type'             => 'textfield',
@@ -167,12 +167,12 @@ function search_autocomplete_form_configure($form, &$form_state) {
       '#description'      => t('Please change only if you know what you do, read <a href="http://projects.axiomcafe.fr/search-autocomplete">documentation</a> first.'),
       '#default_value'    => $item->selector,
       '#maxlength'        => 255,
-      '#size'             => 35
+      '#size'             => 35,
     );
     // Add button validation
     $form['submit'] = array(
       '#type'             => 'submit',
-      '#value'            => t('Save configuration')
+      '#value'            => t('Save configuration'),
     );
   }
   return $form;
@@ -211,16 +211,21 @@ function search_autocomplete_form_configure_submit($form, &$form_state) {
   $callback = $values['callback_textfield'];
   $data_type = 2; // if static resource => type = 2
   if ($callback != '') {
-    if (url_is_external($callback)) { // if path is absolute:
-      if (strcmp(substr($callback, 0, strlen($base_url)), $base_url) === 0) { // if path is internal:
-        $callback = str_replace($base_url . "/", "", $callback); // get it relative
-        $data_type = 1; // type = 1
+    // If path is absolute:
+    if (url_is_external($callback)) {
+      // If path is internal:
+      if (strcmp(substr($callback, 0, strlen($base_url)), $base_url) === 0) {
+        // Get it relative.
+        $callback = str_replace($base_url . "/", "", $callback); 
+        $data_type = 1;
       }
-      else { // if external: type = 0
+      // If external: type = 0.
+      else {
         $data_type = 0;
       }
     }
-    else { // if path is not absolute:
+    // If path is not absolute:
+    else {
       $data_type = 1;
     }
   }
@@ -268,10 +273,10 @@ function search_autocomplete_form_configure_submit($form, &$form_state) {
   $ok_query ? drupal_set_message(t("Configuration success !")) : drupal_set_message(t("An error has occured while saving the settings. Please, double check your settings!"), 'error');
 }
 
-///////////////////////////////////////////////////////////////////////////////
-////                        HELPER FUNCTIONS                               ////
+// ///////////////////////////////////////////////////////////////////////// //
+// //                        HELPER FUNCTIONS                             // //
 
-// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------.
 /**
  * Helper function: get the array of fids every of his children of 
  * the caller but not caller fid.

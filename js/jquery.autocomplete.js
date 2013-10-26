@@ -39,7 +39,7 @@
               }
               // static resources
               else if (Drupal.settings.search_autocomplete[key].type == 2) {
-                var results = $.ui.autocomplete.filter(Drupal.settings.search_autocomplete[key].datas, request.term );
+                var results = $.ui.autocomplete.filter(Drupal.settings.search_autocomplete[key].datas, request.term);
                     if (!results.length && NoResultsLabel) {
                     results = [NoResultsLabel];
                 }
@@ -54,8 +54,7 @@
             select: function(event, ui) {
               if (ui.item.label === NoResultsLabel) {
                 event.preventDefault();
-              } else
-              if (Drupal.settings.search_autocomplete[key].auto_redirect == 1 && ui.item.link) {
+              } else if (Drupal.settings.search_autocomplete[key].auto_redirect == 1 && ui.item.link) {
                 document.location.href = ui.item.link;
               } else if (Drupal.settings.search_autocomplete[key].auto_submit == 1) {
                   $(this).val(ui.item.label);

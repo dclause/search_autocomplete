@@ -10,8 +10,8 @@
  */
 
 /**
- * MENU CALLBACK:
- * Define the page to add a form.
+ * MENU CALLBACK: Define the page to add a form.
+ *
  * @return  A rendered form
  */
 function search_autocomplete_form_add() {
@@ -50,7 +50,8 @@ function search_autocomplete_form_add() {
  * Save the new form in database.
  */
 function search_autocomplete_form_add_submit($form, &$form_state) {
-  $ok_query = TRUE;  // so far so good!
+  // So far so good!
+  $ok_query = TRUE;
 
   // Get the form values.
   $values = $form_state['values'];
@@ -72,7 +73,7 @@ function search_autocomplete_form_add_submit($form, &$form_state) {
   $fid = db_insert('search_autocomplete_forms')
           ->fields(array(
             'title' => $values['title'],
-            'selector' => $values['selector']
+            'selector' => $values['selector'],
           ))
           ->execute();
 
