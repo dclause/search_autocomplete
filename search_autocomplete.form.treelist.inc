@@ -5,9 +5,6 @@
  * Search Autocomplete
  * Display the list of form to autocomplete and themis it as a draggable table.
  *
- * @authors
- * Miroslav Talenberg (Dominique CLAUSE) <http://www.axiomcafe.fr/contact>
- *
  * Sponsored by:
  * www.axiomcafe.fr
  */
@@ -110,22 +107,8 @@ function search_autocomplete_treelist_form_submit($form, &$form_state) {
   drupal_set_message(t('Configuration success'));
 } //function search_autocomplete_treelist_form_submit()
 
-/**
- * This function transforms the choices into a string.
- */
-function array2str($myarray, &$output = '', $parentkey = "---") {
-  foreach ($myarray as $key => $value) {
-    if (is_array($value)) {
-      $parentkey .= "---";
-      array2str($value, $output, $parentkey);
-      $parentkey = substr($parentkey, 0, -3);
-    }
-    else {
-      $output .= $parentkey . "[" . $key . "] => " . $value . "<br/>";
-    }
-  }
-  return $output;
-}
+
+
 //-------------------------------------------------------------------------------------
 /**
  * CALLBACK:
@@ -183,7 +166,7 @@ function theme_search_autocomplete_treelist_form($variables) {
  * return the items sorted
  */
 function _search_autocomplete_get_items() {
-  $items = array();
+
   // get data in database and fetch it
   $result = db_select('search_autocomplete_forms', 'f')
     ->fields('f')

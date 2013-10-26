@@ -4,9 +4,6 @@
  * @file
  * This file is used to install/update/delete the module tables in database
  *
- * @authors
- * Miroslav Talenberg (Dominique CLAUSE) <http://www.axiomcafe.fr/contact>
- *
  * Sponsored by:
  * www.axiomcafe.fr
  */
@@ -132,8 +129,7 @@ function search_autocomplete_schema() {
  * Implements hook_install().
  */
 function search_autocomplete_install() {
-  global $base_url;
-  
+
   $limit            = variable_get('search_autocomplete_limit', 10);
   $trigger          = variable_get('search_autocomplete_trigger', 3);
   $enabled          = 1;
@@ -141,7 +137,7 @@ function search_autocomplete_install() {
   // ----------------
   // declare insertion statement
   $insert = db_insert('search_autocomplete_forms')
-                ->fields(array('title', 'selector', 'weight', 'enabled', 'min_char', 'max_sug', 'auto_submit', 'auto_redirect', 'data_source', 'data_callback', 'data_static', 'theme'));     
+                ->fields(array('title', 'selector', 'weight', 'enabled', 'min_char', 'max_sug', 'auto_submit', 'auto_redirect', 'data_source', 'data_callback', 'data_static', 'theme'));
   $insert->values(array(
     'title' => st('Search page - Node Tab') . "  (search/node/%)",
     'selector'      => '#search-form[action="/search/node"] #edit-keys',
@@ -225,10 +221,10 @@ function search_autocomplete_update_7300(&$sandbox) {
 
   $num_deleted =  db_drop_table('search_autocomplete_forms');
   $num_deleted &= db_drop_table('search_autocomplete_suggestions');
-  
+
   db_create_table('search_autocomplete_forms', drupal_get_schema('search_autocomplete_forms', TRUE));
   search_autocomplete_install();
-  
+
   return t('The update process is successfull.');
 
   // In case of an error, simply throw an exception with an error message.
@@ -241,7 +237,7 @@ function search_autocomplete_update_7300(&$sandbox) {
 function search_autocomplete_update_7301(&$sandbox) {
   global $base_url;
   $ret = array();
-  
+
   $result = db_select('search_autocomplete_forms', 'f')
     ->fields('f', array('fid', 'data_callback'))
     ->execute()
@@ -283,7 +279,7 @@ function search_autocomplete_update_7310(&$sandbox) {
     'type'        => 'int',
     'not null'    => TRUE,
     'default'     => 1,
-  ); 
+  );
   db_add_field( 'search_autocomplete_forms', 'translite', $translite_field);
   $no_results_field = array(
     'description' => 'Maximum number of suggestions',
@@ -291,9 +287,9 @@ function search_autocomplete_update_7310(&$sandbox) {
     'length'      => 50,
     'not null'    => FALSE,
     'default'     => '-- no results --',
-  ); 
+  );
   db_add_field( 'search_autocomplete_forms', 'no_results', $no_results_field);
-  
+
   drupal_clear_js_cache();
   return t('Update has:<br/>- add a column "translite" in the search autocomplete database.<br/>- add a column "no_results" in the search autocomplete database.<br/> Done with success.');
 
@@ -314,8 +310,8 @@ function search_autocomplete_update_7320(&$sandbox) {
     'size'        => 'big',
   );
   db_change_field('search_autocomplete_forms', 'data_static', 'data_static', $new_field);
-  
-  // Select data_callbacks of 
+
+  // Select data_callbacks of
   $result = db_select('search_autocomplete_forms', 'f')
     ->fields('f', array('fid', 'data_callback'))
     ->execute()
@@ -331,8 +327,4 @@ function search_autocomplete_update_7320(&$sandbox) {
 
   return (t('Update has:') . '<br/>' . t('- changed column type "data_static" from TEXT to LONGTEXT.')
                            . '<br/>' . t('- Add filter to VIEWS callback for performance improvement.'));
-  
-  // In case of an error, simply throw an exception with an error message.
-  throw new DrupalUpdateException('Something went wrong. Please uninstall and install the module again.');
-  return $ret;
 }

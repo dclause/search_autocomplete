@@ -5,9 +5,6 @@
  * Search Autocomplete
  * Add a new form to Search Autocomplete form list.
  *
- * @authors
- * Miroslav Talenberg (Dominique CLAUSE) <http://www.axiomcafe.fr/contact>
- *
  * Sponsored by:
  * www.axiomcafe.fr
  */
@@ -54,11 +51,6 @@ function search_autocomplete_form_add() {
 function search_autocomplete_form_add_submit($form, &$form_state) {
   $ok_query = TRUE;  // so far so good!
 
-  // Update the database with the new values
-  $what = '';
-  $sids = '';
-  $weights = '';
-
   // Get the form values
   $values = $form_state['values'];
 
@@ -70,8 +62,8 @@ function search_autocomplete_form_add_submit($form, &$form_state) {
     ->execute()
     ->fetchAll();
 
-  foreach ($result as $obj) {
-    drupal_set_message(t("The title or the selector already exists. Please choose another one."), 'error');
+  foreach ($result as $selector) {
+    drupal_set_message(t("The title or the selector @selector already exists. Please choose another one.", array('@selector' => $selector);, 'error');
     return;
   }
 

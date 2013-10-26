@@ -5,9 +5,6 @@
  * Search Autocomplete
  * Delete a form from Search Autocomplete form list.
  *
- * @authors
- * Miroslav Talenberg (Dominique CLAUSE) <http://www.axiomcafe.fr/contact>
- *
  * Sponsored by:
  * www.axiomcafe.fr
  */
@@ -56,7 +53,6 @@ function search_autocomplete_form_delete($form, &$form_state, $parent_fid, $fid)
  */
 function search_autocomplete_form_delete_submit($form, &$form_state) {
 
-  $ok = TRUE;
   $values = $form_state['values'];
   $fid = $values['fid'];
   $parent_fid = $values['parent_fid'];

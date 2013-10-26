@@ -5,9 +5,6 @@
  * Search Autocomplete
  * Enables autocomplete functionality on search fields.
  *
- * @authors
- * Miroslav Talenberg (Dominique CLAUSE) <http://www.axiomcafe.fr/contact>
- *
  * Sponsored by:
  * www.axiomcafe.fr
  */
@@ -102,7 +99,8 @@ function _search_autocomplete_render_multiple_field($field, $values) {
 
     // Render items.
     $formatter_name = $options['format'];
-    if ($items && ($formatter = _content_get_formatter($formatter_name, $content_field['type']))) {
+    $formatter = _content_get_formatter($formatter_name, $content_field['type']);
+    if ($items && ($formatter)) {
       $rendered = array();
       if (content_handle('formatter', 'multiple values', $formatter) == CONTENT_HANDLE_CORE) {
         // Single-value formatter.
@@ -123,7 +121,6 @@ function _search_autocomplete_render_multiple_field($field, $values) {
       }
       if (count($rendered) > 1) {
         // TODO: could we use generic field display ?
-        //return theme('content_view_multiple_field', $rendered, $content_field, $values);
         return $rendered;
       }
       elseif ($rendered) {
@@ -197,7 +194,7 @@ function _search_autocomplete_render_fields($view, $row) {
           $object->content = $field_output;
         }
         $object->raw = $field_raw;
-        $object->class = drupal_clean_css_identifier(strtolower($id));//views_css_safe($id);
+        $object->class = drupal_clean_css_identifier(strtolower($id));
 
         $object->label = check_plain($view->field[$id]->label());
 
@@ -269,7 +266,7 @@ function search_autocomplete_get($name, $display_id = 'default', $args = array()
  *
  * @deprecated The $option parameter in PHP 5.4.0 json_encode() deprecates this function.
  *
- * @see _search_autocomplete_json_encode
+ * @see _search_autocomplete_json_encode()
  */
 function _search_autocomplete_encode_formatted($v, $depth = 0) {
   $base_indent  = '&nbsp;&nbsp;';
@@ -291,11 +288,6 @@ function _search_autocomplete_encode_formatted($v, $depth = 0) {
       $search   = array('"', chr(92), chr(8), chr(12), chr(13) . chr(10), chr(10), chr(13), chr(9));
       $replace  = array('\"', '\\', '\b', '\f', '\n', '\n', '\r', '\t');
       $output   = str_replace($search, $replace, $v);
-/* *
-      $output = str_replace(array("\r", "\n", "<", ">", "&"),
-                           array('\r', '\n', '\x3c', '\x3e', '\x26'),
-                           addslashes($output));
-/* */
       return '"' . check_plain($output) . '"';
 
     case 'array':
@@ -323,13 +315,6 @@ function _search_autocomplete_encode_formatted($v, $depth = 0) {
   }
 }
 
-function _search_autocomplete_debug_stop($var, $location) {
-  print("Location:$location\n");
-  var_dump($var);
-  module_Invoke_all('exit');
-  exit;
-}
-
 /**
  * Backwards-compatible JSON encoder.
  *
@@ -338,7 +323,7 @@ function _search_autocomplete_debug_stop($var, $location) {
  * Fallbacks to manual encoding/escaping when PHP 5.2.x and below is detected.
  *
  * @param array $rows
- *   Results from template_preprocess_views_search_autocomplete_style_simple().
+ *   Results from template_preprocess_views_search_autocomplete_style().
  * @param int $bitmask
  *   Integer to use as the $bitmask parameter for json_encode().
  */
@@ -389,7 +374,7 @@ function search_autocomplete_view_autocomplete() {
   $handler->display->display_options['query']['type'] = 'views_query';
   $handler->display->display_options['query']['options']['query_comment'] = FALSE;
   $handler->display->display_options['exposed_form']['type'] = 'basic';
-  $handler->display->display_options['exposed_form']['options']['reset_button_label'] = 'Reinitialize';
+  $handler->display->display_options['exposed_form']['options']['reset_button_label'] = 'Reset';
   $handler->display->display_options['pager']['type'] = 'some';
   $handler->display->display_options['pager']['options']['items_per_page'] = '15';
   $handler->display->display_options['pager']['options']['offset'] = '0';
@@ -405,7 +390,7 @@ function search_autocomplete_view_autocomplete() {
   $handler->display->display_options['sorts']['title']['id'] = 'title';
   $handler->display->display_options['sorts']['title']['table'] = 'node';
   $handler->display->display_options['sorts']['title']['field'] = 'title';
-  /* Filter criterion: Contenu: Publié */
+  /* Filter criterion: Contenu: Published */
   $handler->display->display_options['filters']['status']['id'] = 'status';
   $handler->display->display_options['filters']['status']['table'] = 'node';
   $handler->display->display_options['filters']['status']['field'] = 'status';
@@ -436,7 +421,7 @@ function search_autocomplete_view_autocomplete() {
     t('Node title suggestions for autocompletion'),
     t('more'),
     t('Apply'),
-    t('Reinitialize'),
+    t('Reset'),
     t('Sort by'),
     t('Asc'),
     t('Desc'),
@@ -466,7 +451,7 @@ function search_autocomplete_view_autocomplete() {
   $handler->display->display_options['query']['type'] = 'views_query';
   $handler->display->display_options['query']['options']['query_comment'] = FALSE;
   $handler->display->display_options['exposed_form']['type'] = 'basic';
-  $handler->display->display_options['exposed_form']['options']['reset_button_label'] = 'Reinitialize';
+  $handler->display->display_options['exposed_form']['options']['reset_button_label'] = 'Reset';
   $handler->display->display_options['pager']['type'] = 'some';
   $handler->display->display_options['pager']['options']['items_per_page'] = '15';
   $handler->display->display_options['pager']['options']['offset'] = '0';
@@ -512,7 +497,7 @@ function search_autocomplete_view_autocomplete() {
     t('autocomplete_users'),
     t('more'),
     t('Apply'),
-    t('Reinitialize'),
+    t('Reset'),
     t('Sort by'),
     t('Asc'),
     t('Desc'),

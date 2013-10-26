@@ -2,15 +2,12 @@
  * @file
  * SEARCH AUTOCOMPLETE (version 7.3-x)
  */
- 
+
 /*
- * @authors
- * Miroslav Talenberg (Dominique CLAUSE) <http://www.axiomcafe.fr/contact>
- *
  * Sponsored by:
  * www.axiomcafe.fr
  */
- 
+
 (function ($) {
   Drupal.behaviors.search_autocomplete = {
     attach: function(context) {
@@ -25,7 +22,7 @@
                   // Only return the number of values set in the settings.
                   if (!results.length && NoResultsLabel) {
                       results = [NoResultsLabel];
-                  }   
+                  }
                   response(results.slice(0, Drupal.settings.search_autocomplete[key].max_sug));
                 });
               } else if (Drupal.settings.search_autocomplete[key].type == 1) {      // internal URL
@@ -49,7 +46,7 @@
               $(".ui-autocomplete li.ui-menu-item:odd").addClass("ui-menu-item-odd");
               $(".ui-autocomplete li.ui-menu-item:even").addClass("ui-menu-item-even");
             },
-            select: function(event, ui) { 
+            select: function(event, ui) {
               if (ui.item.label === NoResultsLabel) {
                 event.preventDefault();
               } else

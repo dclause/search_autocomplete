@@ -5,9 +5,6 @@
  * Search Autocomplete
  * Enables autocomplete functionality on search fields.
  *
- * @authors
- * Miroslav Talenberg (Dominique CLAUSE) <http://www.axiomcafe.fr/contact>
- *
  * Sponsored by:
  * www.axiomcafe.fr
  */
@@ -24,9 +21,6 @@ function search_autocomplete_init() {
 
   // checkout if user have authorization to access the autocompleted form
   if (user_access('use Search Autocomplete')) {
-    // init:
-    $settings = array();
-  
     // checkout if the db exists (it should)
     if (db_table_exists('search_autocomplete_forms')) {
       // get every form to autocomplete
@@ -43,14 +37,14 @@ function search_autocomplete_init() {
             $object['label']  = trim(substr($input_data[$i], 0, $cut));
             $object['value']  = trim(substr($input_data[$i], 0, $cut));
             $object['link']   = trim(substr($input_data[$i], $cut+2, strlen($input_data[$i])));
-          } 
+          }
           else {
             $object['label']  = trim($input_data[$i]);
             $object['value']  = trim($input_data[$i]);
           }
           $data_static[] = $object;
         }
-        
+
         $theme_id      = preg_replace("/\\.[^.\\s]{3,4}$/", "", $match->theme);
         $data_source  = $match->data_callback;
         if ($match->data_source == 1 && !url_is_external($match->data_callback)) {
@@ -71,7 +65,7 @@ function search_autocomplete_init() {
             'auto_redirect' => $match->auto_redirect
           )
         )), 'setting');
-        drupal_add_css(drupal_get_path('module', 'search_autocomplete') . '/css/' . $match->theme);         
+        drupal_add_css(drupal_get_path('module', 'search_autocomplete') . '/css/' . $match->theme);
       }
       // If there is some results: need to include the css and js....
       if ($result) {
@@ -83,11 +77,11 @@ function search_autocomplete_init() {
       }
     }
   }
-  
+
   if (isset($_GET['sort_order'])) {
     $_GET['sort_order'] = drupal_strtoupper($_GET['sort_order']);
   }
-  
+
 } // search_autocomplete_init()
 
 

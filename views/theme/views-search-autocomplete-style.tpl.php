@@ -1,9 +1,6 @@
 <?php
 /**
  * @file views-views-json-style.tpl.php
- * This template file is never used. The switch for choosing among the different
- * views_search_autocomplete_* themes based on format is done in
- * views_plugin_style_json->theme_functions()
  *
  * - $view: The View object.
  * - $rows: Array of row objects as rendered by _search_autocomplete_render_fields

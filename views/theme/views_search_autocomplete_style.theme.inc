@@ -22,7 +22,6 @@ function template_preprocess_views_search_autocomplete_style(&$vars) {
   if (array_key_exists(0, $view->args))
     $arg = $view->args[0] ? $view->args[0] : '';
 
-  $base = $view->base_table;
   $objects = array();
 
   $vars['bitmask'] = NULL;

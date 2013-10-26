@@ -5,9 +5,6 @@
  * Search Autocomplete
  * Helper functions to retrive suggestions from database
  *
- * @authors
- * Miroslav Talenberg (Dominique CLAUSE) <http://www.axiomcafe.fr/contact>
- *
  * Sponsored by:
  * www.axiomcafe.fr
  */
@@ -18,7 +15,6 @@
  * @return  A rendered form
  */
 function search_autocomplete_form_configure($form, &$form_state) {
-  $base = "admin/config/search/search_autocomplete";  // base URL for this module configurations
 
   // get data from database
   $fid = arg(4);
@@ -112,8 +108,8 @@ function search_autocomplete_form_configure($form, &$form_state) {
     $descr =  t('Enter the url where to retrieve suggestions. It can be internal (absolute or relative) or external.') . '<br/>' .
               t('To make an easy internal suggestion url, create a view using "Autocompletion JSON" view style ! (<a href="http://projects.axiomcafe.fr/search-autocomplete/advanced-configuration/add-suggestion-type-version-3x">see documentation</a>)') . '<br/>' .
               t('Available views are:') . '<br/>' .
-              'autocomplete-nodes :  ' . t('suggest node titles'). '<br/>' .
-              'autocomplete-users :  ' . t('suggest user names'). '<br/>' .
+              'autocomplete-nodes :  ' . t('suggest node titles') . '<br/>' .
+              'autocomplete-users :  ' . t('suggest user names') . '<br/>' .
               'autocomplete-words :  ' . t('suggest the node titles for nodes containing the user input');
     $form['search_autocomplete_what']['callback']['callback_textfield'] = array(
       '#type'           => 'textfield',
@@ -208,10 +204,6 @@ function search_autocomplete_form_configure_submit($form, &$form_state) {
   $ok_query = TRUE;  // so far so good!
   // get form submission values
   $values = $form_state['values'];
-  //Update the database with the new values
-  $what = '';
-  $sids = '';
-  $weights = '';
 
   // analyse incoming callback
   $callback = $values['callback_textfield'];
@@ -286,7 +278,6 @@ function _search_autocomplete_get_all_children($fid, &$items = array(), $depth =
   if ($depth)
     $items[] = $fid;
 
-  //$result = db_query('SELECT * FROM {search_autocomplete_forms} WHERE parent_fid=:parent_fid', array(':parent_fid' => $fid));
   $result = db_select('search_autocomplete_forms', 'f')
       ->fields('f')
       ->condition('parent_fid', $fid)

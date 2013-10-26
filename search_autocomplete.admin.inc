@@ -5,9 +5,6 @@
  * Search Autocomplete
  * Sets the admin part of the module: permissions, hooks, callbacks, etc...
  *
- * @authors
- * Miroslav Talenberg (Dominique CLAUSE) <http://www.axiomcafe.fr/contact>
- *
  * Sponsored by:
  * www.axiomcafe.fr
  */
