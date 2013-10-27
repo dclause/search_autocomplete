@@ -34,6 +34,7 @@ class search_autocomplete_views_plugin_style extends views_plugin_style {
                             . t('Select the autocompletion input value. If the autocompletion settings are set to auto-submit, this value will be submitted as the suggestion is selected.'),
       '#default_value'  => $this->options['input_value'],
       '#disabled'       => empty($field_label_options),
+      '#required'       => TRUE,
       '#options'        => $field_label_options,
     );
 
@@ -47,6 +48,7 @@ class search_autocomplete_views_plugin_style extends views_plugin_style {
                             . t('Select the autocompletion input link. If the autocompletion settings are set to auto-redirect, this link is where the user will be redirected as the suggestion is selected.'),
       '#default_value'  => $this->options['input_link'],
       '#disabled'       => empty($field_link_options),
+      '#required'       => TRUE,
       '#options'        => $field_link_options,
     );
   }

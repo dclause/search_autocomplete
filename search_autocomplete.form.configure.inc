@@ -12,7 +12,8 @@
 /**
  * MENU CALLBACK: Define the form to configure the suggestions.
  *
- * @return  A rendered form
+ * @return array
+ *   A rendered form.
  */
 function search_autocomplete_form_configure($form, &$form_state) {
 
@@ -105,7 +106,7 @@ function search_autocomplete_form_configure($form, &$form_state) {
       '#prefix'         => '<div class="form-radios">',
       '#parents'        => array('suggestions'),
     );
-    $descr =  t('Enter the url where to retrieve suggestions. It can be internal (absolute or relative) or external.') . '<br/>' .
+    $descr = t('Enter the url where to retrieve suggestions. It can be internal (absolute or relative) or external.') . '<br/>' .
               t('To make an easy internal suggestion url, create a view using "Autocompletion JSON" view style ! (<a href="http://projects.axiomcafe.fr/search-autocomplete/advanced-configuration/add-suggestion-type-version-3x">see documentation</a>)') . '<br/>' .
               t('Available views are:') . '<br/>' .
               'autocomplete-nodes :  ' . t('suggest node titles') . '<br/>' .
@@ -113,10 +114,12 @@ function search_autocomplete_form_configure($form, &$form_state) {
               'autocomplete-words :  ' . t('suggest the node titles for nodes containing the user input');
     $form['search_autocomplete_what']['callback']['callback_textfield'] = array(
       '#type'           => 'textfield',
-      '#description'    =>  $descr,
+      '#description'    => $descr,
       '#default_value'  => $item->data_callback,
-      '#size'           => 80,         // The default size is a bit large...
-      '#suffix'         => '',       // End of the "form-radios" style.
+      // The default size is a bit large...
+      '#size'           => 80,
+      // End of the "form-radios" style.
+       '#suffix'        => '',
       '#attributes'     => array('onClick' => '$("input[name=suggestions][value=1]").attr("checked", true);'),
     );
     // Use a static resource.
@@ -133,8 +136,8 @@ function search_autocomplete_form_configure($form, &$form_state) {
       '#type'           => 'textarea',
       '#description'    => t('Please enter one suggestion per line. You can use the syntax: "foo => http://bar" per line if you wish to add a jumping to URL for the suggestion. Please refer to <a href="http://projects.axiomcafe.fr/search-autocomplete">documentation</a>.'),
       '#default_value'  => $item->data_static,
-      '#size'           => 20,         // The default size is a bit large...
-      '#suffix'         => '</div>',  // End of the "form-radios" style.
+      '#size'           => 20,
+      '#suffix'         => '</div>',
       '#attributes'     => array('onClick' => '$("input[name=suggestions][value=2]").attr("checked", true);'),
     );
 
@@ -152,7 +155,6 @@ function search_autocomplete_form_configure($form, &$form_state) {
       '#description'    => t('Choose the theme to use for autocompletion dropdown popup. Read <a href="http://projects.axiomcafe.fr/search-autocomplete">documentation</a> to learn how to make your own.'),
     );
 
-
     // ------------------------------------------------------------------.
     // ADVANCED - Advanced options.
     $form['search_autocomplete_advanced'] = array(
@@ -169,7 +171,7 @@ function search_autocomplete_form_configure($form, &$form_state) {
       '#maxlength'        => 255,
       '#size'             => 35,
     );
-    // Add button validation
+    // Add button validation.
     $form['submit'] = array(
       '#type'             => 'submit',
       '#value'            => t('Save configuration'),
@@ -187,14 +189,14 @@ function search_autocomplete_form_configure_validate($form, &$form_state) {
 
   $values = $form_state['values'];
   if ($values['suggestions'] == 1) {
-    $new_url = preg_replace('/\?[^=]*=[^&]*/', '', $values['callback_textfield']);
-    if (!drupal_valid_path($new_url)) {
-      form_set_error('url', t('callback url is not valid: @new_url', array(@new_url => $new_url)));
+    $NEW_URL = preg_replace('/\?[^=]*=[^&]*/', '', $values['callback_textfield']);
+    if (!drupal_valid_path($NEW_URL)) {
+      form_set_error('url', t('callback url is not valid: @new_url', array(@new_url => $NEW_URL)));
     }
   }
 }
 
-// -------------------------------------------------------------------------------------
+// -------------------------------------------------------------------------.
 /**
  * Implements hook_submit().
  *
@@ -203,13 +205,14 @@ function search_autocomplete_form_configure_validate($form, &$form_state) {
 function search_autocomplete_form_configure_submit($form, &$form_state) {
   global $base_url;
 
-  $ok_query = TRUE;  // So far so good!
+  $ok_query = TRUE;
   // Get form submission values.
   $values = $form_state['values'];
 
-  // analyse incoming callback
+  // Analyse incoming callback.
   $callback = $values['callback_textfield'];
-  $data_type = 2; // if static resource => type = 2
+  // Static resource => type = 2.
+  $data_type = 2;
   if ($callback != '') {
     // If path is absolute:
     if (url_is_external($callback)) {
@@ -250,7 +253,7 @@ function search_autocomplete_form_configure_submit($form, &$form_state) {
     ->condition('fid', $values['fid'])
     ->execute();
   // ###
-  // UPDATE CHILD LIST BUT NOT THE ADVANCED OPTIONS
+  // UPDATE CHILD LIST BUT NOT THE ADVANCED OPTIONS.
   $fids = _search_autocomplete_get_all_children($values['fid']);
   // Update the settings for this form + every children form.
   foreach ($fids as $fid) {

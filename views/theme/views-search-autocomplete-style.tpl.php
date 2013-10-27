@@ -1,6 +1,6 @@
 <?php
 /**
- * @file 
+ * @file
  * views-views-json-style.tpl.php
  *
  * - $view: The View object.
@@ -27,5 +27,4 @@ else :
   print $json;
   // Don't think this is needed in .tpl.php files: module_invoke_all('exit');
   exit;
-
-}
+endif;
