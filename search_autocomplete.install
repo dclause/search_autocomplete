@@ -170,7 +170,7 @@ function search_autocomplete_install() {
     'data_source'   => 1,
     'data_callback' => 'autocomplete-users?filter=',
     'data_static'   => '',
-    'theme'         => 'classic.css',
+    'theme'         => 'facebook like.css',
   ));
   $insert->values(array(
     'title'     => st('Search Block'),

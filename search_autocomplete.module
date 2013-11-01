@@ -87,6 +87,30 @@ function search_autocomplete_init() {
 }
 
 /**
+ * Implements image_default_styles().
+ *
+ * Add an image style for Search Autocomplete module.
+ */
+function search_autocomplete_image_default_styles() {
+
+  $styles = array();
+  $styles['autocompletion_style'] = array(
+    'effects' => array(
+      array(
+        'name' => 'image_scale_and_crop',
+        'data' => array(
+          'width' => 50,
+          'height' => 50,
+        ),
+        'weight' => 0,
+      ),
+    ),
+  );
+
+  return $styles;
+}
+
+/**
  * HELP FUNCTION: replace placeholders in the input string.
  *
  * @param $input  the string to be replaced

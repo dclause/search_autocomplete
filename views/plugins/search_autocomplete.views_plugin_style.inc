@@ -12,7 +12,7 @@ class search_autocomplete_views_plugin_style extends views_plugin_style {
    * Implements views_plugin_style::option_definition
    */
   function option_definition() {
-    $options = parent::option_definition();
+    // $options = parent::option_definition();
     $options['input_label'] = array('default' => 'field-name');
     $options['input_link'] = array('default' => 'field-name');
     return $options;
@@ -78,15 +78,9 @@ class search_autocomplete_views_plugin_style extends views_plugin_style {
   }
 
   /**
-   * Implements views_style_plugin::additional_theme_functions(). Returns empty array.
-   * @return array
-   */
-  function additional_theme_functions() {
-    return array();
-  }
-
-  /**
-   * Implements view_style_plugin::render()
+   * Implements view_style_plugin::render().
+   *
+   * This methods renders the JSON Autocompletion view style.
    */
   function render($input) {
     $view = $this->view;
@@ -101,27 +95,4 @@ class search_autocomplete_views_plugin_style extends views_plugin_style {
 
     return theme($this->theme_functions(), array('view' => $view, 'style_option' => $style_option, 'rows' => $rows));
   }
-
-
-  // ADDITIONNAL HELPER FUNCTIONS
-
-  /**
-   * This function parse a field definition to look for a particular
-   * option within.
-   * @param fields  an array of the fields
-   * @property the property to look for
-   * @value     the value to restrict to
-   */
-  // function search_autocomplete_parse_fields($fields, $property, $value = TRUE) {
-    // // get all fields label
-    // $labels = $this->display->handler->get_field_labels();
-    // $parsed_fields = array();
-
-    // foreach ($fields as $id => $field) {      // for each fields
-      // if (isset($field[$property]) && $field[$property] == $value) {        // if we find the property value we need..
-        // $parsed_fields[$id] = $labels[$id];       // we take that particular field
-      // }
-    // }
-    // return $parsed_fields;
-  // }
 }

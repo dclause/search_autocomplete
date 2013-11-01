@@ -21,9 +21,6 @@ function template_preprocess_views_search_autocomplete_style(&$vars) {
   $rows = $vars['rows'];
   $style_options = $view->style_options;
   
-  //dpm($view);
-  dpm($style_options);
-  
   $arg = '';
   if (array_key_exists(0, $view->args)) {
     $arg = $view->args[0] ? $view->args[0] : '';
@@ -34,14 +31,8 @@ function template_preprocess_views_search_autocomplete_style(&$vars) {
   $vars['bitmask'] = NULL;
 
   $should_translite = search_autocomplete_get_translite();
-
-   dpm('rows:');
-   dpm($rows);
     
   foreach ($rows as $row) {
-  
-    dpm('row:');
-    dpm($row);
     
     $object = array();   
     
@@ -62,42 +53,17 @@ function template_preprocess_views_search_autocomplete_style(&$vars) {
      * ----------------  */
     $object['value'] = $row[$style_options['input_value']]->raw;
     
-    
     /* ----------------
      * Build the array of output fields...
      * ----------------  */
-    $object['output_fields'] = array();
+    $object['fields'] = array();
     foreach ($style_options['output_fields'] as $field_name) {
-      $object['output_fields'][] = $row[$field_name]->content;
+      // Add the field if the value is not null.
+      if ($row[$field_name]->content) {
+        $object['fields'][$field_name] = $row[$field_name]->label . ' ' . $row[$field_name]->content;
+      }
     }
     
-    
-    $object['label'] = "truc";
-      // $value = $field->raw;
-      // // Hack to romanize accents, this needs module transliteration enabled.
-      // if (function_exists('transliteration_get') && $should_translite) {
-        // $romanised = transliteration_get($value, '?', language_default('language'));
-      // }
-      // else {
-        // $romanised = $value;
-      // }
-      
-      // // Compare both $value and $romanised.
-      // if ($arg == '' || mb_stripos($value, $arg, 0, 'UTF-8')  !== FALSE || mb_stripos( $romanised, $arg, 0, 'UTF-8')  !== FALSE ) {
-
-        // $label = "";
-        // if ($field->label) {
-          // $label = strip_tags($field->label);
-        // }
-
-        // $object['link']  = $link;
-        // $object['label'] = $label . $value;
-        
-        // $object['value'] = $romanised;
-
-        // $objects[] = $object;
-
-      // }
     $objects[] = $object;
   }
 

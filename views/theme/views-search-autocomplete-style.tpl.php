@@ -19,7 +19,7 @@ if ($view->override_path) :
   $json = _search_autocomplete_encode_formatted($rows);
   print "<code>$json</code>";
 else :
-  $json = json_encode($rows, $bitmask);
+  $json = json_encode($rows);
 
   // We want to send the JSON as a server response so switch the content
   // type and stop further processing of the page.
