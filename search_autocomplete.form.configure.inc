@@ -108,8 +108,8 @@ function search_autocomplete_form_configure($form, &$form_state) {
     );
     $descr = t('Enter the url where to retrieve suggestions. It can be internal (absolute or relative) or external.') . '<br/>' .
               t('To make an easy internal suggestion url, create a view using "Autocompletion JSON" view style ! (<a href="http://projects.axiomcafe.fr/search-autocomplete/advanced-configuration/add-suggestion-type-version-3x">see documentation</a>)') . '<br/>' .
-              t('Available views are:') . '<br/>' .
-              'autocomplete-nodes :  ' . t('suggest node titles') . '<br/>' .
+              t('Available views are:') .
+              '<br/>autocomplete-nodes :  ' . t('suggest node titles') . '<br/>' .
               'autocomplete-users :  ' . t('suggest user names') . '<br/>' .
               'autocomplete-words :  ' . t('suggest the node titles for nodes containing the user input');
     $form['search_autocomplete_what']['callback']['callback_textfield'] = array(
@@ -122,7 +122,6 @@ function search_autocomplete_form_configure($form, &$form_state) {
        '#suffix'        => '',
       '#attributes'     => array('onClick' => '$("input[name=suggestions][value=1]").attr("checked", true);'),
     );
-    // Use a static resource.
 
     $form['search_autocomplete_what']['suggestions']['staticresource'] = array();
     $form['search_autocomplete_what']['staticresource']['staticresource_option'] = array(
@@ -145,7 +144,9 @@ function search_autocomplete_form_configure($form, &$form_state) {
     $themes = array();
     $files = file_scan_directory(drupal_get_path('module', 'search_autocomplete') . '/css', '/.*\.css\z/', array('recurse' => FALSE));
     foreach ($files as $file) {
-      if ($file->name != 'jquery.autocomplete') $themes[$file->filename] = $file->name;
+      if ($file->name != 'jquery.autocomplete') {
+        $themes[$file->filename] = $file->name;
+      }
     }
     $form['search_autocomplete_what']['theme'] = array(
       '#type'           => 'select',
@@ -189,9 +190,9 @@ function search_autocomplete_form_configure_validate($form, &$form_state) {
 
   $values = $form_state['values'];
   if ($values['suggestions'] == 1) {
-    $NEW_URL = preg_replace('/\?[^=]*=[^&]*/', '', $values['callback_textfield']);
-    if (!drupal_valid_path($NEW_URL)) {
-      form_set_error('url', t('callback url is not valid: @new_url', array(@new_url => $NEW_URL)));
+    $new_url = preg_replace('/\?[^=]*=[^&]*/', '', $values['callback_textfield']);
+    if (!drupal_valid_path($new_url)) {
+      form_set_error('url', t('callback url is not valid: @new_url', array('@new_url' => $new_url)));
     }
   }
 }
@@ -219,7 +220,7 @@ function search_autocomplete_form_configure_submit($form, &$form_state) {
       // If path is internal:
       if (strcmp(substr($callback, 0, strlen($base_url)), $base_url) === 0) {
         // Get it relative.
-        $callback = str_replace($base_url . "/", "", $callback); 
+        $callback = str_replace($base_url . "/", "", $callback);
         $data_type = 1;
       }
       // If external: type = 0.
@@ -232,11 +233,13 @@ function search_autocomplete_form_configure_submit($form, &$form_state) {
       $data_type = 1;
     }
   }
-  if ($values['suggestions'] == 2) $data_type = 2;
+  if ($values['suggestions'] == 2) {
+    $data_type = 2;
+  }
 
-  // ###
+  // ###.
   // UPDATE THE FORM.
-  // -> update form
+  // -> update form.
   db_update('search_autocomplete_forms')
     ->fields(array(
       'min_char'        => $values['min_char'],
@@ -248,7 +251,7 @@ function search_autocomplete_form_configure_submit($form, &$form_state) {
       'data_source'     => $data_type,
       'data_callback'   => $callback,
       'data_static'     => $values['staticresource_textfield'],
-      'theme'           => $values['theme']
+      'theme'           => $values['theme'],
     ))
     ->condition('fid', $values['fid'])
     ->execute();
@@ -257,7 +260,7 @@ function search_autocomplete_form_configure_submit($form, &$form_state) {
   $fids = _search_autocomplete_get_all_children($values['fid']);
   // Update the settings for this form + every children form.
   foreach ($fids as $fid) {
-    // -> update form
+    // -> update form.
     db_update('search_autocomplete_forms')
       ->fields(array(
         'min_char'        => $values['min_char'],
@@ -265,12 +268,12 @@ function search_autocomplete_form_configure_submit($form, &$form_state) {
         'no_results'      => $values['no_results'],
         'auto_submit'     => $values['auto_submit'],
         'auto_redirect'   => $values['auto_redirect'],
-        'theme'           => $values['theme']
+        'theme'           => $values['theme'],
       ))
       ->condition('fid', $fid)
       ->execute();
   }
-  // ###
+  // ###.
   drupal_clear_css_cache();
   $form_state['redirect'] = 'admin/config/search/search_autocomplete';
   $ok_query ? drupal_set_message(t("Configuration success !")) : drupal_set_message(t("An error has occured while saving the settings. Please, double check your settings!"), 'error');
@@ -281,13 +284,14 @@ function search_autocomplete_form_configure_submit($form, &$form_state) {
 
 // ----------------------------------------------------------------------------.
 /**
- * Helper function: get the array of fids every of his children of 
+ * Helper function: get the array of fids every of his children of
  * the caller but not caller fid.
  */
 function _search_autocomplete_get_all_children($fid, &$items = array(), $depth = 0) {
-  if ($depth)
+  if ($depth) {
     $items[] = $fid;
-
+  }
+  
   $result = db_select('search_autocomplete_forms', 'f')
       ->fields('f')
       ->condition('parent_fid', $fid)

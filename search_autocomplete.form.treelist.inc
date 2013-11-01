@@ -9,7 +9,7 @@
  * www.axiomcafe.fr
  */
 
-//-------------------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
 /**
  * Menu Callback: create the form to list the searchforms.
  *
@@ -68,7 +68,7 @@ function search_autocomplete_treelist_form($form, &$form_state) {
       // Id of the parent item in hierarchy.
       'parent_fid' => array(
         '#type' => 'textfield',
-        '#default_value' => $parent_fid
+        '#default_value' => $parent_fid,
       ),
       // Depth of the item.
       '#depth' => $values->depth,
@@ -84,7 +84,7 @@ function search_autocomplete_treelist_form($form, &$form_state) {
     '#title'          => $title,
     '#description'    => t('If enabled, the user will be suggested with all special characters suggestions when using standard characters. In other word, when entering "foo", suggestions may contain also "f&oacute;&ocirc;bar", "fo&otilde;bar", ...'),
     '#disabled'       => module_exists('transliteration') ? FALSE : TRUE,
-    '#default_value'  => $translite
+    '#default_value'  => $translite,
   );
 
   // Submit buton.
@@ -95,21 +95,21 @@ function search_autocomplete_treelist_form($form, &$form_state) {
   return $form;
 }
 
-//----------------------------------------------------------------------------.
+// ----------------------------------------------------------------------------.
 /**
  * Implements hook_submit().
  *
  * Save the changes in the database.
  */
 function search_autocomplete_treelist_form_submit($form, &$form_state) {
-  //Update the database with the new values
+  // Update the database with the new values.
   foreach ($form_state['values']['my_items'] as $item) {
     db_update('search_autocomplete_forms')
       ->fields(array(
         'weight' => $item['weight'],
         'parent_fid' => $item['parent_fid'],
         'enabled' => $item['enabled'],
-        'translite' => $form_state['values']['translite']
+        'translite' => $form_state['values']['translite'],
       ))
       ->condition('fid', $item['fid'])
       ->execute();
@@ -117,7 +117,7 @@ function search_autocomplete_treelist_form_submit($form, &$form_state) {
   drupal_set_message(t('Configuration success'));
 }
 
-//---------------------------------------------------------------------------.
+// ---------------------------------------------------------------------------.
 /**
  * CALLBACK: Theme function for this treelist form.
  */
@@ -128,7 +128,7 @@ function theme_search_autocomplete_treelist_form($variables) {
   drupal_add_tabledrag('my-draggable-table', 'match', 'parent', 'parent-group', 'parent-group', 'id-group');
 
   $rows = array();
-  
+
   // For each elements to anchor in the form.
   foreach (element_children($form['my_items']) as $key) {
 
@@ -151,44 +151,53 @@ function theme_search_autocomplete_treelist_form($variables) {
     );
   }
   // Create table headers.
-  $header = array(t('Form nam'), t('Enabled'), t('Weight'), array(
-    'data' => t('Operations'),
-    'colspan' => 2,
-  ));
+  $header = array(t('Form nam'),
+    t('Enabled'),
+    t('Weight'),
+    array(
+      'data' => t('Operations'),
+      'colspan' => 2,
+    ),
+  );
   // Themize the table and render the form.
-  $output  = theme('table', array('header' => $header, 'rows' => $rows, 'attributes' => array('id' => 'my-draggable-table')));
+  $output  = theme('table', array(
+    'header' => $header,
+    'rows' => $rows,
+    'attributes' => array(
+      'id' => 'my-draggable-table',
+    ),
+  ));
   $output .= drupal_render_children($form);
   $output .= drupal_render($form['submit']);
 
   return $output;
 }
 
+// ////////////////////////////////////////////////////////////////////////////
+// //                         HELPER FUNCTIONS                            // //
 
-
-///////////////////////////////////////////////////////////////////////////////
-////                           HELPER FUNCTIONS                            ////
-
-//----------------------------------------------------------------------------.
+// ---------------------------------------------------------------------------.
 /**
  * Helper function: get the forms from database and render them hierarchically.
  * Return the items sorted.
  */
 function _search_autocomplete_get_items() {
 
-  // get data in database and fetch it
+  // Get data in database and fetch it.
   $result = db_select('search_autocomplete_forms', 'f')
     ->fields('f')
-    ->orderBy('weight')  //ORDER BY created
+    ->orderBy('weight')
     ->execute()
     ->fetchAllAssoc('fid');
 
-  // order the list
+  // Order the list.
   return _search_autocomplete_get_ordered_list(0, $result);
-} //function _search_autocomplete_get_items()
+}
 
-//-------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------.
 /**
- * HELPER:
+ * HELPER function to order a list.
+ *
  * Returns a tree list of all items in the $items array that are children
  * of the supplied parent, ordered appropriately.
  *
@@ -227,12 +236,11 @@ function _search_autocomplete_get_ordered_list($parent, $items, $depth = 0) {
   return $ancestors;
 }
 
-//-------------------------------------------------------------------------------------
+// ---------------------------------------------------------------------------.
 /**
- * HELPER:
- * Usort function for sorting arrays by weight.
+ * HELPER function : Usort function for sorting arrays by weight.
  *
- * @return boolean
+ * @return bool
  *   1: if ($a < $b),
  *   0 if equal,
  *   -1 otherwise
@@ -242,4 +250,3 @@ function _search_autocomplete_sort_by_weight($a, $b) {
     return 0;
   return ($a->weight < $b->weight) ? -1 : 1;
 }
-
