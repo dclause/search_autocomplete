@@ -12,7 +12,7 @@
 /**
  * MENU CALLBACK: Define the page to add a form.
  *
- * @return  array
+ * @return array
  *   A rendered form
  */
 function search_autocomplete_form_add() {
