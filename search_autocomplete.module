@@ -15,17 +15,18 @@ include_once('search_autocomplete.view_autocomplete.inc');
 
 /**
  * Implements hook_init().
+ *
  * Add autocomplete.js on everypage.
  */
 function search_autocomplete_init() {
 
-  // checkout if user have authorization to access the autocompleted form
+  // Checkout if user have authorization to access the autocompleted form.
   if (user_access('use Search Autocomplete')) {
-    // checkout if the db exists (it should)
+    // Checkout if the db exists (it should).
     if (db_table_exists('search_autocomplete_forms')) {
-      // get every form to autocomplete
+      // Get every form to autocomplete.
       $result = db_query('SELECT * FROM {search_autocomplete_forms} WHERE enabled=1');
-      // build the setting array to transfert to JS
+      // Build the setting array to transfert to JS.
       foreach ($result as $match) {
         $form_id = 'form' . $match->fid;
         $input_data  = explode("\n", $match->data_static);
@@ -60,9 +61,10 @@ function search_autocomplete_init() {
             'type'          => $match->data_source,
             'datas'         => $match->data_source > 1 ? $data_static : $data_source,
             'fid'           => $match->fid,
-            'theme'         => str_replace(' ', '-', strtolower($theme_id)),    // get the css filename with '-' instead of ' ', lower case and no '.css'
+            // Get the css filename with '-' instead of ' ', lower case and no '.css'.
+            'theme'         => str_replace(' ', '-', strtolower($theme_id)),
             'auto_submit'   => $match->auto_submit,
-            'auto_redirect' => $match->auto_redirect
+            'auto_redirect' => $match->auto_redirect,
           )
         )), 'setting');
         drupal_add_css(drupal_get_path('module', 'search_autocomplete') . '/css/' . $match->theme);
@@ -82,11 +84,11 @@ function search_autocomplete_init() {
     $_GET['sort_order'] = drupal_strtoupper($_GET['sort_order']);
   }
 
-} // search_autocomplete_init()
-
+}
 
 /**
- * HELP FUNCTION: replace placeholders in the input string
+ * HELP FUNCTION: replace placeholders in the input string.
+ *
  * @param $input  the string to be replaced
  * @param $args   the array of placeholders and values
  */
@@ -100,10 +102,11 @@ function search_autocomplete_replaceArguments(&$input, &$args) {
 }
 
 /**
- * Helper function: get from database if suggestions should be translited
+ * Helper function: get from database if suggestions should be translited.
  */
 function search_autocomplete_get_translite() {
-// get data in database and fetch it
+  
+  // Get data in database and fetch it.
   $result = db_select('search_autocomplete_forms', 'f')
     ->fields('f', array('translite'))
     ->range(0, 1)

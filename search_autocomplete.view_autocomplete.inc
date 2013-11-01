@@ -99,8 +99,7 @@ function _search_autocomplete_render_multiple_field($field, $values) {
 
     // Render items.
     $formatter_name = $options['format'];
-    $formatter = _content_get_formatter($formatter_name, $content_field['type']);
-    if ($items && ($formatter)) {
+    if ($items && ($formatter = _content_get_formatter($formatter_name, $content_field['type']))) {
       $rendered = array();
       if (content_handle('formatter', 'multiple values', $formatter) == CONTENT_HANDLE_CORE) {
         // Single-value formatter.
@@ -121,6 +120,7 @@ function _search_autocomplete_render_multiple_field($field, $values) {
       }
       if (count($rendered) > 1) {
         // TODO: could we use generic field display ?
+        //return theme('content_view_multiple_field', $rendered, $content_field, $values);
         return $rendered;
       }
       elseif ($rendered) {
@@ -194,7 +194,7 @@ function _search_autocomplete_render_fields($view, $row) {
           $object->content = $field_output;
         }
         $object->raw = $field_raw;
-        $object->class = drupal_clean_css_identifier(strtolower($id));
+        $object->class = drupal_clean_css_identifier(strtolower($id));//views_css_safe($id);
 
         $object->label = check_plain($view->field[$id]->label());
 
@@ -266,9 +266,11 @@ function search_autocomplete_get($name, $display_id = 'default', $args = array()
  *
  * @deprecated The $option parameter in PHP 5.4.0 json_encode() deprecates this function.
  *
- * @see _search_autocomplete_json_encode()
+ * @see _search_autocomplete_json_encode
  */
 function _search_autocomplete_encode_formatted($v, $depth = 0) {
+
+dpm($v);
   $base_indent  = '&nbsp;&nbsp;';
   $eol          = '<br />';
   $indent       = str_repeat($base_indent, $depth);
@@ -288,6 +290,11 @@ function _search_autocomplete_encode_formatted($v, $depth = 0) {
       $search   = array('"', chr(92), chr(8), chr(12), chr(13) . chr(10), chr(10), chr(13), chr(9));
       $replace  = array('\"', '\\', '\b', '\f', '\n', '\n', '\r', '\t');
       $output   = str_replace($search, $replace, $v);
+/* *
+      $output = str_replace(array("\r", "\n", "<", ">", "&"),
+                           array('\r', '\n', '\x3c', '\x3e', '\x26'),
+                           addslashes($output));
+/* */
       return '"' . check_plain($output) . '"';
 
     case 'array':
@@ -315,32 +322,11 @@ function _search_autocomplete_encode_formatted($v, $depth = 0) {
   }
 }
 
-/**
- * Backwards-compatible JSON encoder.
- *
- * Provides backwars-compatible support for more JSON encoding formats.
- * Uses PHP's native JSON encoding when PHP 5.3.0 or greater is detected.
- * Fallbacks to manual encoding/escaping when PHP 5.2.x and below is detected.
- *
- * @param array $rows
- *   Results from template_preprocess_views_search_autocomplete_style().
- * @param int $bitmask
- *   Integer to use as the $bitmask parameter for json_encode().
- */
-function _search_autocomplete_json_encode($rows, $bitmask = NULL) {
-
-  if (PHP_MAJOR_VERSION >= 5 && PHP_MINOR_VERSION >= 3) {
-    $json = json_encode($rows, $bitmask);
-    // Encoding features not supported before 5.4.x.
-    if (PHP_MINOR_VERSION <= 4) {
-      $json = str_replace(array('\/'), array('/'), $json);
-    }
-  }
-  else {
-    $json = json_encode($rows);
-    $json = str_replace(array('\/'), array('/'), $json);
-  }
-  return $json;
+function _search_autocomplete_debug_stop($var, $location) {
+  print("Location:$location\n");
+  var_dump($var);
+  module_Invoke_all('exit');
+  exit;
 }
 
 /**

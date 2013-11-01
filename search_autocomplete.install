@@ -8,14 +8,18 @@
  * www.axiomcafe.fr
  */
 
-// -----------------------------------------------------------------------------------------------
+// -----------------------------------------------------------------------.
 /**
  * Implements hook_schema().
- * Set the schema of database
- * @return the schema for of the table to create
+ *
+ * Set the schema of database.
+ *
+ * @return array
+ *   The schema for of the table to create.
  */
 function search_autocomplete_schema() {
-  // schema for search_autocomplete database
+  
+  // Schema for search_autocomplete database.
   $schema['search_autocomplete_forms'] = array(
     'description' => t('Store the forms to autocomplete using Search Autocomplete.'),
     'fields' => array(
@@ -122,9 +126,9 @@ function search_autocomplete_schema() {
   );
 
   return $schema;
-} // function search_autocomplete_schema
+}
 
-//-----------------------------------------------------------------------------------------------
+// -------------------------------------------------------------------------.
 /**
  * Implements hook_install().
  */
@@ -135,7 +139,7 @@ function search_autocomplete_install() {
   $enabled          = 1;
 
   // ----------------
-  // declare insertion statement
+  // Declare insertion statement.
   $insert = db_insert('search_autocomplete_forms')
                 ->fields(array('title', 'selector', 'weight', 'enabled', 'min_char', 'max_sug', 'auto_submit', 'auto_redirect', 'data_source', 'data_callback', 'data_static', 'theme'));
   $insert->values(array(
@@ -151,7 +155,7 @@ function search_autocomplete_install() {
     'data_source'   => 1,
     'data_callback' => 'autocomplete-nodes?filter=',
     'data_static'   => '',
-    'theme'         => 'classic.css'
+    'theme'         => 'classic.css',
   ));
   $insert->values(array(
     'title'     => st('Search page - User Tab') . "  (search/user/%)",
@@ -166,7 +170,7 @@ function search_autocomplete_install() {
     'data_source'   => 1,
     'data_callback' => 'autocomplete-users?filter=',
     'data_static'   => '',
-    'theme'         => 'classic.css'
+    'theme'         => 'classic.css',
   ));
   $insert->values(array(
     'title'     => st('Search Block'),
@@ -181,20 +185,19 @@ function search_autocomplete_install() {
     'data_source'   => 1,
     'data_callback' => 'autocomplete-nodes?filter=',
     'data_static'   => '',
-    'theme'         => 'classic.css'
+    'theme'         => 'classic.css',
   ));
   $insert->execute();
 
   drupal_set_message(st('Search Autocomplete is now correctly installed!') . "<br/>" . st('If you see some functionalities missing or broken, please post an issue here:') . '  <a href="http://drupal.org/project/issues/search_autocomplete">http://drupal.org/project/issues/search_autocomplete</a>');
-
-
-} // function search_autocomplete_install
+}
 
 /**
  * Permission fix for update process from 6.x
  */
 function search_autocomplete_update_7000() {
   $t = get_t();
+  
   // In Drupal 6 the permissions were wrapped in t(), but in Drupal 7 they are
   // not. So we want to make sure the database is storing the untranslated
   // permission or we could run into issues on upgraded Drupal 7 sites.
@@ -214,8 +217,8 @@ function search_autocomplete_update_7000() {
 }
 
 /**
-  * Get ready for Search Autocomplete 7.3-x
-  */
+ * Get ready for Search Autocomplete 7.3-x
+ */
 function search_autocomplete_update_7300(&$sandbox) {
   $ret = array();
 
@@ -231,9 +234,10 @@ function search_autocomplete_update_7300(&$sandbox) {
   throw new DrupalUpdateException('Something went wrong. Please uninstall and install the module again.');
   return $ret;
 }
-/**
-  * Get ready for Search Autocomplete 7.x-3.0-rc2
-  */
+
+/*
+ * Get ready for Search Autocomplete 7.x-3.0-rc2
+ */
 function search_autocomplete_update_7301(&$sandbox) {
   global $base_url;
   $ret = array();
@@ -261,16 +265,16 @@ function search_autocomplete_update_7301(&$sandbox) {
 }
 
 /**
-  * Get ready for Search Autocomplete 7.x-3.0-rc3
-  */
+ * Get ready for Search Autocomplete 7.x-3.0-rc3
+ */
 function search_autocomplete_update_7302(&$sandbox) {
   $ret = array();
   cache_clear_all();
   return $ret;
 }
 /**
-  * Get ready for Search Autocomplete 7.x-3.1
-  */
+ * Get ready for Search Autocomplete 7.x-3.1
+ */
 function search_autocomplete_update_7310(&$sandbox) {
   $ret = array();
 
@@ -300,10 +304,11 @@ function search_autocomplete_update_7310(&$sandbox) {
 // -----------------------------------------------------------------------------------------------
 
 /**
-  * Get ready for Search Autocomplete 7.x-3.2
-  */
+ * Get ready for Search Autocomplete 7.x-3.2
+ */
 function search_autocomplete_update_7320(&$sandbox) {
-  // Create the definition for the field
+
+  // Create the definition for the field.
   $new_field = array(
     'description' => 'Static text as a data',
     'type'        => 'text',
@@ -311,7 +316,7 @@ function search_autocomplete_update_7320(&$sandbox) {
   );
   db_change_field('search_autocomplete_forms', 'data_static', 'data_static', $new_field);
 
-  // Select data_callbacks of
+  // Select data_callbacks of.
   $result = db_select('search_autocomplete_forms', 'f')
     ->fields('f', array('fid', 'data_callback'))
     ->execute()
