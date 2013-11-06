@@ -7,7 +7,7 @@
  *
  * - $view: The View object.
  * - $rows: Array of row objects as rendered by _search_autocomplete_render_fields
- *   $options: Array of plugin style options
+ * - $options: Array of plugin style options
  *
  * @ingroup views_templates
  * @see views_plugin_style_json.inc

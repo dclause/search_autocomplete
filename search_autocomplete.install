@@ -333,3 +333,21 @@ function search_autocomplete_update_7320(&$sandbox) {
   return (t('Update has:') . '<br/>' . t('- changed column type "data_static" from TEXT to LONGTEXT.')
                            . '<br/>' . t('- Add filter to VIEWS callback for performance improvement.'));
 }
+
+/**
+ * Get ready for Search Autocomplete 7.x-4.0-alpha1
+ */
+function search_autocomplete_update_7400(&$sandbox) {
+
+  // Select data_callbacks of.
+  db_update('search_autocomplete_forms')
+    ->fields(array(
+      'theme'   => 'facebook like.css')
+    )
+    ->condition('data_callback', 'autocomplete-users?filter=', '=')
+    ->execute();
+    
+  cache_clear_all();
+  
+  return (t('Update has been done.'));
+}

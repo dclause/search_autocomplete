@@ -162,7 +162,7 @@ function search_autocomplete_views_default_views() {
  */
 function search_autocomplete_view_autocomplete() {
 
-  // AUTOCOMPLETE NODE VIEW
+  // AUTOCOMPLETE NODES VIEW
   $view_nodes = new view();
   $view_nodes->name = 'autocomplete_nodes';
   $view_nodes->description = '';
@@ -172,7 +172,6 @@ function search_autocomplete_view_autocomplete() {
   $view_nodes->core = 7;
   $view_nodes->api_version = '3.0';
   $view_nodes->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
-
   /* Display: Master */
   $handler = $view_nodes->new_display('default', 'Master', 'default');
   $handler->display->display_options['title'] = 'Node title suggestions for autocompletion';
@@ -184,12 +183,18 @@ function search_autocomplete_view_autocomplete() {
   $handler->display->display_options['query']['options']['query_comment'] = FALSE;
   $handler->display->display_options['exposed_form']['type'] = 'basic';
   $handler->display->display_options['exposed_form']['options']['submit_button'] = 'Appliquer';
+  $handler->display->display_options['exposed_form']['options']['reset_button_label'] = 'Réinitialiser';
   $handler->display->display_options['exposed_form']['options']['exposed_sorts_label'] = 'Trier par';
   $handler->display->display_options['pager']['type'] = 'some';
   $handler->display->display_options['pager']['options']['items_per_page'] = '15';
   $handler->display->display_options['pager']['options']['offset'] = '0';
   $handler->display->display_options['style_plugin'] = 'search_autocomplete';
   $handler->display->display_options['style_options']['input_link'] = 'view_node';
+  $handler->display->display_options['style_options']['output_fields'] = array(
+    'title' => 'title',
+    'name' => 'name',
+    'comment_count' => 'comment_count',
+  );
   /* Relation: Contenu : Auteur */
   $handler->display->display_options['relationships']['uid']['id'] = 'uid';
   $handler->display->display_options['relationships']['uid']['table'] = 'node';
@@ -248,7 +253,6 @@ function search_autocomplete_view_autocomplete() {
     4 => 0,
     3 => 0,
   );
-
   /* Display: Page */
   $handler = $view_nodes->new_display('page', 'Page', 'page');
   $handler->display->display_options['path'] = 'autocomplete-nodes';
@@ -265,7 +269,6 @@ function search_autocomplete_view_autocomplete() {
   $view_users->core = 7;
   $view_users->api_version = '3.0';
   $view_users->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
-
   /* Display: Master */
   $handler = $view_users->new_display('default', 'Master', 'default');
   $handler->display->display_options['title'] = 'autocomplete_users';
@@ -278,12 +281,18 @@ function search_autocomplete_view_autocomplete() {
   $handler->display->display_options['query']['options']['query_comment'] = FALSE;
   $handler->display->display_options['exposed_form']['type'] = 'basic';
   $handler->display->display_options['exposed_form']['options']['submit_button'] = 'Appliquer';
+  $handler->display->display_options['exposed_form']['options']['reset_button_label'] = 'Réinitialiser';
   $handler->display->display_options['exposed_form']['options']['exposed_sorts_label'] = 'Trier par';
   $handler->display->display_options['pager']['type'] = 'some';
   $handler->display->display_options['pager']['options']['items_per_page'] = '15';
   $handler->display->display_options['pager']['options']['offset'] = '0';
   $handler->display->display_options['style_plugin'] = 'search_autocomplete';
   $handler->display->display_options['style_options']['input_link'] = 'view_user';
+  $handler->display->display_options['style_options']['output_fields'] = array(
+    'picture' => 'picture',
+    'name' => 'name',
+    'rid' => 'rid',
+  );
   /* Champ: Utilisateur : Lien */
   $handler->display->display_options['fields']['view_user']['id'] = 'view_user';
   $handler->display->display_options['fields']['view_user']['table'] = 'users';
@@ -342,7 +351,6 @@ function search_autocomplete_view_autocomplete() {
   /* Display: Page */
   $handler = $view_users->new_display('page', 'Page', 'page');
   $handler->display->display_options['path'] = 'autocomplete-users';
-  
   $views[$view_users->name] = $view_users;
 
   // AUTOCOMPLETE NODE WORDS
@@ -366,12 +374,14 @@ function search_autocomplete_view_autocomplete() {
   $handler->display->display_options['query']['type'] = 'views_query';
   $handler->display->display_options['exposed_form']['type'] = 'basic';
   $handler->display->display_options['exposed_form']['options']['submit_button'] = 'Appliquer';
-  $handler->display->display_options['exposed_form']['options']['reset_button_label'] = 'Reset';
   $handler->display->display_options['exposed_form']['options']['exposed_sorts_label'] = 'Trier par';
   $handler->display->display_options['pager']['type'] = 'some';
   $handler->display->display_options['pager']['options']['items_per_page'] = '15';
   $handler->display->display_options['style_plugin'] = 'search_autocomplete';
   $handler->display->display_options['style_options']['input_link'] = 'view_node';
+  $handler->display->display_options['style_options']['output_fields'] = array(
+    'title' => 'title',
+  );
   /* Champ: Contenu : Titre */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';
@@ -413,11 +423,9 @@ function search_autocomplete_view_autocomplete() {
     1 => 0,
     3 => 0,
   );
-
   /* Display: Page */
   $handler = $view_words->new_display('page', 'Page', 'page');
   $handler->display->display_options['path'] = 'autocomplete-words';
-  
   $views[$view_words->name] = $view_words;
 
   return $views;

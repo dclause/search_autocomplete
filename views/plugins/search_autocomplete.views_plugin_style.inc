@@ -12,9 +12,10 @@ class search_autocomplete_views_plugin_style extends views_plugin_style {
    * Implements views_plugin_style::option_definition
    */
   function option_definition() {
-    // $options = parent::option_definition();
+    $options = parent::option_definition();
     $options['input_label'] = array('default' => 'field-name');
     $options['input_link'] = array('default' => 'field-name');
+    $options['output_fields'] = array('default' => 'field-name');
     return $options;
   }
 
@@ -64,7 +65,6 @@ class search_autocomplete_views_plugin_style extends views_plugin_style {
       '#multiple'       => TRUE, 
       '#options'        => $all_view_fields,
     );
-    
   }
 
   /**
@@ -73,8 +73,17 @@ class search_autocomplete_views_plugin_style extends views_plugin_style {
    * @return array
    */
   function theme_functions() {
+    $options = $this->options;
     $hook = 'views_search_autocomplete_style';
     return views_theme_functions($hook, $this->view, $this->display);
+  }
+
+  /**
+   * Implements views_style_plugin::additional_theme_functions(). Returns empty array.
+   * @return array
+   */
+  function additional_theme_functions() {
+    return array();
   }
 
   /**
@@ -84,8 +93,8 @@ class search_autocomplete_views_plugin_style extends views_plugin_style {
    */
   function render($input) {
     $view = $this->view;
-    $style_option = $this->view->style_option;   
-    
+    $options = $this->options;
+
     $rows = array();
     foreach ($view->result as $count => $row) {
       $view->row_index = $count;
@@ -93,6 +102,6 @@ class search_autocomplete_views_plugin_style extends views_plugin_style {
     }
     unset($view->row_index);
 
-    return theme($this->theme_functions(), array('view' => $view, 'style_option' => $style_option, 'rows' => $rows));
+    return theme($this->theme_functions(), array('view' => $view, 'options' => $options, 'rows' => $rows));
   }
 }

@@ -7,7 +7,7 @@
  * - $view: The view in use.
  * - $rows: Array of row objects as rendered by
  * _search_autocomplete_render_fields
- * - $attachment: Not used currently
+ * - $options: The options for the style passed in from the UI.
  *
  * @ingroup views_templates
  * @see search_autocomplete.views.inc
@@ -19,7 +19,7 @@ function template_preprocess_views_search_autocomplete_style(&$vars) {
 
   $view = $vars['view'];
   $rows = $vars['rows'];
-  $style_options = $view->style_options;
+  $style_options = $vars['options'];
   
   $arg = '';
   if (array_key_exists(0, $view->args)) {
@@ -59,7 +59,7 @@ function template_preprocess_views_search_autocomplete_style(&$vars) {
     $object['fields'] = array();
     foreach ($style_options['output_fields'] as $field_name) {
       // Add the field if the value is not null.
-      if ($row[$field_name]->content) {
+      if (array_key_exists($field_name, $row) && $row[$field_name] && $row[$field_name]->content) {
         $object['fields'][$field_name] = $row[$field_name]->label . ' ' . $row[$field_name]->content;
       }
     }
