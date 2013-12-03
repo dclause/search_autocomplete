@@ -48,7 +48,8 @@ function search_autocomplete_init() {
 
         $theme_id      = preg_replace("/\\.[^.\\s]{3,4}$/", "", $match->theme);
         $data_source  = $match->data_callback;
-        if ($match->data_source == 1 && !url_is_external($match->data_callback)) {
+                
+        if (($match->data_source == 1 || $match->data_source == 3) && !url_is_external($match->data_callback)) {
           $data_source = urldecode(url($match->data_callback, array('absolute' => TRUE)));
         }
 
@@ -59,7 +60,7 @@ function search_autocomplete_init() {
             'max_sug'       => $match->max_sug,
             'no_results'    => $match->no_results,
             'type'          => $match->data_source,
-            'datas'         => $match->data_source > 1 ? $data_static : $data_source,
+            'datas'         => $match->data_source == 2 ? $data_static : $data_source,
             'fid'           => $match->fid,
             // Get the css filename with '-' instead of ' ', lower case and no '.css'.
             'theme'         => str_replace(' ', '-', strtolower($theme_id)),

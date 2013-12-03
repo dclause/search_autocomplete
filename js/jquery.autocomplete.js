@@ -12,23 +12,27 @@
   
   // Autocomplete
   $.ui.autocomplete.prototype._renderItem = function (ul, item) {
-    console.log(item);
-    console.log(this.term);
-    
-    var innerHTML = '<div class="ui-autocomplete-fields">';
+    var term = this.term;
+    var first = ("group" in item)  ? 'first' : '';
+    var innerHTML = '<div class="ui-autocomplete-fields ' + first + '">';
+    if ("group" in item) {
+    	innerHTML += ('<div class="ui-autocomplete-field-group ' + item.group.group_id + '">' + item.group.group_name + '</div>');
+    }
     if (item.fields) {
       $.each( item.fields, function( key, value ) {
-        innerHTML += ('<div class="ui-autocomplete-field-' + key + '">' + value + '</div>');
+      var regex = new RegExp( '(' + $.trim(term) + ')', 'gi' );
+    	var output  = value.replace(regex, "<span class='ui-autocomplete-field-term'>$1</span>");
+        innerHTML += ('<div class="ui-autocomplete-field-' + key + '">' + output + '</div>');
       });
     } else {
-      innerHTML += item.value;
+    	// Case no results :
+    	innerHTML += ('<div class="ui-autocomplete-field-noresult">' + item.label + '</div>');
     }
     innerHTML += '</div>';
 
-    var itemLabel = innerHTML.replace(this.term, "<span class='ui-autocomplete-field-term'>" + this.term + "</span>");
     return $( "<li></li>" )
         .data( "item.autocomplete", item )
-        .append( "<a>" + itemLabel + "</a>" )
+        .append( "<a>" + innerHTML + "</a>" )
         .appendTo( ul );
   };
   
@@ -42,7 +46,7 @@
       if (Drupal.settings.search_autocomplete) {
         $.each(Drupal.settings.search_autocomplete, function(key, value) {
           var NoResultsLabel = Drupal.settings.search_autocomplete[key].no_results;
-          $(Drupal.settings.search_autocomplete[key].selector).addClass('ui-autocomplete-processed').autocomplete({
+          $(Drupal.settings.search_autocomplete[key].selector).addClass('ui-autocomplete-processed ui-theme-' + Drupal.settings.search_autocomplete[key].theme).autocomplete({
             minLength: Drupal.settings.search_autocomplete[key].minChars,
             source: function(request, response) {
               // External URL:
@@ -56,7 +60,7 @@
                 });
               }
               // Internal URL:
-              else if (Drupal.settings.search_autocomplete[key].type == 1) {
+              else if (Drupal.settings.search_autocomplete[key].type == 1 || Drupal.settings.search_autocomplete[key].type == 3) {
                 $.getJSON(Drupal.settings.search_autocomplete[key].datas + request.term, { }, function (results) {
                   // Only return the number of values set in the settings.
                   if (!results.length && NoResultsLabel) {

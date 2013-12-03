@@ -92,6 +92,25 @@ function search_autocomplete_menu() {
     'access arguments'  => array('administer Search Autocomplete'),
     'file'              => 'search_autocomplete.form.delete.inc',
   );
+  // create a callback page for JSON suggestions
+  $items['search_autocomplete/autocomplete'] = array(
+    'title' => 'Autocompleton when using view',
+    'page callback' => 'search_autocomplete_autocomplete',
+    'type' => MENU_CALLBACK,
+    'access callback' => TRUE,
+    'access arguments' => array('access content'),
+    'file' => 'search_autocomplete.autocomplete.inc',
+  );
+  
+  $items['views/autocomplete'] = array(
+    'title' => 'Autocomplete view selector',
+    'page callback' => 'search_autocomplete_views_autocomplete',
+    // access not properly checked on callbacks (see function)
+    'type' => MENU_CALLBACK,
+    'access callback' => TRUE,
+    'access arguments' => array('access content'),
+    'file' => 'search_autocomplete.autocomplete.inc',
+  );
   return $items;
 }
 

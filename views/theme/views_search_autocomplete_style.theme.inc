@@ -15,7 +15,7 @@
  
 
 function template_preprocess_views_search_autocomplete_style(&$vars) {
-  global $base_root;
+global $base_root;
 
   $view = $vars['view'];
   $rows = $vars['rows'];
@@ -27,10 +27,8 @@ function template_preprocess_views_search_autocomplete_style(&$vars) {
   }
 
   $objects = array();
-
+  
   $vars['bitmask'] = NULL;
-
-  $should_translite = search_autocomplete_get_translite();
     
   foreach ($rows as $row) {
     
@@ -45,13 +43,13 @@ function template_preprocess_views_search_autocomplete_style(&$vars) {
     if (preg_match("/$regexp/siU", htmlspecialchars_decode($row[$style_options['input_link']]->content, ENT_QUOTES), $matches)) {
       $link = $base_root . $matches[2];
       // And build the link object.
-      $object['link'] = $link;
+      $object['link'] = trim($link);
     }
     
     /* ----------------
      * Build the value...
      * ----------------  */
-    $object['value'] = $row[$style_options['input_value']]->raw;
+    $object['value'] = trim($row[$style_options['input_label']]->raw);
     
     /* ----------------
      * Build the array of output fields...
@@ -60,13 +58,36 @@ function template_preprocess_views_search_autocomplete_style(&$vars) {
     foreach ($style_options['output_fields'] as $field_name) {
       // Add the field if the value is not null.
       if (array_key_exists($field_name, $row) && $row[$field_name] && $row[$field_name]->content) {
-        $object['fields'][$field_name] = $row[$field_name]->label . ' ' . $row[$field_name]->content;
+        $object['fields'][$field_name] = trim($row[$field_name]->label . ' ' . $row[$field_name]->content);
       }
     }
     
-    $objects[] = $object;
+    if ($style_options['group_by']) {
+      $group_type = $style_options['group_by'];
+      $group_name = $row[$group_type]->content;
+      if (!isset($objects[$group_name])) {
+        $objects[$group_name] = array();
+      }
+      $objects[$group_name][] = $object;
+    } else{
+      $objects[] = $object;
+    }
   }
 
-  // Check if user wants nested arrays.
-  $vars["rows"] = $objects;
+//   if ($style_options['group_by']) {
+//     array_multisort($key_objects, SORT_ASC, $objects);
+//   }
+
+  $returns = array();
+  if ($style_options['group_by']) {
+    foreach ($objects as $group_name => $group) {
+      $group[0]['group']['group_id'] = preg_replace('/\W+/','',strtolower(strip_tags($group_name)));;
+      $group[0]['group']['group_name'] = trim($group_name);
+      $returns = array_merge($returns, $group);
+    }
+    $vars["rows"] = $returns;
+  } else {
+    // Check if user wants nested arrays.
+    $vars["rows"] = $objects;
+  }
 }

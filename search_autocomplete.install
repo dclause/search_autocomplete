@@ -114,6 +114,12 @@ function search_autocomplete_schema() {
         'type'        => 'text',
         'size'         => 'big',
       ),
+      'data_view'  => array(
+          'description' => 'Internal callback view',
+          'type'        => 'varchar',
+          'length'      => 255,
+          'default'     => '',
+      ),
       'theme'  => array(
         'description' => 'Theme to use with this form',
         'type'        => 'varchar',
@@ -141,7 +147,7 @@ function search_autocomplete_install() {
   // ----------------
   // Declare insertion statement.
   $insert = db_insert('search_autocomplete_forms')
-                ->fields(array('title', 'selector', 'weight', 'enabled', 'min_char', 'max_sug', 'auto_submit', 'auto_redirect', 'data_source', 'data_callback', 'data_static', 'theme'));
+                ->fields(array('title', 'selector', 'weight', 'enabled', 'min_char', 'max_sug', 'auto_submit', 'auto_redirect', 'data_source', 'data_callback', 'data_static', 'data_view', 'theme'));
   $insert->values(array(
     'title' => st('Search page - Node Tab') . "  (search/node/%)",
     'selector'      => '#search-form[action="/search/node"] #edit-keys',
@@ -152,10 +158,11 @@ function search_autocomplete_install() {
     'translite'     => 1,
     'auto_submit'   => 1,
     'auto_redirect' => 1,
-    'data_source'   => 1,
-    'data_callback' => 'autocomplete-nodes?filter=',
+    'data_source'   => 3,
+    'data_callback' => 'search_autocomplete/autocomplete/1/',
     'data_static'   => '',
-    'theme'         => 'classic.css',
+    'data_view'     => 'words_autocomplete',
+    'theme'         => 'tripadvisor-like.css',
   ));
   $insert->values(array(
     'title'     => st('Search page - User Tab') . "  (search/user/%)",
@@ -167,10 +174,11 @@ function search_autocomplete_install() {
     'translite'     => 1,
     'auto_submit'   => 1,
     'auto_redirect' => 1,
-    'data_source'   => 1,
-    'data_callback' => 'autocomplete-users?filter=',
+    'data_source'   => 3,
+    'data_callback' => '',
     'data_static'   => '',
-    'theme'         => 'facebook like.css',
+    'data_view'     => 'users_autocomplete',
+    'theme'         => 'facebook-like.css',
   ));
   $insert->values(array(
     'title'     => st('Search Block'),
@@ -182,10 +190,11 @@ function search_autocomplete_install() {
     'translite'     => 1,
     'auto_submit'   => 1,
     'auto_redirect' => 1,
-    'data_source'   => 1,
-    'data_callback' => 'autocomplete-nodes?filter=',
+    'data_source'   => 3,
+    'data_callback' => 'search_autocomplete/autocomplete/3/',
     'data_static'   => '',
-    'theme'         => 'classic.css',
+    'data_view'     => 'nodes_autocomplete',
+    'theme'         => 'tripadvisor-like.css',
   ));
   $insert->execute();
 
@@ -193,161 +202,12 @@ function search_autocomplete_install() {
 }
 
 /**
- * Permission fix for update process from 6.x
+ * Get ready for Search Autocomplete 7.x-4.0-alpha2
  */
-function search_autocomplete_update_7000() {
-  $t = get_t();
-  
-  // In Drupal 6 the permissions were wrapped in t(), but in Drupal 7 they are
-  // not. So we want to make sure the database is storing the untranslated
-  // permission or we could run into issues on upgraded Drupal 7 sites.
-  db_update('role_permission')
-    ->fields(array(
-      'permission' => 'administer Search Autocomplete',
-    ))
-    ->condition('permission', $t('administer Search Autocomplete'))
-    ->execute();
+function search_autocomplete_update_7402(&$sandbox) {
 
-  db_update('role_permission')
-    ->fields(array(
-      'permission' => 'use Search Autocomplete',
-    ))
-    ->condition('permission', $t('use Search Autocomplete'))
-    ->execute();
-}
-
-/**
- * Get ready for Search Autocomplete 7.3-x
- */
-function search_autocomplete_update_7300(&$sandbox) {
-  $ret = array();
-
-  $num_deleted =  db_drop_table('search_autocomplete_forms');
-  $num_deleted &= db_drop_table('search_autocomplete_suggestions');
-
-  db_create_table('search_autocomplete_forms', drupal_get_schema('search_autocomplete_forms', TRUE));
-  search_autocomplete_install();
-
-  return t('The update process is successfull.');
-
-  // In case of an error, simply throw an exception with an error message.
-  throw new DrupalUpdateException('Something went wrong. Please uninstall and install the module again.');
-  return $ret;
-}
-
-/*
- * Get ready for Search Autocomplete 7.x-3.0-rc2
- */
-function search_autocomplete_update_7301(&$sandbox) {
-  global $base_url;
-  $ret = array();
-
-  $result = db_select('search_autocomplete_forms', 'f')
-    ->fields('f', array('fid', 'data_callback'))
-    ->execute()
-    ->fetchAll();
-
-  foreach ($result as $item) {
-    db_update('search_autocomplete_forms')
-      ->fields(array(
-        'data_callback'   => str_replace($base_url . "/", "", $item->data_callback)
-      ))
-      ->condition('fid', $item->fid)
-      ->execute();
-  }
-  drupal_clear_js_cache();
-
-  return t('Update has:<br/>- change internal callback URL from absolute to relative.<br/>- clear JS cache.<br/> Done with success.');
-
-  // In case of an error, simply throw an exception with an error message.
-  throw new DrupalUpdateException('Something went wrong. Please uninstall and install the module again.');
-  return $ret;
-}
-
-/**
- * Get ready for Search Autocomplete 7.x-3.0-rc3
- */
-function search_autocomplete_update_7302(&$sandbox) {
-  $ret = array();
-  cache_clear_all();
-  return $ret;
-}
-/**
- * Get ready for Search Autocomplete 7.x-3.1
- */
-function search_autocomplete_update_7310(&$sandbox) {
-  $ret = array();
-
-  $translite_field = array(
-    'description' => 'Define if suggestion searches should be translited',
-    'type'        => 'int',
-    'not null'    => TRUE,
-    'default'     => 1,
-  );
-  db_add_field( 'search_autocomplete_forms', 'translite', $translite_field);
-  $no_results_field = array(
-    'description' => 'Maximum number of suggestions',
-    'type'        => 'varchar',
-    'length'      => 50,
-    'not null'    => FALSE,
-    'default'     => '-- no results --',
-  );
-  db_add_field( 'search_autocomplete_forms', 'no_results', $no_results_field);
-
-  drupal_clear_js_cache();
-  return t('Update has:<br/>- add a column "translite" in the search autocomplete database.<br/>- add a column "no_results" in the search autocomplete database.<br/> Done with success.');
-
-  // In case of an error, simply throw an exception with an error message.
-  throw new DrupalUpdateException('Something went wrong. Please uninstall and install the module again.');
-  return $ret;
-}
-// -----------------------------------------------------------------------------------------------
-
-/**
- * Get ready for Search Autocomplete 7.x-3.2
- */
-function search_autocomplete_update_7320(&$sandbox) {
-
-  // Create the definition for the field.
-  $new_field = array(
-    'description' => 'Static text as a data',
-    'type'        => 'text',
-    'size'        => 'big',
-  );
-  db_change_field('search_autocomplete_forms', 'data_static', 'data_static', $new_field);
-
-  // Select data_callbacks of.
-  $result = db_select('search_autocomplete_forms', 'f')
-    ->fields('f', array('fid', 'data_callback'))
-    ->execute()
-    ->fetchAll();
-  foreach ($result as $item) {
-    db_update('search_autocomplete_forms')
-      ->fields(array(
-        'data_callback'   => $item->data_callback . '?filter=')
-      )
-      ->condition('data_callback', array('autocomplete-nodes', 'autocomplete-users'), 'IN')
-      ->execute();
-  }
-
-  return (t('Update has:') . '<br/>' . t('- changed column type "data_static" from TEXT to LONGTEXT.')
-                           . '<br/>' . t('- Add filter to VIEWS callback for performance improvement.'));
-}
-
-/**
- * Get ready for Search Autocomplete 7.x-4.0-alpha1
- */
-function search_autocomplete_update_7400(&$sandbox) {
-
-  // Select data_callbacks of.
-  db_update('search_autocomplete_forms')
-    ->fields(array(
-      'theme'   => 'facebook like.css')
-    )
-    ->condition('data_callback', 'autocomplete-users?filter=', '=')
-    ->execute();
-    
-  cache_clear_all();
+  drupal_uninstall_modules(array('search_autocomplete_forms'));
+  module_enable(array('search_autocomplete_forms'));
   
   return (t('Update has been done.'));
 }

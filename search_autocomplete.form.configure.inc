@@ -96,22 +96,18 @@ function search_autocomplete_form_configure($form, &$form_state) {
       '#title'          => t('Suggestion source'),
       '#description'    => t('Choose the source of suggestions to display in this form'),
     );
+    
     // Use a callback.
     $form['search_autocomplete_what']['suggestions']['callback'] = array();
     $form['search_autocomplete_what']['callback']['callback_option'] = array(
       '#type'           => 'radio',
       '#title'          => t('Callback URL:'),
       '#return_value'   => 1,
-      '#default_value'  => $item->data_source < 2 ? 1 : 2,
+      '#default_value'  => $item->data_source < 2 ? 1 : $item->data_source,
       '#prefix'         => '<div class="form-radios">',
       '#parents'        => array('suggestions'),
     );
-    $descr = t('Enter the url where to retrieve suggestions. It can be internal (absolute or relative) or external.') . '<br/>' .
-              t('To make an easy internal suggestion url, create a view using "Autocompletion JSON" view style ! (<a href="http://projects.axiomcafe.fr/search-autocomplete/advanced-configuration/add-suggestion-type-version-3x">see documentation</a>)') . '<br/>' .
-              t('Available views are:') .
-              '<br/>autocomplete-nodes :  ' . t('suggest node titles') . '<br/>' .
-              'autocomplete-users :  ' . t('suggest user names') . '<br/>' .
-              'autocomplete-words :  ' . t('suggest the node titles for nodes containing the user input');
+    $descr = t('Enter the url where to retrieve suggestions. It can be internal (absolute or relative) or external.');
     $form['search_autocomplete_what']['callback']['callback_textfield'] = array(
       '#type'           => 'textfield',
       '#description'    => $descr,
@@ -123,6 +119,7 @@ function search_autocomplete_form_configure($form, &$form_state) {
       '#attributes'     => array('onClick' => '$("input[name=suggestions][value=1]").attr("checked", true);'),
     );
 
+    // Use static resources
     $form['search_autocomplete_what']['suggestions']['staticresource'] = array();
     $form['search_autocomplete_what']['staticresource']['staticresource_option'] = array(
       '#type'           => 'radio',
@@ -136,10 +133,30 @@ function search_autocomplete_form_configure($form, &$form_state) {
       '#description'    => t('Please enter one suggestion per line. You can use the syntax: "foo => http://bar" per line if you wish to add a jumping to URL for the suggestion. Please refer to <a href="http://projects.axiomcafe.fr/search-autocomplete">documentation</a>.'),
       '#default_value'  => $item->data_static,
       '#size'           => 20,
-      '#suffix'         => '</div>',
       '#attributes'     => array('onClick' => '$("input[name=suggestions][value=2]").attr("checked", true);'),
     );
 
+    // Use a view.
+    $form['search_autocomplete_what']['suggestions']['view'] = array();
+    $form['search_autocomplete_what']['view']['view_option'] = array(
+        '#type'           => 'radio',
+        '#title'          => t('Use an existing view:'),
+        '#return_value'   => 3,
+        '#default_value'  => $item->data_source < 2 ? 1 : $item->data_source,
+        '#suffix'         => '</div>',
+        '#parents'        => array('suggestions'),
+        '#attributes'     => array('onClick' => '$("input[name=suggestions][value=3]").attr("checked", true);'),
+    );
+    $form['search_autocomplete_what']['view']['view_textfield'] = array(
+        '#type'           => 'textfield',
+        '#description'    => t('Use autocompletion to match an eligible view.'),
+        '#default_value'  => $item->data_view,
+        '#autocomplete_path' => 'views/autocomplete',
+        // The default size is a bit large...
+        '#size'           => 80,
+        '#attributes'     => array('onClick' => '$("input[name=suggestions][value=3]").attr("checked", true);'),
+    );
+    
     // Template to use.
     $themes = array();
     $files = file_scan_directory(drupal_get_path('module', 'search_autocomplete') . '/css', '/.*\.css\z/', array('recurse' => FALSE));
@@ -213,8 +230,8 @@ function search_autocomplete_form_configure_submit($form, &$form_state) {
   // Analyse incoming callback.
   $callback = $values['callback_textfield'];
   // Static resource => type = 2.
-  $data_type = 2;
-  if ($callback != '') {
+  $data_type = $values['suggestions'];
+  if ($data_type == 1 && $callback != '') {
     // If path is absolute:
     if (url_is_external($callback)) {
       // If path is internal:
@@ -233,8 +250,8 @@ function search_autocomplete_form_configure_submit($form, &$form_state) {
       $data_type = 1;
     }
   }
-  if ($values['suggestions'] == 2) {
-    $data_type = 2;
+  if ($data_type == 3) {
+    $callback = 'search_autocomplete/autocomplete/' . $values['fid'] . '/';
   }
 
   // ###.
@@ -251,6 +268,7 @@ function search_autocomplete_form_configure_submit($form, &$form_state) {
       'data_source'     => $data_type,
       'data_callback'   => $callback,
       'data_static'     => $values['staticresource_textfield'],
+      'data_view'       => $values['view_textfield'],
       'theme'           => $values['theme'],
     ))
     ->condition('fid', $values['fid'])
