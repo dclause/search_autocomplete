@@ -5,7 +5,7 @@
  * Search Autocomplete
  * Display the list of form to autocomplete and themis it as a draggable table.
  *
- * @authors
+ * @author
  * Miroslav Talenberg (Dominique CLAUSE) <http://www.axiomcafe.fr/contact>
  *
  * Sponsored by:

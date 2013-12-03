@@ -1,0 +1,7 @@
+name = JSON Autocomplete
+description = "Views style plugin to render as JSON per Search Autocomplete."
+package = Views
+core = 6.x
+version = 1.0
+dependencies[] = views
+php = 5.1

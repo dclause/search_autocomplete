@@ -3,9 +3,9 @@
 /**
  * @file
  * Search Autocomplete
- * Helper functions to retrive suggestions from database
+ * Helper functions to retrive forms from database
  *
- * @authors
+ * @author
  * Miroslav Talenberg (Dominique CLAUSE) <http://www.axiomcafe.fr/contact>
  *
  * Sponsored by:
@@ -29,134 +29,187 @@ function search_autocomplete_form_configure() {
     '#type' => 'hidden',
     '#value' => $fid,
   );
-  /* ------------------------------------------------------------------ */
-  // HOW - How to display Search Autocomplete suggestions
+  // ------------------------------------------------------------------.
+  // HOW - How to display Search Autocomplete suggestions.
   $form['search_autocomplete_how'] = array(
-    '#type' => 'fieldset',
-    '#title' => t('HOW - How to display Search Autocomplete suggestions?'),
-    '#collapsible' => TRUE,
-    '#collapsed' => TRUE
+    '#type'           => 'fieldset',
+    '#title'          => t('HOW - How to display Search Autocomplete suggestions?'),
+    '#collapsible'    => TRUE,
+    '#collapsed'      => TRUE,
   );
-  // Number of characters before suggestions
-  $trigger = array();
-  for ($i=1; $i<20; $i++) {
-    $trigger[$i] = $i .' '. t('characters');
-  }
+  // Minimum characters to set autocompletion on.
   $form['search_autocomplete_how']['min_char'] = array(
-    '#type' => 'select',
-    '#title' => t('Minimum keyword size that uncouple autocomplete search'),
-    '#default_value' => $item['min_char'],
-    '#options' => $trigger,
-    '#multiple' => FALSE,
-    '#required' => TRUE,
+    '#type'           => 'textfield',
+    '#title'          => t('Minimum keyword size that uncouple autocomplete search'),
+    '#description'    => t('Please enter the minimum number of character a user must input before autocompletion starts.'),
+    '#default_value'  => $item['min_char'],
+    '#maxlength'      => 2,
+    '#required'       => TRUE,
   );
-  // Number of suggestions to display
-  $limit = array();
-  for ($i=1;$i<50;$i++) {
-    $limit[$i] = $i .' '. t('results');
-  }
+  // Number of suggestions to display.
   $form['search_autocomplete_how']['max_sug'] = array(
-    '#type' => 'select',
-    '#title' => t('Limit of the autocomplete search result'),
-    '#default_value' => $item['max_sug'],
-    '#options' => $limit,
-    '#multiple' => FALSE,
-    '#required' => TRUE,
+    '#type'           => 'textfield',
+    '#title'          => t('Limit of the autocomplete search result'),
+    '#description'    => t('Please enter the maximim number of suggestion to display.'),
+    '#default_value'  => $item['max_sug'],
+    '#maxlength'      => 2,
+    '#required'       => TRUE,
+  );
+  // Check if form should be autosubmitted.
+  $form['search_autocomplete_how']['no_results'] = array(
+    '#type'           => 'textfield',
+    '#title'          => t('Behaviour when no suggestions are found'),
+    '#description'    => t('Enter a message to display when no results are found. Leave empty for no message.'),
+    '#default_value'  => $item['no_results'],
+    '#maxlength'      => 50,
+    '#required'       => FALSE,
+  );
+  // Check if form should be autosubmitted.
+  $form['search_autocomplete_how']['auto_submit'] = array(
+    '#type'           => 'checkbox',
+    '#title'          => t('Auto Submit'),
+    '#description'    => t('If enabled, the form will be submitted automatically as soon as your user choose a suggestion in the popup list.'),
+    '#default_value'  => $item['auto_submit'],
+  );
+  // Check if form should be autoredirected.
+  $form['search_autocomplete_how']['auto_redirect'] = array(
+    '#type'           => 'checkbox',
+    '#title'          => t('Auto Redirect'),
+    '#description'    => t('If enabled, the user will be directly routed to the suggestion he choosed instead of performing form validation process. Only works if "link" attribute is existing and if "Auto Submit" is enabled.'),
+    '#default_value'  => $item['auto_redirect'],
   );
 
-  /* ------------------------------------------------------------------ */
-  // WHAT - What to display in Search Autocomplete suggestions
+  // ------------------------------------------------------------------.
+  // WHAT - What to display in Search Autocomplete suggestions.
   $form['search_autocomplete_what'] = array(
-    '#type' => 'fieldset',
-    '#title' => t('WHAT - What to display in Search Autocomplete suggestions?'),
-    '#description' => t('Choose which data should be added to autocompletion suggestions.'),
-    '#collapsible' => TRUE,
-    '#collapsed' => TRUE,
-    '#theme' => 'search_autocomplete_form_configuration_fieldset',
+    '#type'           => 'fieldset',
+    '#title'          => t('WHAT - What to display in Search Autocomplete suggestions?'),
+    '#description'    => t('Choose which data should be added to autocompletion suggestions.'),
+    '#collapsible'    => TRUE,
+    '#collapsed'      => FALSE,
   );
-  $form['search_autocomplete_what']['#tree'] = TRUE;
+  $form['search_autocomplete_what']['suggestions'] = array(
+    '#type'           => 'item',
+    '#title'          => t('Suggestion source'),
+    '#description'    => t('Choose the source of suggestions to display in this form'),
+  );
+  
+  // Use a callback.
+  $form['search_autocomplete_what']['suggestions']['callback'] = array();
+  $form['search_autocomplete_what']['callback']['callback_option'] = array(
+    '#type'           => 'radio',
+    '#title'          => t('Callback URL:'),
+    '#return_value'   => 1,
+    '#default_value'  => $item['data_source'] < 2 ? 1 : $item['data_source'],
+    '#prefix'         => '<div class="form-radios">',
+    '#parents'        => array('suggestions'),
+  );
+  $descr = t('Enter the url where to retrieve suggestions. It can be internal (absolute or relative) or external.') . '<br/>' .
+           t('To make an easy internal suggestion url, create a view using "Autocompletion JSON" view style ! (<a href="http://projects.axiomcafe.fr/search-autocomplete/advanced-configuration/add-suggestion-type-version-3x">see documentation</a>)') . '<br/>' .
+  $form['search_autocomplete_what']['callback']['callback_textfield'] = array(
+    '#type'           => 'textfield',
+    '#description'    => $descr,
+    '#default_value'  => $item['data_callback'],
+    // The default size is a bit large...
+    '#size'           => 80,
+    // End of the "form-radios" style.
+     '#suffix'        => '',
+    '#attributes'     => array('onClick' => '$("input[name=suggestions][value=1]").attr("checked", true);'),
+  );
 
-  // Built possible suggestions
-  $result_suggestions = db_query('SELECT * FROM {search_autocomplete_suggestions} WHERE sug_fid = %d ORDER BY sug_weight ASC', $fid);
-  while ($suggestion = db_fetch_array($result_suggestions)) {
-    // if the module has no dependencies, or if the dependencies are enabled: activate the suggestion
-    if (drupal_strlen($suggestion['sug_dependencies']) == 0 || module_exists($suggestion['sug_dependencies'])) {
-      $activate = TRUE;
-      $title = $suggestion['sug_title'];
-    } // else, do not activate the suggestion and has the dependencie reason
+   // Use static resources
+  $form['search_autocomplete_what']['suggestions']['staticresource'] = array();
+  $form['search_autocomplete_what']['staticresource']['staticresource_option'] = array(
+    '#type'           => 'radio',
+    '#title'          => t('Static resource :'),
+    '#return_value'   => 2,
+    '#default_value'  => $item['data_source'] < 2 ? 1 : $item['data_source'],
+    '#parents'        => array('suggestions'),
+  );
+  $form['search_autocomplete_what']['staticresource']['staticresource_textfield'] = array(
+    '#type'           => 'textarea',
+    '#description'    => t('Please enter one suggestion per line. You can use the syntax: "foo => http://bar" per line if you wish to add a jumping to URL for the suggestion. Please refer to <a href="http://projects.axiomcafe.fr/search-autocomplete">documentation</a>.'),
+    '#default_value'  => $item['data_static'],
+    '#size'           => 20,
+    '#attributes'     => array('onClick' => '$("input[name=suggestions][value=2]").attr("checked", true);'),
+  );
 
-    else {
-      $activate = FALSE;
-      $title = $suggestion['sug_title'] . '  ' . t('(require @module module)', array('@module' => $suggestion['sug_dependencies']));
-    }
-    $sid = $suggestion['sid'];
-
-    $form['search_autocomplete_what'][$sid]['sid'] = array(
-      '#type' => 'hidden',
-      '#value' => $sid,
-      '#disabled' => !$activate,
-    );
-    $form['search_autocomplete_what'][$sid]['sug_markup'] = array(
-      '#type' => 'markup',
-      '#value' => $title,
-      '#disabled' => !$activate,
-    );
-    $form['search_autocomplete_what'][$sid]['sug_title'] = array(
-      '#type' => 'hidden',
-      '#value' => $title,
-      '#disabled' => !$activate,
-    );
-    $form['search_autocomplete_what'][$sid]['sug_enabled'] = array(
-      '#type' => 'checkbox',
-      '#return_value' => 1,
-      '#default_value' => $suggestion['sug_enabled'],
-      '#disabled' => !$activate,
-    );
-    $form['search_autocomplete_what'][$sid]['sug_prefix'] = array(                // -> sug_prefix
-      '#type' => 'textfield',
-      '#default_value' => $suggestion['sug_prefix'],
-      '#maxlength' => 255,
-      '#size' => 35,
-      '#disabled' => !$activate,
-    );
-    $form['search_autocomplete_what'][$sid]['sug_weight'] = array(                // -> weight of the item in hierarchy
-      '#type' => 'weight',
-      '#default_value' => $suggestion['sug_weight'],
-      '#disabled' => !$activate,
-    );
-    $form['search_autocomplete_what'][$sid]['sug_edit'] = array(                  // -> weight of the item in hierarchy
-      '#value' => l(t('edit'), "$base/suggestion/" . $suggestion['sid'] . "/edit"),
-    );
+  // Use a view.
+  $form['search_autocomplete_what']['suggestions']['view'] = array();
+  $form['search_autocomplete_what']['view']['view_option'] = array(
+      '#type'           => 'radio',
+      '#title'          => t('Use an existing view:'),
+      '#return_value'   => 3,
+      '#default_value'  => $item['data_source'] < 2 ? 1 : $item['data_source'],
+      '#suffix'         => '</div>',
+      '#parents'        => array('suggestions'),
+      '#attributes'     => array('onClick' => '$("input[name=suggestions][value=3]").attr("checked", true);'),
+  );
+  $form['search_autocomplete_what']['view']['view_textfield'] = array(
+      '#type'           => 'textfield',
+      '#description'    => t('Use autocompletion to match an eligible view.'),
+      '#default_value'  => $item['data_view'],
+      '#autocomplete_path' => 'views/autocomplete',
+      // The default size is a bit large...
+      '#size'           => 80,
+      '#attributes'     => array('onClick' => '$("input[name=suggestions][value=3]").attr("checked", true);'),
+  );
+      
+  // Template to use.
+  $themes = array();
+  $files = file_scan_directory(drupal_get_path('module', 'search_autocomplete') . '/css/custom_styles', '.css');
+  foreach ($files as $file) {
+    $themes[$file->name] = $file->name;
   }
+  $form['search_autocomplete_what']['theme'] = array(
+    '#type'           => 'select',
+    '#title'          => t('Select a theme for your suggestions'),
+    '#options'        => $themes,
+    '#default_value'  => $item['theme'],
+    '#description'    => t('Choose the theme to use for autocompletion dropdown popup. Read <a href="http://projects.axiomcafe.fr/search-autocomplete">documentation</a> to learn how to make your own.'),
+  );
 
-  /* ------------------------------------------------------------------ */
-  // ADVANCED - Advanced options
+  // ------------------------------------------------------------------.
+  // ADVANCED - Advanced options.
   $form['search_autocomplete_advanced'] = array(
-    '#type' => 'fieldset',
-    '#title' => t('ADVANCED - Advanced options'),
-    '#collapsible' => TRUE,
-    '#collapsed' => TRUE,
+    '#type'             => 'fieldset',
+    '#title'            => t('ADVANCED - Advanced options'),
+    '#collapsible'      => TRUE,
+    '#collapsed'        => TRUE,
   );
   $form['search_autocomplete_advanced']['selector'] = array(
-    '#type' => 'textfield',
-    '#title' => t('ID selector for this form'),
-    '#description' => t('Please change only if you know what you do, read <a href="http://projects.axiomcafe.fr/search-autocomplete">documentation</a> first.'),
-    '#default_value' => $item['selector'],
-    '#maxlength' => 255,
-    '#size' => 35,
+    '#type'             => 'textfield',
+    '#title'            => t('ID selector for this form'),
+    '#description'      => t('Please change only if you know what you do, read <a href="http://projects.axiomcafe.fr/search-autocomplete">documentation</a> first.'),
+    '#default_value'    => $item['selector'],
+    '#maxlength'        => 255,
+    '#size'             => 35,
   );
-  // Add button validation
+  // Add button validation.
   $form['submit'] = array(
-    '#type' => 'submit',
-    '#value' => t('Save configuration'),
+    '#type'             => 'submit',
+    '#value'            => t('Save configuration'),
   );
-  /* $form['reset'] = array(
-    '#type' => 'submit',
-    '#value' => t('Reset to defaults'),
-    '#submit' => array('submit_reset')
-  ); */
 
   return $form;
+}
+
+// --------------------------------------------------------------------------.
+/**
+ * Implements hook_validate().
+ *
+ * Save the changes in the database.
+ */
+function search_autocomplete_form_configure_validate($form, &$form_state) {
+
+  $values = $form_state['values'];
+  if ($values['suggestions'] == 1) {
+    $new_url = preg_replace('/\?[^=]*=[^&]*/', '', $values['callback_textfield']);
+    $item = array('link_path' => $new_url);
+    if (!menu_valid_path($item)) {
+      form_set_error('url', t('callback url is not valid: @new_url', array('@new_url' => $new_url)));
+    }
+  }
 }
 
 // -------------------------------------------------------------------------------------
@@ -165,77 +218,61 @@ function search_autocomplete_form_configure() {
  * Save the changes in the database
  */
 function search_autocomplete_form_configure_submit($form, &$form_state) {
-  $ok_query = TRUE;  // so far so good!
-  //Update the database with the new values
-  $what = '';
-  $sids = '';
-  $weights = '';
+  global $base_url;
 
-  // ###
-  // UPDATE THE FORM
-  // -> update form
+  $ok_query = TRUE;
+  // Get form submission values.
   $values = $form_state['values'];
-  $ok_query &= db_query('UPDATE {search_autocomplete_forms} SET min_char = %d, max_sug = %d, selector = "%s" WHERE fid = %d',
-    array( $values['min_char'], $values['max_sug'], $values['selector'], $values['fid']));
-  // -> update each suggestions
-  foreach ($form_state['clicked_button']['#post']['search_autocomplete_what'] as $key => $item) {
-    drupal_write_record('search_autocomplete_suggestions', $values['search_autocomplete_what'][$key], 'sid');
-  }
-  // ###
-  // UPDATE CHILD LIST BUT NOT THE ADVANCED OPTIONS
-  $fids = _search_autocomplete_get_all_children($values['fid']);
-  // update the settings for this form + every children form
-  foreach ($fids as $fid) {
-    // -> update form
-    $ok_query &= db_query('UPDATE {search_autocomplete_forms} SET min_char = %d, max_sug = %d WHERE fid = %d',
-    array( $values['min_char'], $values['max_sug'], $fid));
-     // -> update each suggestions
-    foreach ($form_state['clicked_button']['#post']['search_autocomplete_what'] as $key => $item) {
-      drupal_write_record('search_autocomplete_suggestions', $values['search_autocomplete_what'][$key], 'sid');
+
+  // Analyse incoming callback.
+  $callback = $values['callback_textfield'];
+  // Static resource => type = 2.
+  $data_type = $values['suggestions'];
+  if ($data_type == 1 && $callback != '') {
+    // If path is absolute:
+    if (menu_path_is_external($callback)) {
+      // If path is internal:
+      if (strcmp(substr($callback, 0, strlen($base_url)), $base_url) === 0) {
+        // Get it relative.
+        $callback = str_replace($base_url . "/", "", $callback);
+        $data_type = 1;
+      }
+      // If external: type = 0.
+      else {
+        $data_type = 0;
+      }
+    }
+    // If path is not absolute:
+    else {
+      $data_type = 1;
     }
   }
-  // ###
+  if ($data_type = 3) {
+    $callback = 'search_autocomplete/autocomplete/' . $values['fid'] . '/';
+  }
 
+  // ###.
+  // UPDATE THE FORM.
+  // -> update form.
+  db_query('UPDATE {search_autocomplete_forms} SET min_char=%d, max_sug=%d, auto_submit=%d, auto_redirect=%d, no_results="%s", selector="%s", data_source=%d, data_callback="%s", data_static="%s", data_view="%s", theme="%s" WHERE fid=%d',
+            array($values['min_char'], $values['max_sug'], $values['auto_submit'], $values['auto_redirect'], $values['no_results'], $values['selector'], $data_type, $callback, $values['staticresource_textfield'], $values['view_textfield'], $values['theme'], $values['fid']));
+  
+  // ###
+  // UPDATE CHILD LIST BUT NOT THE ADVANCED OPTIONS.
+  $fids = _search_autocomplete_get_all_children($values['fid']);
+  // Update the settings for this form + every children form.
+  foreach ($fids as $fid) {
+    // -> update form.
+    
+    db_query('UPDATE {search_autocomplete_forms} SET min_char=%d, max_sug=%d, auto_submit=%d, auto_redirect=%d, no_results="%s", theme="%s" WHERE fid=%d',
+               array($values['min_char'], $values['max_sug'], $values['auto_submit'], $values['auto_redirect'], $values['no_results'], $values['theme'], $fid));
+    
+  }
+  // ###.
+  drupal_clear_css_cache();
   $form_state['redirect'] = 'admin/settings/search_autocomplete';
   $ok_query ? drupal_set_message(t("Configuration success !")) : drupal_set_message(t("An error has occured while saving the settings. Please, double check your settings!"), 'error');
 }
-
-
-// -------------------------------------------------------------------------------------
-/**
- * CALLBACK:
- * Theme function for this treelist form
- */
-function theme_search_autocomplete_form_configuration_fieldset($form) {
-
-  $header = array('Title', 'Enabled', 'Prefix of the item in suggestions', 'Weight', 'Operation');
-
-  // for each elements to anchor in the form
-  foreach (element_children($form) as $key) {
-    $element = &$form[$key];
-    $element['sug_weight']['#attributes']['class'] = 'weight-group';
-
-    $row = array();
-    $row[] = drupal_render($element['sug_markup']);
-    $row[] = drupal_render($element['sug_enabled']);
-    $row[] = drupal_render($element['sug_prefix']);
-    $row[] = drupal_render($element['sug_weight']);
-    $row[] = drupal_render($element['sug_edit']);
-
-    // Add a draggable class to every table row (<tr>)
-    $rows[] = array('data' => $row, 'class' => 'draggable');
-  }
-
-  // Themize the table and render the form
-  $output = theme('table', $header, $rows, array('id' => 'draggable-table'));
-  $output .= drupal_render($form);
-
-  drupal_add_tabledrag('draggable-table', 'order', 'sibling', 'weight-group');
-
-  return $output;
-
-} // function theme_search_autocomplete_form_configuration()
-
 
 
 /////////////////////////////////////////////////////////////////////////////////////////

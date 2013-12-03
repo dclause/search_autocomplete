@@ -1,0 +1,96 @@
+/*
+ * SEARCH AUTOCOMPLETE (version 7.3-x)
+ *
+ * Sponsored by:
+ * www.axiomcafe.fr
+ */
+
+/**
+ * THEME NICE ORANGE
+ */
+
+/* AUTOCOMPLETE */
+.myUI-theme-tripadvisor.myUI-autocomplete {
+  position: absolute;
+  cursor: default;
+}
+* html .myUI-theme-tripadvisor.myUI-autocomplete {
+  width: 1px; /* without this, the menu expands to 100% in IE6 */
+}
+.myUI-theme-tripadvisor.myUI-autocomplete-input {
+  background-image: url("images/throbber.gif");
+  background-position: 100% 4px;
+  background-repeat: no-repeat;
+}
+.myUI-theme-tripadvisor.myUI-autocomplete-loading {
+  background-image: url("images/throbber.gif");
+  background-position: 100% -16px;
+  background-repeat: no-repeat;
+}
+
+.myUI-theme-tripadvisor.myUI-widget-content {
+  background: none;
+  border-radius: 0px;
+  color: #2c2c2c;
+  border: 1px solid #c8c8c8;
+  box-shadow: 2px 2px 2px -1px rgba(128,128,128,0.6);
+  position: absolute;
+  background-color: #FFFFFF;
+  font-family: Arial,Tahoma,"Bitstream Vera Sans",sans-serif;
+  font-size: 1em;
+}
+#myUI-theme-tripadvisor.myUI-menu {
+  list-style: none;
+  padding: 0px;
+  margin: 0;
+  display: block;
+  float: left;
+}
+#myUI-theme-tripadvisor.myUI-menu .myUI-menu {
+  margin-top: -3px;
+}
+#myUI-theme-tripadvisor.myUI-menu .myUI-menu-item {
+  margin: 0;
+  padding: 0;
+  float: left;
+  clear: left;
+  width: 100%;  
+  line-height: 14px;
+  font-size: 12px;
+}
+#myUI-theme-tripadvisor.myUI-menu .myUI-menu-item a {
+  text-decoration: none;
+  display: block;
+  padding: 0;
+}
+#myUI-theme-tripadvisor.myUI-menu .myUI-menu-item a {
+  font-weight: normal;
+  margin: -1px;
+}
+
+/* Interaction States */
+#myUI-theme-tripadvisor .myUI-state-hover {
+  background: none;
+  border: none;
+  border-radius: 0px;
+  background-color: #99CC66;
+  color: #FFFFFF;
+}
+#myUI-theme-tripadvisor .myUI-autocomplete-fields {
+  padding: 5px 6px;
+}
+#myUI-theme-tripadvisor .myUI-autocomplete-fields.first {
+  border-top: 1px solid #D3E0BB;
+}
+#myUI-theme-tripadvisor .myUI-autocomplete-field-title {
+text-align: left;
+}
+#myUI-theme-tripadvisor .myUI-autocomplete-field-term {
+  font-weight: bold;
+}
+#myUI-theme-tripadvisor .myUI-autocomplete-field-group {
+  background-position: right top;
+  background-repeat: no-repeat;
+  color: #589442;
+  float: right;
+}

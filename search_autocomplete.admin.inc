@@ -5,7 +5,7 @@
  * Search Autocomplete
  * Sets the admin part of the module: permissions, hooks, callbacks, etc...
  *
- * @authors
+ * @author
  * Miroslav Talenberg (Dominique CLAUSE) <http://www.axiomcafe.fr/contact>
  *
  * Sponsored by:
@@ -33,11 +33,8 @@ function search_autocomplete_theme($existing, $type, $theme, $path) {
     'search_autocomplete_treelist_form' => array(                    // register theme function for draggable treelist search forms
       'arguments' => array('form' => NULL),
     ),
-    'search_autocomplete_form_configuration_fieldset' => array(      // register theme function for suggestions list
-      'arguments' => array('form' => NULL),
-    ),
   );
-} // function search_autocomplete_theme($existing, $type, $theme, $path)
+}
 
 /**
  * Implementation of hook_menu().
@@ -48,7 +45,7 @@ function search_autocomplete_menu() {
   // create the admin setting page: list of forms
   $items['admin/settings/search_autocomplete'] = array(
     'title' => 'Search Autocomplete settings',
-    'description' => 'Choose settings and suggestion items for autocompletion in input forms.',
+    'description' => 'Choose settings for autocompletion in input forms.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('search_autocomplete_treelist_form'),
     'access arguments' => array(t('administer Search Autocomplete')),
@@ -85,39 +82,28 @@ function search_autocomplete_menu() {
     'access arguments' => array(t('administer Search Autocomplete')),
     'file' => 'search_autocomplete.form.delete.inc',
   );
-  // create an admin setting page: add a new suggestion
-  $items['admin/settings/search_autocomplete/new'] = array(
-    'title' => 'Add a suggestion type',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('search_autocomplete_suggestion_new'),
-    'access arguments' => array(t('administer Search Autocomplete')),
-    'file' => 'search_autocomplete.suggestion.configure.inc',
-    'type' => MENU_LOCAL_TASK,
-  );
-  // create the admin setting page: configure a suggestion
-  $items['admin/settings/search_autocomplete/suggestion/%/edit'] = array(
-    'title' => 'Search Autocomplete - Configuration',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('search_autocomplete_suggestion_configure'),
-    'access arguments' => array(t('administer Search Autocomplete')),
-    'file' => 'search_autocomplete.suggestion.configure.inc',
-  );
-  // create the admin setting page: delete a suggestion
-  $items['admin/settings/search_autocomplete/suggestion/%/delete'] = array(
-    'title' => 'Search Autocomplete - Delete',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('search_autocomplete_suggestion_delete'),
-    'access arguments' => array(t('administer Search Autocomplete')),
-    'file' => 'search_autocomplete.suggestion.delete.inc',
-  );
   // create a callback page for JSON suggestions
-    $items['search_autocomplete/%/autocomplete'] = array(
+  $items['search_autocomplete/autocomplete'] = array(
+    'title' => 'Autocompleton when using view',
     'page callback' => 'search_autocomplete_autocomplete',
-    'access arguments' => array('use Search Autocomplete'),
     'type' => MENU_CALLBACK,
+    'access callback' => TRUE,
+    'access arguments' => array('access content'),
+    'file' => 'search_autocomplete.autocomplete.inc',
   );
+  
+  $items['views/autocomplete'] = array(
+      'title' => 'Autocomplete view selector',
+      'page callback' => 'search_autocomplete_views_autocomplete',
+      // access not properly checked on callbacks (see function)
+      'type' => MENU_CALLBACK,
+      'access callback' => TRUE,
+      'access arguments' => array('access content'),
+      'file' => 'search_autocomplete.autocomplete.inc',
+  );
+  
   return $items;
-} // function search_autocomplete_menu()
+}
 
 /**
  * Implements hook_help().
@@ -132,7 +118,6 @@ function search_autocomplete_help($path, $arg) {
       $help = '<div>' . t('Search Autocomplete helps you to enhance your search forms with autocompleted suggestions.') . '</div>';
       $help .= '<div>' . t('Use this form to activate the forms you want to autocomplete.') . '</div>';
       $help .= '<div>' . t('You may want to add new possible form to autocomplete. To do so, please use the tab <a href="search_autocomplete/add">Add a form</a>.') . '</div>';
-      $help .= '<div>' . t('You may also want to add a new possible suggestion. To do so, please use the tab <a href="search_autocomplete/new">Add a suggestion</a>.') . '</div>';
       break;
     case 'admin/settings/search_autocomplete/add':
       $help = '<div>' . t('This page allows you to add a new form to be autocompleted with the Search Autocomplete module.') . '</div>';

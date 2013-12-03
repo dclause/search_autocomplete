@@ -4,214 +4,192 @@
  * @file
  * This file is used to install/update/delete the module tables in database
  *
- * @authors
+ * @author
  * Miroslav Talenberg (Dominique CLAUSE) <http://www.axiomcafe.fr/contact>
- *
+ * 
  * Sponsored by:
  * www.axiomcafe.fr
  */
 
-// -----------------------------------------------------------------------------------------------
+// -----------------------------------------------------------------------.
 /**
- * Implementation of hook_schema().
- * Set the schema of database
- * @return the schema for of the table to create
+ * Implements hook_schema().
+ *
+ * Set the schema of database.
+ *
+ * @return array
+ *   The schema for of the table to create.
  */
 function search_autocomplete_schema() {
-  // schema for search_autocomplete database
+  
+  // Schema for search_autocomplete database.
   $schema['search_autocomplete_forms'] = array(
     'description' => t('Store the forms to autocomplete using Search Autocomplete.'),
     'fields' => array(
-      'fid' => array(
-        'type' => 'serial',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
+      'fid'       => array(
+        'type'        => 'serial',
+        'unsigned'    => TRUE,
+        'not null'    => TRUE,
       ),
-      'title' => array(
+      'title'     => array(
         'description' => 'Human readable name for the form',
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => '',
+        'type'        => 'varchar',
+        'length'      => 255,
+        'not null'    => TRUE,
+        'default'     => '',
       ),
-      'selector' => array(
+      'selector'  => array(
         'description' => 'Reference id selector of the the form in drupal',
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => '',
+        'type'        => 'varchar',
+        'length'      => 255,
+        'not null'    => TRUE,
+        'default'     => '',
       ),
-      'weight' => array(
+      'weight'    => array(
         'description' => 'Form weight in table',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
+        'type'        => 'int',
+        'not null'    => TRUE,
+        'default'     => 0,
       ),
-      'enabled' => array(
+      'enabled'   => array(
         'description' => 'Define if autocomplete is activated or not',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
+        'type'        => 'int',
+        'not null'    => TRUE,
+        'default'     => 0,
       ),
       'parent_fid' => array(
         'description' => 'Define if the from follows the configuration of another one',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
+        'type'        => 'int',
+        'not null'    => TRUE,
+        'default'     => 0,
       ),
-      'min_char' => array(
+      'min_char'  => array(
         'description' => 'Minimum of character before triggering suggestions',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 3,
+        'type'        => 'int',
+        'not null'    => TRUE,
+        'default'     => 3,
       ),
-      'max_sug' => array(
+      'max_sug'   => array(
         'description' => 'Maximum number of suggestions',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 15,
+        'type'        => 'int',
+        'not null'    => TRUE,
+        'default'     => 10,
+      ),
+      'no_results'   => array(
+        'description' => 'Maximum number of suggestions',
+        'type'        => 'varchar',
+        'length'      => 50,
+        'not null'    => FALSE,
+        'default'     => '-- no results --',
+      ),
+      'auto_submit'   => array(
+        'description' => 'Define if form should be autosubmitted when suggestion is choosen',
+        'type'        => 'int',
+        'not null'    => TRUE,
+        'default'     => 1,
+      ),
+      'auto_redirect'   => array(
+        'description' => 'Define if user should be redirected to suggestion directly',
+        'type'        => 'int',
+        'not null'    => TRUE,
+        'default'     => 1,
+      ),
+      'translite'    => array(
+        'description' => 'Define if suggestion searches should be translited',
+        'type'        => 'int',
+        'not null'    => TRUE,
+        'default'     => 1,
+      ),
+      'data_source'  => array(
+        'description' => 'Should data come from callback or from static resource',
+        'type'        => 'int',
+        'not null'    => TRUE,
+        'default'     => 1,
+      ),
+      'data_callback'  => array(
+        'description' => 'Callback URL for data source',
+        'type'        => 'varchar',
+        'length'      => 255,
+        'default'     => '',
+      ),
+      'data_static'  => array(
+        'description' => 'Static text as a data',
+        'type'        => 'text',
+        'size'         => 'big',
+      ),
+      'data_view'  => array(
+          'description' => 'Internal callback view',
+          'type'        => 'varchar',
+          'length'      => 255,
+          'default'     => '',
+      ),
+      'theme'  => array(
+        'description' => 'Theme to use with this form',
+        'type'        => 'varchar',
+        'length'      => 255,
+        'not null'    => TRUE,
+        'default'     => 'lightness',
       ),
     ),
     'primary key' => array('fid'),
   );
-  
-  // schema for search_autocomplete database
-  $schema['search_autocomplete_suggestions'] = array(
-    'description' => t('Store the suggestions for this form.'),
-    'fields' => array(
-      'sid' => array(
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-      'sug_fid' => array(
-        'description' => 'Form fid the Suggestion belongs to',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-      'sug_enabled' => array(
-        'description' => 'Define if suggestion is activated or not',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-      'sug_prefix' => array(
-        'description' => 'Human readable prefix in suggestion',
-        'type' => 'varchar',
-        'length' => 15,
-        'not null' => TRUE,
-        'default' => '',
-      ),
-      'sug_title' => array(
-        'description' => 'Human readable title for the suggestion',
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => '',
-      ),
-      'sug_name' => array(
-        'description' => 'Reference name of the the suggestion in drupal',
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => '',
-      ),
-      'sug_dependencies' => array(
-        'description' => 'Name of the module (if such) which the suggestion depends on',
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => '',
-      ),
-      'sug_weight' => array(
-        'description' => 'Suggestion weight in table',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-      'sug_query' => array(
-        'description' => 'The database query for this suggestion',
-        'type' => 'varchar',
-        'length' => 512,
-        'not null' => TRUE,
-        'default' => '',
-      ),
-    ),
-  );
-      
-      
-  return $schema;
-} // function search_autocomplete_schema
 
-//-----------------------------------------------------------------------------------------------
+  return $schema;
+}
+
+// -------------------------------------------------------------------------.
 /**
- * Implementation of hook_install().
+ * Implements hook_install().
  */
 function search_autocomplete_install() {
-  
+
   if (db_table_exists('search_autocomplete_forms') && db_table_exists('search_autocomplete_suggestions')) {
     return;
   }
   $results = drupal_install_schema('search_autocomplete');      //Install the database specified in  'function search_autocomplete_schema'
   foreach ($results as $result) {                               // Check eventual errors that could have occured
     if (!$result['success'])
-      drupal_set_message(st('An error has occured during table creation, please retry. If the problem persist please post an issue and report the code: #err_code:400 @query', $result['query']), 'error');
-  }  
-
-  $limit      = variable_get('search_autocomplete_limit', 15);
-  $trigger    = variable_get('search_autocomplete_trigger', 3);
-  $enabled    = 1;
-  $enable_taxo      = module_exists("taxonomy") ? 1 : 0;
-  $enable_comment   = module_exists("comment") ? 1 : 0;
-
-  // ----------------
-  // create possible default forms
-  $sql = 'INSERT INTO {search_autocomplete_forms} (title, selector, weight, enabled, min_char, max_sug) VALUES '.
-         '("%s", "%s", %d, %d, %d, %d),' .
-         '("%s", "%s", %d, %d, %d, %d),' .
-         '("%s", "%s", %d, %d, %d, %d),' .
-         '("%s", "%s", %d, %d, %d, %d)';
-  $variables = array( st('Search page - Node Tab') . "  (search/node/%)", "#search-form", 0, $enabled, $trigger, $limit,
-                      st('Search page - User Tab') . "  (search/user/%)", "#search-form", 1, $enabled, $trigger, $limit,
-                      st('Search Block'), "#search-block-form", 0, $enabled, $trigger, $limit,
-                      st('Search box (added by the theme)'), "#search-theme-form", 0, $enabled, $trigger, $limit );
-  $ok_result1 = db_query($sql, $variables);
-  if (!$ok_result1) 
-    drupal_set_message(st('An error has occured while creating default forms, please retry. If the problem persist please post an issue and report the code: #err_code:401'), 'error');
-  
-  // ----------------
-  // create the possible suggestions :
-  $sql = 'INSERT INTO {search_autocomplete_suggestions} (sid, sug_fid, sug_enabled, sug_prefix, sug_title, sug_name, sug_dependencies, sug_weight, sug_query) VALUES '.
-         '(%d, %d, %d, "%s", "%s", "%s", "%s", %d, "%s"),' .
-       '(%d, %d, %d, "%s", "%s", "%s", "%s", %d, "%s"),' .
-       '(%d, %d, %d, "%s", "%s", "%s", "%s", %d, "%s"),' .
-       '(%d, %d, %d, "%s", "%s", "%s", "%s", %d, "%s"),' .
-       '(%d, %d, %d, "%s", "%s", "%s", "%s", %d, "%s")';
-  $ok_result2 = TRUE;
-  for ($form=0; $form <= 4; $form++) {
-    $variables = array( 
-      1, $form, 1, "node:", "Add node titles", "node_title", "", 1, "SELECT n.title, CONCAT('node/',n.nid) FROM {node} n WHERE n.status = 1 AND LOWER(n.title) LIKE LOWER(:like_word)",
-      2, $form, 1, "user:", "Add usernames", "username", "", 2, "SELECT u.name, CONCAT('user/', u.uid) FROM {users} u WHERE u.status = 1 AND LOWER(u.name) LIKE LOWER(:like_word)",
-      3, $form, $enable_taxo, "vocab:", "Add taxonomies", "taxo_title", "taxonomy", 3, "SELECT t.name, CONCAT('taxonomy/term/', t.tid) FROM {term_data} t WHERE LOWER(t.name) LIKE LOWER(:like_word)",
-      4, $form, $enable_comment, "comment:", "Add node comment titles", "comment_title", "comment", 4, "SELECT c.subject, CONCAT('node/', c.nid, '/#comment-', c.cid) FROM {comments} c WHERE c.subject LIKE LOWER(:like_word)",
-      5, $form, 1, "", "Add all possible words (any word appearing on your website)", "word_title", "search", 5, "SELECT DISTINCT s.word, CONCAT('search/node/', s.word) FROM {search_index} s, {node} n WHERE s.type = 'node' AND n.nid = s.sid AND n.status = 1 AND LOWER(s.word) LIKE LOWER(:like_word)",
-    );
-    $ok_result2 &= db_query($sql, $variables);
+      drupal_set_message(st('An error has occured during table creation, please retry. If the problem persist please post an issue.'), 'error');
   }
-  if (!$ok_result2) 
-    drupal_set_message(st('An error has occured while creating default suggestions, please retry. If the problem persist please post an issue and report the code: #err_code:402'), 'error');
+  
+  $limit            = variable_get('search_autocomplete_limit', 10);
+  $trigger          = variable_get('search_autocomplete_trigger', 1);
+  $enabled          = 1;
 
-  variable_del('search_autocomplete_forms');
-  variable_del('search_autocomplete_test');
-  variable_del('search_autocomplete_limit');
-  variable_del('search_autocomplete_trigger');
-  variable_del('search_autocomplete_method');
+  // ----------------
+  // Declare insertion statement.
+  $sql =  'INSERT INTO {search_autocomplete_forms} (title, selector, weight, enabled, min_char, max_sug, auto_submit, auto_redirect, translite, data_source, data_callback, data_static, data_view, theme) VALUES '.
+          '("%s", "%s", %d, %d, %d, %d, %d, %d, %d, %d, "%s", "%s", "%s", "%s"),' .
+          '("%s", "%s", %d, %d, %d, %d, %d, %d, %d, %d, "%s", "%s", "%s", "%s"),' .
+          '("%s", "%s", %d, %d, %d, %d, %d, %d, %d, %d, "%s", "%s", "%s", "%s"),' .
+          '("%s", "%s", %d, %d, %d, %d, %d, %d, %d, %d, "%s", "%s", "%s", "%s")';
+  
+  $variables = array( st('Search page - Node Tab') . "  (search/node/%)", '#search-form[action="/search/node"] #edit-keys', 4, $enabled, $trigger, $limit, 1, 1, 1, 3, 'search_autocomplete/autocomplete/1', '', 'node_autocomplete', 'tripadvisor',
+                      st('Search page - User Tab') . "  (search/user/%)", '#search-form[action="/search/user"] #edit-keys', 3, $enabled, $trigger, $limit, 1, 1, 1, 1, '', '', '', 'facebook like',
+                      st('Search Block'), '#edit-search-block-form-1', 2, $enabled, $trigger, $limit, 1, 1, 1, 3, 'search_autocomplete/autocomplete/3/', '', 'node_autocomplete', 'tripadvisor',
+                      st('Search box (added by the theme)'), "#edit-search-theme-form-1", 1, $enabled, $trigger, $limit, 1, 1, 1, 3, 'search_autocomplete/autocomplete/4/', '', 'node_autocomplete', 'tripadvisor');
+  $ok_result = db_query($sql, $variables);
+  if (!$ok_result) {
+    drupal_set_message(st('An error has occured while creating default forms, please retry. If the problem persist please post an issue here :') . '  <a href="http://drupal.org/project/issues/search_autocomplete">http://drupal.org/project/issues/search_autocomplete</a>', 'error');
+  }
+  drupal_set_message(st('Search Autocomplete is now correctly installed!') . "<br/>" . st('If you see some functionalities missing or broken, please post an issue here:') . '  <a href="http://drupal.org/project/issues/search_autocomplete">http://drupal.org/project/issues/search_autocomplete</a>');
+}
 
-  if ($ok_result1 && $ok_result2 && $result['success']) 
-    drupal_set_message(st('Search Autocomplete is now correctly installed!'));
+/**
+ * Get ready for Search Autocomplete 6.4-x
+ */
+function search_autocomplete_update_7400(&$sandbox) {
+  $ret = array();
 
-} // function search_autocomplete_install
+  $num_deleted =  db_drop_table($ret, 'search_autocomplete_forms');
+  $num_deleted &= db_drop_table($ret, 'search_autocomplete_suggestions');
+
+  db_create_table($ret, 'search_autocomplete_forms', drupal_get_schema('search_autocomplete_forms', TRUE));
+  search_autocomplete_install();
+
+  return t('The update process is successfull.');
+}
+
 
 // -----------------------------------------------------------------------------------------------
 /**
@@ -221,133 +199,107 @@ function search_autocomplete_uninstall() {
   $results = drupal_uninstall_schema('search_autocomplete');
   foreach ($results as $result) {
     if (!$result['success'])
-      drupal_set_message(t('An error has occured while uninstalling the databases, please retry. If the problem persist please post an issue and report the code: #err_code:403'), 'error');
+      drupal_set_message(t('An error has occured while uninstalling the databases, please retry. If the problem persist please post an issue.'), 'error');
   }
-} // function search_autocomplete_uninstall
+}
 
+/**
+ * Change internal callback URL from absolute to relative.
+ */
+function search_autocomplete_update_6400(&$sandbox) {
+  global $base_url;
+  $ret = array();
+
+
+  $result = db_select('search_autocomplete_forms', 'f')
+    ->fields('f', array('fid', 'data_callback'))
+    ->execute()
+    ->fetchAll();
+
+  foreach ($result as $item) {
+    db_update('search_autocomplete_forms')
+      ->fields(array(
+        'data_callback'   => str_replace($base_url . "/", "", $item->data_callback)
+      ))
+      ->condition('fid', $item->fid)
+      ->execute();
+  }
+
+  return t('Update has:<br/>- change internal callback URL from absolute to relative.<br/>- clear JS cache.<br/> Done with success.');
+}
+
+/**
+ * Add a translite optionnal option.
+ */
+function search_autocomplete_update_6401(&$sandbox) {
+  $ret = array();
+
+  $translite_field = array(
+    'description' => 'Define if suggestion searches should be translited',
+    'type'        => 'int',
+    'not null'    => TRUE,
+    'default'     => 1,
+  );
+  db_add_field($ret, 'search_autocomplete_forms', 'translite', $translite_field);
+  $no_results_field = array(
+    'description' => 'Maximum number of suggestions',
+    'type'        => 'varchar',
+    'length'      => 50,
+    'not null'    => FALSE,
+    'default'     => '-- no results --',
+  );
+  db_add_field($ret, 'search_autocomplete_forms', 'no_results', $no_results_field);
+
+  return t('Update has:<br/>- add a column "translite" in the search autocomplete database.<br/>- add a column "no_results" in the search autocomplete database.<br/> Done with success.');
+}
 // -----------------------------------------------------------------------------------------------
-/**
- * Get ready to version from 1.x to 2.0
- */
-function search_autocomplete_update_6200() {
-  // if tables does'not already exists: run install
-  $ret = array();
-  if (!db_table_exists('search_autocomplete_forms') && !db_table_exists('search_autocomplete_suggestions')) {
-    search_autocomplete_install();
-    // Rebuild system table contents.
-    module_rebuild_cache();
-    system_theme_data();
-  }
-  return $ret;
-}
 
 /**
- * Get ready for version 2.0-alpha1 to 2.1
+ * Change columns from TEXT to LONGTEXT and add filters in callbacks.
  */
-function search_autocomplete_update_6201() { 
+function search_autocomplete_update_6402(&$sandbox) {
   $ret = array();
-  $ok_result = TRUE;  // so far so good
+  
+  // Create the definition for the field.
+  $new_field = array(
+    'description' => 'Static text as a data',
+    'type'        => 'text',
+    'size'        => 'big',
+  );
+  db_change_field($ret, 'search_autocomplete_forms', 'data_static', 'data_static', $new_field);
 
-  // don't need the method field anymore
-  if (db_column_exists('search_autocomplete_forms', 'method')) {
-    $ret = array();
-    db_drop_field($ret, 'search_autocomplete_forms', 'method');
-  }
-  if (db_column_exists('search_autocomplete_forms', 'form_id')) {
-    $ret = array();
-    db_drop_field($ret, 'search_autocomplete_forms', 'form_id');
-  }
-  if (db_column_exists('search_autocomplete_forms', 'sort')) {
-    $ret = array();
-    db_drop_field($ret, 'search_autocomplete_forms', 'sort');
-  }
-
-  // change sug_module to sug_dependencies
-  if (db_column_exists('search_autocomplete_suggestions', 'sug_module')) {
-    $ok_result &= db_query('ALTER TABLE {search_autocomplete_suggestions} CHANGE sug_module sug_dependencies VARCHAR(255) NOT NULL');
-  }
-
-  // add the query column
-  if (!db_column_exists('search_autocomplete_suggestions', 'sug_query')) {
-    $ret = array();
-    db_add_field($ret, 'search_autocomplete_suggestions', 'sug_query', 
-      array( 
-        'description' => 'The database query for this suggestion',
-        'type' => 'varchar',
-        'length' => 512,
-        'not null' => TRUE,
-        'default' => '',
+  // Select data_callbacks of.
+  $result = db_select('search_autocomplete_forms', 'f')
+    ->fields('f', array('fid', 'data_callback'))
+    ->execute()
+    ->fetchAll();
+  foreach ($result as $item) {
+    db_update('search_autocomplete_forms')
+      ->fields(array(
+        'data_callback'   => $item->data_callback . '?filter=')
       )
-    );
-    $ok_result &= db_query('UPDATE {search_autocomplete_suggestions} SET sug_query = "%s" WHERE sid = 1', "SELECT n.title FROM {node} n WHERE n.status = 1 AND LOWER(n.title) LIKE LOWER(:like_word)");
-    $ok_result &= db_query('UPDATE {search_autocomplete_suggestions} SET sug_query = "%s" WHERE sid = 2', "SELECT u.name FROM {users} u WHERE u.status = 1 AND LOWER(u.name) LIKE LOWER(:like_word)");
-    $ok_result &= db_query('UPDATE {search_autocomplete_suggestions} SET sug_query = "%s" WHERE sid = 3', "SELECT t.name FROM {term_data} t WHERE LOWER(t.name) LIKE LOWER(:like_word)");
-    $ok_result &= db_query('UPDATE {search_autocomplete_suggestions} SET sug_query = "%s" WHERE sid = 4', "SELECT c.subject FROM {comments} c WHERE c.subject LIKE LOWER(:like_word)");
-    $ok_result &= db_query('UPDATE {search_autocomplete_suggestions} SET sug_query = "%s" WHERE sid = 5', "SELECT DISTINCT s.word FROM {search_index} s, {node} n WHERE s.type = 'node' AND n.nid = s.sid AND n.status = 1 AND LOWER(s.word) LIKE LOWER(:like_word)");
-
-    // Add the default (zero fid) suggestions
-    $sql = 'INSERT INTO {search_autocomplete_suggestions} (sid, sug_fid, sug_enabled, sug_prefix, sug_title, sug_name, sug_dependencies, sug_weight, sug_query) VALUES '.
-            '(%d, %d, %d, "%s", "%s", "%s", "%s", %d, "%s"),' .
-            '(%d, %d, %d, "%s", "%s", "%s", "%s", %d, "%s"),' .
-            '(%d, %d, %d, "%s", "%s", "%s", "%s", %d, "%s"),' .
-            '(%d, %d, %d, "%s", "%s", "%s", "%s", %d, "%s"),' .
-            '(%d, %d, %d, "%s", "%s", "%s", "%s", %d, "%s")';
-
-    $variables = array( 
-      1, 0, 1, "node:", "Add node titles", "node_title", "", 1, "SELECT n.title FROM {node} n WHERE n.status = 1 AND LOWER(n.title) LIKE LOWER(:like_word)",
-      2, 0, 1, "user:", "Add node usernames", "username", "", 2, "SELECT u.name FROM {users} u WHERE u.status = 1 AND LOWER(u.name) LIKE LOWER(:like_word)",
-      3, 0, 1, "vocab:", "Add taxonomies", "taxo_title", "taxonomy", 3, "SELECT t.name FROM {term_data} t WHERE LOWER(t.name) LIKE LOWER(:like_word)",
-      4, 0, 1, "comment:", "Add node comment titles", "comment_title", "comment", 4, "SELECT c.subject FROM {comments} c WHERE c.subject LIKE LOWER(:like_word)",
-      5, 0, 1, "", "Add all possible words (any word appearing on your website)", "word_title", "search", 5, "SELECT DISTINCT s.word FROM {search_index} s, {node} n WHERE s.type = 'node' AND n.nid = s.sid AND n.status = 1 AND LOWER(s.word) LIKE LOWER(:like_word)",
-    );
-    $ok_result &= db_query($sql, $variables);
+      ->condition('data_callback', array('autocomplete-nodes', 'autocomplete-users'), 'IN')
+      ->execute();
   }
 
-  if (!$ok_result) 
-    drupal_set_message(st('An error has occured during 6201 update of Search Autocomplete module'), 'error');
-
-  // Rebuild system table contents.
-  module_rebuild_cache();
-  system_theme_data();
-
-  return $ret;
+  return (t('Update has:') . '<br/>' . t('- changed column type "data_static" from TEXT to LONGTEXT.')
+                           . '<br/>' . t('- Add filter to VIEWS callback for performance improvement.'));
 }
 
 /**
- * Get ready for version 2.1 to 2.2
+ * Change user autocompletion data.
  */
-function search_autocomplete_update_6202() {
-  $ret = array();
-  $results = db_query('SELECT sug_query FROM {search_autocomplete_suggestions}');
-  while ($item = db_fetch_array($results)) {
-    $new_query = str_replace("LIKE LOWER('%%%s%%')", "LIKE #", $item['sug_query']);
-    db_query('UPDATE {search_autocomplete_suggestions} SET sug_query = "%s" WHERE sug_query = "%s"', $new_query, $item['sug_query']);
-  }
-  return $ret;
-}
-
-/**
- * Get ready for version 2.2 to 2.3
- */
-function search_autocomplete_update_6203() {
-  $ret = array();
-  $results = db_query('SELECT sug_query FROM {search_autocomplete_suggestions}');
-  while ($item = db_fetch_array($results)) {
-    $new_query = str_replace("LIKE #", "LIKE LOWER(:like_word)", $item['sug_query']);
-    db_query('UPDATE {search_autocomplete_suggestions} SET sug_query = "%s" WHERE sug_query = "%s"', $new_query, $item['sug_query']);
-  }
-  return $ret;
-}
-
-/**
- * Get ready for version 2.4 to 2.5
- */
-function search_autocomplete_update_6205() {
-  $ret = array();
-  db_query('UPDATE {search_autocomplete_suggestions} SET sug_query = "%s" WHERE sid = 1', "SELECT n.title, CONCAT('node/',n.nid) FROM {node} n WHERE n.status = 1 AND LOWER(n.title) LIKE LOWER(:like_word)");
-  db_query('UPDATE {search_autocomplete_suggestions} SET sug_query = "%s" WHERE sid = 2', "SELECT u.name, CONCAT('user/', u.uid) FROM {users} u WHERE u.status = 1 AND LOWER(u.name) LIKE LOWER(:like_word)");
-  db_query('UPDATE {search_autocomplete_suggestions} SET sug_query = "%s" WHERE sid = 3', "SELECT t.name, CONCAT('taxonomy/term/', t.tid) FROM {term_data} t WHERE LOWER(t.name) LIKE LOWER(:like_word)");
-  db_query('UPDATE {search_autocomplete_suggestions} SET sug_query = "%s" WHERE sid = 4', "SELECT c.subject, CONCAT('node/', c.nid, '/#comment-', c.cid) FROM {comments} c WHERE c.subject LIKE LOWER(:like_word)");
-  db_query('UPDATE {search_autocomplete_suggestions} SET sug_query = "%s" WHERE sid = 5', "SELECT DISTINCT s.word, CONCAT('search/node/', s.word) FROM {search_index} s, {node} n WHERE s.type = 'node' AND n.nid = s.sid AND n.status = 1 AND LOWER(s.word) LIKE LOWER(:like_word)");
-  return $ret;
+function search_autocomplete_update_6403(&$sandbox) {
+  
+  // Select data_callbacks of.
+  db_update('search_autocomplete_forms')
+    ->fields(array(
+      'theme'   => 'facebook like.css')
+    )
+    ->condition('data_callback', 'autocomplete-users?filter=', '=')
+    ->execute();
+    
+  cache_clear_all();
+  
+  return (t('Update has been done.'));
 }

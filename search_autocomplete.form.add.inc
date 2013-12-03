@@ -5,7 +5,7 @@
  * Search Autocomplete
  * Add a new form to Search Autocomplete form list.
  *
- * @authors
+ * @author
  * Miroslav Talenberg (Dominique CLAUSE) <http://www.axiomcafe.fr/contact>
  *
  * Sponsored by:
@@ -53,11 +53,6 @@ function search_autocomplete_form_add() {
 function search_autocomplete_form_add_submit($form, &$form_state) {
   $ok_query = TRUE;  // so far so good!
 
-  // Update the database with the new values
-  $what = '';
-  $sids = '';
-  $weights = '';
-
   // Get the form values
   $values = $form_state['values'];
 
@@ -71,13 +66,6 @@ function search_autocomplete_form_add_submit($form, &$form_state) {
   // Insert the new form in database
   $ok_query &= db_query('INSERT {search_autocomplete_forms} SET title = "%s", selector = "%s"', $values['title'], $values['selector']);
   $fid = db_last_insert_id('search_autocomplete_forms', 'fid');
-
-  // Connect default suggestions to this form
-  $ret= db_query('SELECT * FROM {search_autocomplete_suggestions} WHERE sug_fid=0');
-  while ($match = db_fetch_array($ret)) {
-    $ok_query &= db_query('INSERT {search_autocomplete_suggestions} SET sid = %d, sug_fid=%d, sug_enabled=%d, sug_prefix="%s", sug_title="%s", sug_name="%s", sug_dependencies="%s", sug_weight=%d, sug_query="%s"',
-      $match['sid'], $fid, $match['sug_enabled'], $match['sug_prefix'], $match['sug_title'], $match['sug_name'], $match['sug_dependencies'], $match['sug_weight'], $match['sug_query']);
-  }
 
   // redirect to configuration page
   $form_state['redirect'] = 'admin/settings/search_autocomplete/' . $fid . '/configure';

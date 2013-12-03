@@ -1,0 +1,114 @@
+/*
+ * SEARCH AUTOCOMPLETE (version 7.3-x)
+ *
+ * Sponsored by:
+ * www.axiomcafe.fr
+ */
+
+/**
+ * THEME CUSTOM
+ */
+
+
+/*******     DO NOT CHANGE ANYTHING IN HERE : have a look at the end of css file ***********/
+/* AUTOCOMPLETE  : */
+.myUI-theme-nice-green.myUI-autocomplete {
+  position: absolute;
+  cursor: default;
+}
+* html .myUI-theme-nice-green.myUI-autocomplete {
+  width: 1px; /* without this, the menu expands to 100% in IE6 */
+}
+.myUI-theme-nice-green.myUI-autocomplete-input {
+  background-image: url("images/throbber.gif");
+  background-position: 100% 4px;
+  background-repeat: no-repeat;
+}
+.myUI-theme-nice-green.myUI-autocomplete-loading {
+  background-image: url("images/throbber.gif");
+  background-position: 100% -16px;
+  background-repeat: no-repeat;
+}
+.myUI-theme-nice-green.myUI-menu {
+  list-style: none;
+  padding: 2px;
+  margin: 0;
+  display: block;
+  float: left;
+}
+.myUI-theme-nice-green.myUI-menu .myUI-menu {
+  margin-top: -3px;
+}
+.myUI-theme-nice-green.myUI-menu .myUI-menu-item {
+  margin: 0;
+  padding: 0;
+  zoom: 1;
+  float: left;
+  clear: left;
+  width: 100%;
+}
+.myUI-theme-nice-green.myUI-menu .myUI-menu-item a {
+  text-decoration: none;
+  display: block;
+  padding: .2em .4em;
+  line-height: 1.5;
+  zoom: 1;
+}
+.myUI-theme-nice-green.myUI-menu .myUI-menu-item a {
+  font-weight: normal;
+  margin: -1px;
+}
+
+/************************************************************/
+/*******     MAKE YOUR CUSTOM CHANGES IN HERE     ***********/
+
+/* Component containers */
+#myUI-theme-nice-green {
+  font-family: segoe myUI, Arial, sans-serif;
+  font-size: 1.1em;
+  border: 1px solid #dfd9c3;
+  background: #f5f3e5 url(images/ui-bg_highlight-hard_100_f5f3e5_1x100.png) 50% top repeat-x;
+  color: #312e25;
+}
+#myUI-theme-nice-green a {
+  color: #312e25;
+}
+
+/* Corner radius */
+#myUI-theme-nice-green .myUI-corner-all {
+  -moz-border-radius-topleft: 6px;
+  -webkit-border-top-left-radius: 6px;
+  -khtml-border-top-left-radius: 6px;
+  border-top-left-radius: 6px;
+}
+#myUI-theme-nice-green .myUI-corner-all {
+  -moz-border-radius-topright: 6px;
+  -webkit-border-top-right-radius: 6px;
+  -khtml-border-top-right-radius: 6px;
+  border-top-right-radius: 6px;
+}
+#myUI-theme-nice-green .myUI-corner-all {
+  -moz-border-radius-bottomleft: 6px;
+  -webkit-border-bottom-left-radius: 6px;
+  -khtml-border-bottom-left-radius: 6px;
+  border-bottom-left-radius: 6px;
+}
+#myUI-theme-nice-green .myUI-corner-all {
+  -moz-border-radius-bottomright: 6px;
+  -webkit-border-bottom-right-radius: 6px;
+  -khtml-border-bottom-right-radius: 6px;
+  border-bottom-right-radius: 6px;
+}
+
+/* Interaction States */
+#myUI-theme-nice-green .myUI-state-hover {
+  border: 1px solid #327e04;
+  background: #67b021 url(images/ui-bg_highlight-soft_25_67b021_1x100.png) 50% 50% repeat-x;
+  font-weight: normal;
+  color: #ffffff;
+}
+#myUI-theme-nice-green .myUI-state-hover a,
+#myUI-theme-nice-green .myUI-state-hover a:hover {
+  color: #ffffff;
+  text-decoration: none;
+}
