@@ -58,16 +58,10 @@
   margin: -1px;
 }
 
-/*!
- * jQuery UI CSS Framework 1.8.22
- *
- * START THEME
- * Copyright 2012, AUTHORS.txt (http://jqueryui.com/about)
- * Dual licensed under the MIT or GPL Version 2 licenses.
- * http://jquery.org/license
- *
- * http://docs.jquery.com/UI/Theming/API
- */
+/* AUTOCOMPLETE MENU */
+#ui-theme-nice-blue div {
+  display: block;
+}
 
 /* Component containers */
 #ui-theme-nice-blue {

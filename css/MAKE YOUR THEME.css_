@@ -61,6 +61,10 @@
 /************************************************************/
 /*******     MAKE YOUR CUSTOM CHANGES IN HERE     ***********/
 
+#ui-theme-YOUR-THEME-NAME div {
+  display: block;
+}
+
 /* make even odd distinction */
 #ui-theme-YOUR-THEME-NAME .ui-menu-item-odd { }
 #ui-theme-YOUR-THEME-NAME .ui-menu-item-even { }
@@ -108,4 +112,12 @@
   border: 1px solid #fbcb09;
   background-image: none;
   font-weight: normal;
+}
+
+
+/* Suggestions fields */
+#ui-theme-YOUR-THEME-NAME .ui-autocomplete-field-group {
+  float: right;
+  position: absolute;
+  right: 5px;
 }

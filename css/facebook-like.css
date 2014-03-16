@@ -27,12 +27,18 @@
   background-position: 100% -16px;
   background-repeat: no-repeat;
 }
+
+/* AUTOCOMPLETE MENU */
+#ui-theme-facebook-like div {
+  display: block;
+}
 #ui-theme-facebook-like.ui-menu {
   list-style: none;
   padding: 2px;
   margin: 0;
   display: block;
   float: left;
+  min-width: 250px;
 }
 #ui-theme-facebook-like.ui-menu .ui-menu {
   margin-top: -3px;
@@ -92,30 +98,41 @@
   border-bottom-right-radius: 4px;
 }
 
+#ui-theme-facebook-like .ui-menu-item-first {
+  border-top: 1px solid #6D84B4;
+}
 /* Interaction States */
 #ui-theme-facebook-like .ui-state-hover {
   font-weight: normal;
   border: none;
+  border-radius: 0px;
   background-image: none;
-  background-color: #0a246a;
+  background-color: #6D84B4;
   color: white;
 }
 #ui-theme-facebook-like a {
   min-height: 50px;
   padding: 3px 3px 3px 60px;
 }
+#ui-theme-facebook-like .ui-autocomplete-field-group {
+  float: right;
+  font-size: 12px;
+}
 #ui-theme-facebook-like .ui-autocomplete-field-term{
   font-weight: bold;
-  color : blue;
+}
+#ui-theme-facebook-like .ui-state-hover .ui-autocomplete-field-name {
+    color: white;
 }
 #ui-theme-facebook-like .ui-autocomplete-field-name {
   font-size: 20px;
+  color: #6D84B4;
 }
 #ui-theme-facebook-like .ui-autocomplete-field-rid {
   font-size: 9px;
   color: #999;
 }
 #ui-theme-facebook-like .ui-autocomplete-field-picture {
-  left: 4px;
-  position: absolute;
+  float: left;
+  margin-right: 5px;
 }

@@ -15,9 +15,6 @@
     var term = this.term;
     var first = ("group" in item)  ? 'first' : '';
     var innerHTML = '<div class="ui-autocomplete-fields ' + first + '">';
-    if ("group" in item) {
-    	innerHTML += ('<div class="ui-autocomplete-field-group ' + item.group.group_id + '">' + item.group.group_name + '</div>');
-    }
     if (item.fields) {
       $.each( item.fields, function( key, value ) {
       var regex = new RegExp( '(' + $.trim(term) + ')', 'gi' );
@@ -33,7 +30,12 @@
     }
     innerHTML += '</div>';
 
-    return $( "<li></li>" )
+    var group = '';
+    if ("group" in item) {
+    	group += ('<div class="ui-autocomplete-field-group ' + item.group.group_id + '">' + item.group.group_name + '</div>');
+    	$(group).appendTo( ul );
+    }
+    return  $("<li class=ui-menu-item-" + first + "></li>" )
         .data( "item.autocomplete", item )
         .append( "<a>" + innerHTML + "</a>" )
         .appendTo( ul );
@@ -41,7 +43,7 @@
   
   $.ui.autocomplete.prototype._resizeMenu = function() {
     var ul = this.menu.element; 
-    ul.outerWidth( Math.max( ul.width("").outerWidth() + 5, this.options.position.of == null ? this.element.outerWidth() : this.options.position.of.outerWidth()));
+    ul.outerWidth(Math.max( ul.width("").outerWidth() + 5, this.options.position.of == null ? this.element.outerWidth() : this.options.position.of.outerWidth()));
   };
   
   Drupal.behaviors.search_autocomplete = {
@@ -101,6 +103,7 @@
                   event.preventDefault();
               }
             },
+            appendTo: $(Drupal.settings.search_autocomplete[key].selector).parent(),
           }).autocomplete("widget").attr("id", "ui-theme-" + Drupal.settings.search_autocomplete[key].theme);
         });
       }

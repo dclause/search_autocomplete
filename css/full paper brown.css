@@ -58,18 +58,10 @@
   margin: -1px;
 }
 
-
-/*!
- * jQuery UI Autocomplete 1.8.22
- *
- * LIGHTNESS PAPER GINGER
- *
- * Copyright 2012
- * Dual licensed under the MIT or GPL Version 2 licenses.
- * http://jquery.org/license
- *
- * http://docs.jquery.com/UI/Theming/API
- */
+/* AUTOCOMPLETE MENU */
+#ui-theme-full-paper-brown div {
+  display: block;
+}
 
 /* Component containers */
 #ui-theme-full-paper-brown {

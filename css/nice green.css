@@ -59,9 +59,10 @@
   margin: -1px;
 }
 
-/************************************************************/
-/*******     MAKE YOUR CUSTOM CHANGES IN HERE     ***********/
-
+/* AUTOCOMPLETE MENU */
+#ui-theme-nice-green div {
+  display: block;
+}
 /* Component containers */
 #ui-theme-nice-green {
   font-family: segoe ui, Arial, sans-serif;

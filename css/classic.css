@@ -27,6 +27,12 @@
   background-position: 100% -16px;
   background-repeat: no-repeat;
 }
+
+/* AUTOCOMPLETE MENU */
+#ui-theme-classic div {
+  display: block;
+}
+
 #ui-theme-classic.ui-menu {
   list-style: none;
   padding: 2px;

@@ -39,6 +39,11 @@
   font-family: Arial,Tahoma,"Bitstream Vera Sans",sans-serif;
   font-size: 1em;
 }
+
+/* AUTOCOMPLETE MENU */
+#ui-theme-tripadvisor-like div {
+  display: block;
+}
 #ui-theme-tripadvisor-like.ui-menu {
   list-style: none;
   padding: 0px;
@@ -80,7 +85,7 @@
 #ui-theme-tripadvisor-like .ui-autocomplete-fields {
   padding: 5px 6px;
 }
-#ui-theme-tripadvisor-like .ui-autocomplete-fields.first {
+#ui-theme-tripadvisor-like .ui-menu-item-first {
   border-top: 1px solid #D3E0BB;
 }
 #ui-theme-tripadvisor-like .ui-autocomplete-field-title {
@@ -94,4 +99,6 @@ text-align: left;
   background-repeat: no-repeat;
   color: #589442;
   float: right;
+  position: absolute;
+  right: 5px;
 }
