@@ -12,7 +12,7 @@
  * @ingroup views_templates
  * @see search_autocomplete.views.inc
  */
- 
+
 
 function template_preprocess_views_search_autocomplete_style(&$vars) {
 global $base_root;
@@ -20,24 +20,24 @@ global $base_root;
   $view = $vars['view'];
   $rows = $vars['rows'];
   $style_options = $vars['options'];
-  
+
   $arg = '';
   if (array_key_exists(0, $view->args)) {
     $arg = $view->args[0] ? $view->args[0] : '';
   }
 
   $objects = array();
-  
+
   $vars['bitmask'] = NULL;
-    
+
   foreach ($rows as $row) {
-    
-    $object = array();   
-    
+
+    $object = array();
+
     /* ----------------
      * Build the link...
      * ----------------  */
-     
+
     // Extract the URL...
     $regexp = "<a\s[^>]*href=(\"??)([^\" >]*?)\\1[^>]*>(.*)<\/a>";
     if (preg_match("/$regexp/siU", htmlspecialchars_decode($row[$style_options['input_link']]->content, ENT_QUOTES), $matches)) {
@@ -45,12 +45,12 @@ global $base_root;
       // And build the link object.
       $object['link'] = trim($link);
     }
-    
+
     /* ----------------
      * Build the value...
      * ----------------  */
-    $object['value'] = trim($row[$style_options['input_label']]->raw);
-    
+    $object['value'] = trim(strip_tags($row[$style_options['input_label']]->content));
+
     /* ----------------
      * Build the array of output fields...
      * ----------------  */
@@ -61,7 +61,7 @@ global $base_root;
         $object['fields'][$field_name] = trim($row[$field_name]->label . ' ' . $row[$field_name]->content);
       }
     }
-    
+
     if ($style_options['group_by']) {
       $group_type = $style_options['group_by'];
       $group_name = $row[$group_type]->content;
