@@ -21,7 +21,10 @@
     if (item.fields) {
       $.each( item.fields, function( key, value ) {
       var regex = new RegExp( '(' + $.trim(term) + ')', 'gi' );
-    	var output  = value.replace(regex, "<span class='ui-autocomplete-field-term'>$1</span>");
+    	var output = value;
+		if (value.indexOf('src=') == -1 && value.indexOf('href=') == -1) {
+		  output = value.replace(regex, "<span class='ui-autocomplete-field-term'>$1</span>");
+		}
         innerHTML += ('<div class="ui-autocomplete-field-' + key + '">' + output + '</div>');
       });
     } else {
