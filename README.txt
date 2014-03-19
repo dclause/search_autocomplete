@@ -28,10 +28,6 @@ files.
 --------------------------------------------------------------------------------
 -- 2.  Updating Search Autocomplete:
 
-BEWARE: Update to 7.x-4.x from 7.x-3.x will lose every previous configuration.
-Please make sure you can produce the suggestion set you need using views. This
-should be easy !
-
 Delete every files in the module directory sites/all/modules/search_autocomplete
 or in the equivalent directory of your Drupal installation.
 
