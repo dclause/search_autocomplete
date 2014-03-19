@@ -18,7 +18,7 @@
  *   The schema for of the table to create.
  */
 function search_autocomplete_schema() {
-  
+
   // Schema for search_autocomplete database.
   $schema['search_autocomplete_forms'] = array(
     'description' => t('Store the forms to autocomplete using Search Autocomplete.'),
@@ -52,7 +52,7 @@ function search_autocomplete_schema() {
         'description' => 'Define if autocomplete is activated or not',
         'type'        => 'int',
         'not null'    => TRUE,
-        'default'     => 0,
+        'default'     => 1,
       ),
       'parent_fid' => array(
         'description' => 'Define if the from follows the configuration of another one',
@@ -99,9 +99,9 @@ function search_autocomplete_schema() {
       ),
       'data_source'  => array(
         'description' => 'Should data come from callback or from static resource',
-        'type'        => 'int',
-        'not null'    => TRUE,
-        'default'     => 1,
+        'type'        => 'varchar',
+        'length'      => 255,
+        'default'     => 'view',
       ),
       'data_callback'  => array(
         'description' => 'Callback URL for data source',
@@ -118,14 +118,14 @@ function search_autocomplete_schema() {
           'description' => 'Internal callback view',
           'type'        => 'varchar',
           'length'      => 255,
-          'default'     => '',
+          'default'     => 'nodes_autocomplete',
       ),
       'theme'  => array(
         'description' => 'Theme to use with this form',
         'type'        => 'varchar',
         'length'      => 255,
         'not null'    => TRUE,
-        'default'     => 'lightness',
+        'default'     => 'basic-green.css',
       ),
     ),
     'primary key' => array('fid'),
@@ -158,11 +158,11 @@ function search_autocomplete_install() {
     'translite'     => 1,
     'auto_submit'   => 1,
     'auto_redirect' => 1,
-    'data_source'   => 3,
-    'data_callback' => 'search_autocomplete/autocomplete/1/',
+    'data_source'   => 'view',
+    'data_callback' => '',
     'data_static'   => '',
     'data_view'     => 'words_autocomplete',
-    'theme'         => 'tripadvisor-like.css',
+    'theme'         => 'basic-green.css',
   ));
   $insert->values(array(
     'title'     => st('Search page - User Tab') . "  (search/user/%)",
@@ -174,11 +174,11 @@ function search_autocomplete_install() {
     'translite'     => 1,
     'auto_submit'   => 1,
     'auto_redirect' => 1,
-    'data_source'   => 3,
+    'data_source'   => 'view',
     'data_callback' => '',
     'data_static'   => '',
     'data_view'     => 'users_autocomplete',
-    'theme'         => 'facebook-like.css',
+    'theme'         => 'user-blue.css',
   ));
   $insert->values(array(
     'title'     => st('Search Block'),
@@ -190,11 +190,11 @@ function search_autocomplete_install() {
     'translite'     => 1,
     'auto_submit'   => 1,
     'auto_redirect' => 1,
-    'data_source'   => 3,
-    'data_callback' => 'search_autocomplete/autocomplete/3/',
+    'data_source'   => 'view',
+    'data_callback' => '',
     'data_static'   => '',
     'data_view'     => 'nodes_autocomplete',
-    'theme'         => 'tripadvisor-like.css',
+    'theme'         => 'basic-green.css',
   ));
   $insert->execute();
 
@@ -202,12 +202,129 @@ function search_autocomplete_install() {
 }
 
 /**
- * Get ready for Search Autocomplete 7.x-4.0-alpha2
+ * Add data_view field (update from 3.x to 4.x).
  */
-function search_autocomplete_update_7402(&$sandbox) {
+function search_autocomplete_update_7403(&$sandbox) {
+  if (!db_field_exists('search_autocomplete_forms', 'data_view')) {
+    db_add_field('search_autocomplete_forms', 'data_view',
+      array(
+      'description' => 'Internal callback view',
+      'type'        => 'varchar',
+      'length'      => 255,
+      'default'     => 'nodes_autocomplete',
+      )
+    );
+  }
+}
 
-  drupal_uninstall_modules(array('search_autocomplete_forms'));
-  module_enable(array('search_autocomplete_forms'));
-  
-  return (t('Update has been done.'));
+/**
+ * Update default values from data_source: now view by defaut.
+ */
+function search_autocomplete_update_7404(&$sandbox) {
+  db_change_field('search_autocomplete_forms', 'data_source', 'data_source',
+    array(
+      'description' => 'Should data come from callback or from static resource',
+      'type'        => 'varchar',
+      'length'      => 255,
+      'default'     => 'view',
+    )
+  );
+}
+
+/**
+ * Update default values from enabled: now forms are enabed by default.
+ */
+function search_autocomplete_update_7405(&$sandbox) {
+  db_change_field('search_autocomplete_forms', 'enabled', 'enabled',
+    array(
+      'description' => 'Define if autocomplete is activated or not',
+      'type'        => 'int',
+      'not null'    => TRUE,
+      'default'     => 1,
+    )
+  );
+}
+
+/**
+ * Update default values from theme: now forms use the new multi-field theme by default.
+ */
+function search_autocomplete_update_7406(&$sandbox) {
+  db_change_field('search_autocomplete_forms', 'theme', 'theme',
+    array(
+      'description' => 'Theme to use with this form',
+      'type'        => 'varchar',
+      'length'      => 255,
+      'not null'    => TRUE,
+      'default'     => 'basic-green.css',
+    )
+  );
+}
+
+/**
+ * Update existing data (update from 4.0-alpha2 to 4.x).
+ */
+function search_autocomplete_update_7407(&$sandbox) {
+
+  $fid = db_select('search_autocomplete_forms', 'sa')
+    ->fields('sa', array('fid'))
+    ->condition('sa.selector', '#search-form[action="/search/node"] #edit-keys', '=')
+    ->execute()
+    ->fetchAssoc();
+  db_update('search_autocomplete_forms') // Table name no longer needs {}
+  ->fields(array(
+      'data_source'   => 'view',
+      'data_callback' => 'search_autocomplete/autocomplete/' . $fid['fid'] . '/',
+      'data_view'     => 'words_autocomplete',
+      'theme'         => 'basic-green.css'
+  ))
+  ->condition('selector', '#search-form[action="/search/node"] #edit-keys', '=')
+  ->execute();
+
+  $fid = db_select('search_autocomplete_forms', 'sa')
+  ->fields('sa', array('fid'))
+  ->condition('sa.selector', '#search-form[action="/search/user"] #edit-keys', '=')
+  ->execute()
+  ->fetchAssoc();
+  db_update('search_autocomplete_forms') // Table name no longer needs {}
+  ->fields(array(
+      'data_source'   => 'view',
+      'data_view'     => 'users_autocomplete',
+      'data_callback' => 'search_autocomplete/autocomplete/' . $fid['fid'] . '/',
+      'theme'         => 'user-blue.css'
+  ))
+  ->condition('selector', '#search-form[action="/search/user"] #edit-keys', '=')
+  ->execute();
+
+  $fid = db_select('search_autocomplete_forms', 'sa')
+  ->fields('sa', array('fid'))
+  ->condition('sa.selector', '#edit-search-block-form--2', '=')
+  ->execute()
+  ->fetchAssoc();
+  db_update('search_autocomplete_forms') // Table name no longer needs {}
+  ->fields(array(
+      'data_source'   => 'view',
+      'data_view'     => 'nodes_autocomplete',
+      'data_callback' => 'search_autocomplete/autocomplete/' . $fid['fid'] . '/',
+      'theme'         => 'basic-green.css'
+  ))
+  ->condition('selector', '#edit-search-block-form--2', '=')
+  ->execute();
+
+}
+
+/**
+ * Migrate translite option to global setting (update from 4.0-alpha2 to 4.x).
+ */
+function search_autocomplete_update_7408(&$sandbox) {
+
+  $translite = db_select('search_autocomplete_forms', 'sa')
+    ->fields('sa', array('translite'))
+    ->execute()
+    ->fetchAssoc();
+
+  db_drop_field('search_autocomplete_forms', 'translite');
+
+  variable_set('sa_translite', $translite['translite']);
+
+  return (t('Update to 7.x-4.0 has been done.'));
 }

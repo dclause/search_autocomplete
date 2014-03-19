@@ -96,14 +96,14 @@ function search_autocomplete_form_configure($form, &$form_state) {
       '#title'          => t('Suggestion source'),
       '#description'    => t('Choose the source of suggestions to display in this form'),
     );
-    
+
     // Use a callback.
     $form['search_autocomplete_what']['suggestions']['callback'] = array();
     $form['search_autocomplete_what']['callback']['callback_option'] = array(
       '#type'           => 'radio',
       '#title'          => t('Callback URL:'),
-      '#return_value'   => 1,
-      '#default_value'  => $item->data_source < 2 ? 1 : $item->data_source,
+      '#return_value'   => 'callback',
+      '#default_value'  => $item->data_source,
       '#prefix'         => '<div class="form-radios">',
       '#parents'        => array('suggestions'),
     );
@@ -111,7 +111,7 @@ function search_autocomplete_form_configure($form, &$form_state) {
     $form['search_autocomplete_what']['callback']['callback_textfield'] = array(
       '#type'           => 'textfield',
       '#description'    => $descr,
-      '#default_value'  => $item->data_callback,
+      '#default_value'  => $item->data_source == 'callback' ? $item->data_callback : '',
       // The default size is a bit large...
       '#size'           => 80,
       // End of the "form-radios" style.
@@ -124,8 +124,8 @@ function search_autocomplete_form_configure($form, &$form_state) {
     $form['search_autocomplete_what']['staticresource']['staticresource_option'] = array(
       '#type'           => 'radio',
       '#title'          => t('Static resource :'),
-      '#return_value'   => 2,
-      '#default_value'  => $item->data_source < 2 ? 1 : 2,
+      '#return_value'   => 'static',
+      '#default_value'  => $item->data_source,
       '#parents'        => array('suggestions'),
     );
     $form['search_autocomplete_what']['staticresource']['staticresource_textfield'] = array(
@@ -141,8 +141,8 @@ function search_autocomplete_form_configure($form, &$form_state) {
     $form['search_autocomplete_what']['view']['view_option'] = array(
         '#type'           => 'radio',
         '#title'          => t('Use an existing view:'),
-        '#return_value'   => 3,
-        '#default_value'  => $item->data_source < 2 ? 1 : $item->data_source,
+        '#return_value'   => 'view',
+        '#default_value'  => $item->data_source,
         '#suffix'         => '</div>',
         '#parents'        => array('suggestions'),
         '#attributes'     => array('onClick' => '$("input[name=suggestions][value=3]").attr("checked", true);'),
@@ -156,10 +156,10 @@ function search_autocomplete_form_configure($form, &$form_state) {
         '#size'           => 80,
         '#attributes'     => array('onClick' => '$("input[name=suggestions][value=3]").attr("checked", true);'),
     );
-    
+
     // Template to use.
     $themes = array();
-    $files = file_scan_directory(drupal_get_path('module', 'search_autocomplete') . '/css', '/.*\.css\z/', array('recurse' => FALSE));
+    $files = file_scan_directory(drupal_get_path('module', 'search_autocomplete') . '/css/themes', '/.*\.css\z/', array('recurse' => FALSE));
     foreach ($files as $file) {
       if ($file->name != 'jquery.autocomplete') {
         $themes[$file->filename] = $file->name;
@@ -231,26 +231,18 @@ function search_autocomplete_form_configure_submit($form, &$form_state) {
   $callback = $values['callback_textfield'];
   // Static resource => type = 2.
   $data_type = $values['suggestions'];
-  if ($data_type == 1 && $callback != '') {
+  if ($data_type == 'callback' && $callback != '') {
     // If path is absolute:
     if (url_is_external($callback)) {
       // If path is internal:
       if (strcmp(substr($callback, 0, strlen($base_url)), $base_url) === 0) {
         // Get it relative.
         $callback = str_replace($base_url . "/", "", $callback);
-        $data_type = 1;
       }
-      // If external: type = 0.
-      else {
-        $data_type = 0;
-      }
-    }
-    // If path is not absolute:
-    else {
-      $data_type = 1;
     }
   }
-  if ($data_type == 3) {
+  // in the case of view, we use a custom callback to retrieve the view data
+  if ($data_type == 'view') {
     $callback = 'search_autocomplete/autocomplete/' . $values['fid'] . '/';
   }
 
@@ -265,7 +257,7 @@ function search_autocomplete_form_configure_submit($form, &$form_state) {
       'auto_redirect'   => $values['auto_redirect'],
       'no_results'      => $values['no_results'],
       'selector'        => $values['selector'],
-      'data_source'     => $data_type,
+      'data_source'     => $values['suggestions'],
       'data_callback'   => $callback,
       'data_static'     => $values['staticresource_textfield'],
       'data_view'       => $values['view_textfield'],
@@ -309,7 +301,7 @@ function _search_autocomplete_get_all_children($fid, &$items = array(), $depth =
   if ($depth) {
     $items[] = $fid;
   }
-  
+
   $result = db_select('search_autocomplete_forms', 'f')
       ->fields('f')
       ->condition('parent_fid', $fid)

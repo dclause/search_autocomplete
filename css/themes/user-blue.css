@@ -6,44 +6,44 @@
  */
 
 /**
- * THEME NICE ORANGE
+ * THEME user-blue
  */
 
 /* AUTOCOMPLETE */
-.ui-theme-classic.ui-autocomplete {
+.ui-theme-user-blue.ui-autocomplete {
   position: absolute;
   cursor: default;
 }
-* html .ui-theme-classic.ui-autocomplete {
+* html .ui-theme-user-blue.ui-autocomplete {
   width: 1px; /* without this, the menu expands to 100% in IE6 */
 }
-.ui-theme-classic.ui-autocomplete-input {
+.ui-theme-user-blue.ui-autocomplete-input {
   background-image: url("images/throbber.gif");
   background-position: 100% 4px;
   background-repeat: no-repeat;
 }
-.ui-theme-classic.ui-autocomplete-loading {
+.ui-theme-user-blue.ui-autocomplete-loading {
   background-image: url("images/throbber.gif");
   background-position: 100% -16px;
   background-repeat: no-repeat;
 }
 
 /* AUTOCOMPLETE MENU */
-#ui-theme-classic div {
+#ui-theme-user-blue div {
   display: block;
 }
-
-#ui-theme-classic.ui-menu {
+#ui-theme-user-blue.ui-menu {
   list-style: none;
   padding: 2px;
   margin: 0;
   display: block;
   float: left;
+  min-width: 250px;
 }
-#ui-theme-classic.ui-menu .ui-menu {
+#ui-theme-user-blue.ui-menu .ui-menu {
   margin-top: -3px;
 }
-#ui-theme-classic.ui-menu .ui-menu-item {
+#ui-theme-user-blue.ui-menu .ui-menu-item {
   margin: 0;
   padding: 0;
   zoom: 1;
@@ -51,76 +51,88 @@
   clear: left;
   width: 100%;
 }
-#ui-theme-classic.ui-menu .ui-menu-item a {
+#ui-theme-user-blue.ui-menu .ui-menu-item a {
   text-decoration: none;
   display: block;
   padding: .2em .4em;
   line-height: 1.5;
   zoom: 1;
-}
-#ui-theme-classic.ui-menu .ui-menu-item a {
   font-weight: normal;
   margin: -1px;
 }
 
 /* make even odd distinction */
-#ui-theme-classic .ui-menu-item-odd {
+#ui-theme-user-blue .ui-menu-item-odd {
   background-color: #eeeeee;
 }
 
 /* Component containers */
-#ui-theme-classic {
+#ui-theme-user-blue {
   font-family: Trebuchet MS, Tahoma, Verdana, Arial, sans-serif;
   font-size: 1.1em;
 }
-#ui-theme-classic a {
+#ui-theme-user-blue a {
   color: #333333;
 }
 
 /* Corner radius */
-#ui-theme-classic .ui-corner-all {
+#ui-theme-user-blue .ui-corner-all {
   -moz-border-radius-topleft: 4px;
   -webkit-border-top-left-radius: 4px;
   -khtml-border-top-left-radius: 4px;
   border-top-left-radius: 4px;
-}
-#ui-theme-classic .ui-corner-all {
+
   -moz-border-radius-topright: 4px;
   -webkit-border-top-right-radius: 4px;
   -khtml-border-top-right-radius: 4px;
   border-top-right-radius: 4px;
-}
-#ui-theme-classic .ui-corner-all {
+
   -moz-border-radius-bottomleft: 4px;
   -webkit-border-bottom-left-radius: 4px;
   -khtml-border-bottom-left-radius: 4px;
   border-bottom-left-radius: 4px;
-}
-#ui-theme-classic .ui-corner-all {
+
   -moz-border-radius-bottomright: 4px;
   -webkit-border-bottom-right-radius: 4px;
   -khtml-border-bottom-right-radius: 4px;
   border-bottom-right-radius: 4px;
 }
 
+#ui-theme-user-blue .ui-menu-item-first {
+  border-top: 1px solid #6D84B4;
+}
 /* Interaction States */
-#ui-theme-classic .ui-state-hover {
+#ui-theme-user-blue .ui-state-hover {
   font-weight: normal;
   border: none;
+  border-radius: 0px;
   background-image: none;
-  background-color: #0a246a;
+  background-color: #6D84B4;
   color: white;
 }
-
-#ui-theme-classic .ui-autocomplete-field-term{
+#ui-theme-user-blue a {
+  min-height: 50px;
+  padding: 3px 3px 3px 60px;
+}
+#ui-theme-user-blue .ui-autocomplete-field-group {
+  float: right;
+  font-size: 12px;
+}
+#ui-theme-user-blue .ui-autocomplete-field-term{
   font-weight: bold;
-  color : blue;
 }
-#ui-theme-classic .ui-autocomplete-field-title {
-  font-size: 19px;
+#ui-theme-user-blue .ui-state-hover .ui-autocomplete-field-name {
+    color: white;
 }
-#ui-theme-classic .ui-autocomplete-field-name,
-#ui-theme-classic .ui-autocomplete-field-comment_count {
+#ui-theme-user-blue .ui-autocomplete-field-name {
+  font-size: 20px;
+  color: #6D84B4;
+}
+#ui-theme-user-blue .ui-autocomplete-field-rid {
   font-size: 9px;
   color: #999;
+}
+#ui-theme-user-blue .ui-autocomplete-field-picture {
+  float: left;
+  margin-right: 5px;
 }

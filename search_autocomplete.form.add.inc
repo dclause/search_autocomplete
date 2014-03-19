@@ -17,6 +17,11 @@
  */
 function search_autocomplete_form_add() {
 
+  $selector = '';
+
+  if (isset($_REQUEST['selector'])) {
+    $selector = urldecode($_REQUEST['selector']);
+  }
   $form = array();
   // ------------------------------------------------------------------.
   $form['title'] = array(
@@ -32,7 +37,7 @@ function search_autocomplete_form_add() {
     '#title'          => t('Selector'),
     '#description'    => $descr,
     '#type'           => 'textfield',
-    '#default_value'  => '',
+    '#default_value'  => $selector,
     '#maxlength'      => 255,
     '#required'       => TRUE,
   );

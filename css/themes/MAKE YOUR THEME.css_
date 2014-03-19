@@ -118,6 +118,6 @@
 /* Suggestions fields */
 #ui-theme-YOUR-THEME-NAME .ui-autocomplete-field-group {
   float: right;
-  position: absolute;
+  position: relative;
   right: 5px;
 }

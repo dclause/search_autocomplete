@@ -27,12 +27,13 @@ function search_autocomplete_treelist_form($form, &$form_state) {
 
   // For each items to render in the form.
   foreach ($data as $values) {
-    $fid        = $values->fid;
-    $title      = $values->title;
-    $weight     = $values->weight;
-    $enabled    = $values->enabled;
-    $parent_fid = $values->parent_fid;
-    $translite  = $values->translite;
+    $fid            = $values->fid;
+    $title          = $values->title;
+    $weight         = $values->weight;
+    $enabled        = $values->enabled;
+    $parent_fid     = $values->parent_fid;
+    $translite      = variable_get('sa_translite', true);
+    $admin_helper   = variable_get('sa_admin_helper', true);
 
     $form['my_items'][$fid] = array(
       'title' => array(
@@ -87,6 +88,15 @@ function search_autocomplete_treelist_form($form, &$form_state) {
     '#default_value'  => $translite,
   );
 
+  // Use admin helper tool option settings.
+  $title = t('Use autocompletion helper tool for Search Autocomplete administrators.');
+  $form['admin_helper'] = array(
+      '#type'           => 'checkbox',
+      '#title'          => $title,
+      '#description'    => t('If enabled, user with "administer Search Autocomplete" permission will be able to use admin helper tool on input fields (recommanded).'),
+      '#default_value'  => $admin_helper,
+  );
+
   // Submit buton.
   $form['submit'] = array(
     '#type' => 'submit',
@@ -109,11 +119,12 @@ function search_autocomplete_treelist_form_submit($form, &$form_state) {
         'weight' => $item['weight'],
         'parent_fid' => $item['parent_fid'],
         'enabled' => $item['enabled'],
-        'translite' => $form_state['values']['translite'],
       ))
       ->condition('fid', $item['fid'])
       ->execute();
   }
+  variable_set('sa_translite', $form_state['values']['translite']);
+  variable_set('sa_admin_helper', $form_state['values']['admin_helper']);
   drupal_set_message(t('Configuration success'));
 }
 

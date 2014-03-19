@@ -21,6 +21,12 @@ include_once('search_autocomplete.view_autocomplete.inc');
 function search_autocomplete_init() {
 
   // Checkout if user have authorization to access the autocompleted form.
+  if (user_access('administer Search Autocomplete') && variable_get('sa_admin_helper', TRUE)) {
+    drupal_add_js(drupal_get_path('module', 'search_autocomplete') . '/js/search_autocomplete.admin.js');
+    drupal_add_css(drupal_get_path('module', 'search_autocomplete') . '/css/search_autocomplete.admin.css');
+  }
+
+  // Checkout if user have authorization to access the autocompleted form.
   if (user_access('use Search Autocomplete')) {
     // Checkout if the db exists (it should).
     if (db_table_exists('search_autocomplete_forms')) {
@@ -46,11 +52,17 @@ function search_autocomplete_init() {
           $data_static[] = $object;
         }
 
-        $theme_id      = preg_replace("/\\.[^.\\s]{3,4}$/", "", $match->theme);
-        $data_source  = $match->data_callback;
-                
-        if (($match->data_source == 1 || $match->data_source == 3) && !url_is_external($match->data_callback)) {
-          $data_source = urldecode(url($match->data_callback, array('absolute' => TRUE)));
+        $theme_id       = preg_replace("/\\.[^.\\s]{3,4}$/", "", $match->theme);
+        $data_source    = $match->data_source;
+        $data_callback  = $match->data_callback;
+
+        if ($match->data_source != 'static') {
+          if (url_is_external($match->data_callback)) {
+            $data_source = 'external';
+          } else {
+            $data_source = 'internal';
+            $data_callback = urldecode(url($match->data_callback, array('absolute' => TRUE)));
+          }
         }
 
         drupal_add_js(array('search_autocomplete' => array(
@@ -59,8 +71,8 @@ function search_autocomplete_init() {
             'minChars'      => $match->min_char,
             'max_sug'       => $match->max_sug,
             'no_results'    => $match->no_results,
-            'type'          => $match->data_source,
-            'datas'         => $match->data_source == 2 ? $data_static : $data_source,
+            'type'          => $data_source,
+            'datas'         => $match->data_source == 2 ? $data_static : $data_callback,
             'fid'           => $match->fid,
             // Get the css filename with '-' instead of ' ', lower case and no '.css'.
             'theme'         => str_replace(' ', '-', strtolower($theme_id)),
@@ -68,7 +80,7 @@ function search_autocomplete_init() {
             'auto_redirect' => $match->auto_redirect,
           )
         )), 'setting');
-        drupal_add_css(drupal_get_path('module', 'search_autocomplete') . '/css/' . $match->theme);
+        drupal_add_css(drupal_get_path('module', 'search_autocomplete') . '/css/themes/' . $match->theme);
       }
       // If there is some results: need to include the css and js....
       if ($result) {
@@ -130,7 +142,7 @@ function search_autocomplete_replaceArguments(&$input, &$args) {
  * Helper function: get from database if suggestions should be translited.
  */
 function search_autocomplete_get_translite() {
-  
+
   // Get data in database and fetch it.
   $result = db_select('search_autocomplete_forms', 'f')
     ->fields('f', array('translite'))

@@ -55,7 +55,7 @@
             minLength: Drupal.settings.search_autocomplete[key].minChars,
             source: function(request, response) {
               // External URL:
-              if (Drupal.settings.search_autocomplete[key].type == 0) {
+              if (Drupal.settings.search_autocomplete[key].type == 'external') {
                 $.getJSON(Drupal.settings.search_autocomplete[key].datas, { q: request.term }, function (results) {
                   // Only return the number of values set in the settings.
                   if (!results.length && NoResultsLabel) {
@@ -65,7 +65,7 @@
                 });
               }
               // Internal URL:
-              else if (Drupal.settings.search_autocomplete[key].type == 1 || Drupal.settings.search_autocomplete[key].type == 3) {
+              else if (Drupal.settings.search_autocomplete[key].type == 'internal' || Drupal.settings.search_autocomplete[key].type == 'view') {
                 $.getJSON(Drupal.settings.search_autocomplete[key].datas + request.term, { }, function (results) {
                   // Only return the number of values set in the settings.
                   if (!results.length && NoResultsLabel) {
@@ -75,7 +75,7 @@
                 });
               }
               // Static resources:
-              else if (Drupal.settings.search_autocomplete[key].type == 2) {
+              else if (Drupal.settings.search_autocomplete[key].type == 'static') {
                 var results = $.ui.autocomplete.filter(Drupal.settings.search_autocomplete[key].datas, request.term);
                     if (!results.length && NoResultsLabel) {
                     results = [NoResultsLabel];
