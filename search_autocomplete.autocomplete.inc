@@ -15,7 +15,7 @@
  * The user string so far
  */
 function search_autocomplete_views_autocomplete($user_input = '') {
-  
+
   // anything yet?
   if (!$user_input) {
     echo drupal_json_encode(array());
@@ -26,7 +26,7 @@ function search_autocomplete_views_autocomplete($user_input = '') {
     drupal_access_denied();
     return;
   }
-  
+
   // Load all views.
   $views = views_get_all_views();
   // Select views with an according name
@@ -42,17 +42,17 @@ function search_autocomplete_views_autocomplete($user_input = '') {
 }
 
 function search_autocomplete_autocomplete($fid, $user_input = '') {
-    
+
   $result = db_select('search_autocomplete_forms', 'f')
   ->fields('f', array('data_view'))
   ->condition('f.fid', $fid, '=')
   ->execute()
   ->fetchAssoc();
-  
+
   $view = views_get_view($result['data_view']);
   $view->exposed_input['filter'] = $user_input;
-  
-  if (method_exists($view, render)) {
+
+  if (method_exists($view, 'render')) {
     echo $view->render();
   } else {
     echo drupal_json_encode(array());
