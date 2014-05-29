@@ -41,7 +41,7 @@
   border: 1px solid #c8c8c8;
   box-shadow: 2px 2px 2px -1px rgba(128,128,128,0.6);
   position: absolute;
-  background-color: #FFFFFF;
+  background-color: #ffffff;
   font-family: Arial,Tahoma,"Bitstream Vera Sans",sans-serif;
   font-size: 1em;
 }
@@ -86,7 +86,7 @@
   border: none;
   border-radius: 0px;
   background-color: MY_COLOR;                       // <= change here
-  color: #FFFFFF;
+  color: #ffffff;
 }
 #ui-theme-CUSTOM .ui-autocomplete-fields {
   padding: 5px 6px;

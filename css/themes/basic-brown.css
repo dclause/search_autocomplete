@@ -35,7 +35,7 @@
   border: 1px solid #c8c8c8;
   box-shadow: 2px 2px 2px -1px rgba(128,128,128,0.6);
   position: absolute;
-  background-color: #FFFFFF;
+  background-color: #ffffff;
   font-family: Arial,Tahoma,"Bitstream Vera Sans",sans-serif;
   font-size: 1em;
 }
@@ -60,7 +60,7 @@
   padding: 0;
   float: left;
   clear: left;
-  width: 100%;  
+  width: 100%;
   line-height: 14px;
   font-size: 12px;
 }
@@ -79,15 +79,15 @@
   background: none;
   border: none;
   border-radius: 0px;
-  background-color: #A0522D;
-  color: #FFFFFF;
+  background-color: #a0522d;
+  color: #ffffff;
 }
 #ui-theme-basic-brown .ui-autocomplete-fields {
   padding: 5px 6px;
   overflow: hidden;
 }
 #ui-theme-basic-brown .ui-menu-item-first {
-  border-top: 1px solid #8B4513;
+  border-top: 1px solid #8b4513;
 }
 #ui-theme-basic-brown .ui-autocomplete-field-title {
   text-align: left;
@@ -99,7 +99,7 @@
 #ui-theme-basic-brown .ui-autocomplete-field-group {
   background-position: right top;
   background-repeat: no-repeat;
-  color: #8B4513;
+  color: #8b4513;
   float: right;
   position: relative;
   right: 5px;

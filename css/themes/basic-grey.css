@@ -35,7 +35,7 @@
   border: 1px solid #c8c8c8;
   box-shadow: 2px 2px 2px -1px rgba(128,128,128,0.6);
   position: absolute;
-  background-color: #FFFFFF;
+  background-color: #ffffff;
   font-family: Arial,Tahoma,"Bitstream Vera Sans",sans-serif;
   font-size: 1em;
 }
@@ -60,7 +60,7 @@
   padding: 0;
   float: left;
   clear: left;
-  width: 100%;  
+  width: 100%;
   line-height: 14px;
   font-size: 12px;
 }
@@ -79,7 +79,7 @@
   background: none;
   border: none;
   border-radius: 0px;
-  background-color: #F6F6F2;
+  background-color: #f6f6f2;
 }
 #ui-theme-basic-grey .ui-autocomplete-fields {
   padding: 5px 6px;

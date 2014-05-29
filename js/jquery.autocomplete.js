@@ -1,51 +1,49 @@
 /**
  * @file
- * SEARCH AUTOCOMPLETE (version 7.3-x)
- */
-
-/*
+ * SEARCH AUTOCOMPLETE javascript mechanism.
+ * 
  * Sponsored by:
  * www.axiomcafe.fr
  */
 
 (function ($) {
-  
+
   // Autocomplete
   $.ui.autocomplete.prototype._renderItem = function (ul, item) {
     var term = this.term;
     var first = ("group" in item)  ? 'first' : '';
     var innerHTML = '<div class="ui-autocomplete-fields ' + first + '">';
     if (item.fields) {
-      $.each( item.fields, function( key, value ) {
-      var regex = new RegExp( '(' + $.trim(term) + ')', 'gi' );
-    	var output = value;
-		if (value.indexOf('src=') == -1 && value.indexOf('href=') == -1) {
-		  output = value.replace(regex, "<span class='ui-autocomplete-field-term'>$1</span>");
-		}
+      $.each(item.fields, function(key, value) {
+        var regex = new RegExp('(' + $.trim(term) + ')', 'gi');
+        var output = value;
+        if (value.indexOf('src=') == -1 && value.indexOf('href=') == -1) {
+          output = value.replace(regex, "<span class='ui-autocomplete-field-term'>$1</span>");
+        }
         innerHTML += ('<div class="ui-autocomplete-field-' + key + '">' + output + '</div>');
       });
     } else {
-    	// Case no results :
-    	innerHTML += ('<div class="ui-autocomplete-field-noresult">' + item.label + '</div>');
+      // Case no results :
+      innerHTML += ('<div class="ui-autocomplete-field-noresult">' + item.label + '</div>');
     }
     innerHTML += '</div>';
 
     var group = '';
     if ("group" in item) {
-    	group += ('<div class="ui-autocomplete-field-group ' + item.group.group_id + '">' + item.group.group_name + '</div>');
-    	$(group).appendTo( ul );
+      group += ('<div class="ui-autocomplete-field-group ' + item.group.group_id + '">' + item.group.group_name + '</div>');
+      $(group).appendTo(ul);
     }
-    return  $("<li class=ui-menu-item-" + first + "></li>" )
-        .data( "item.autocomplete", item )
-        .append( "<a>" + innerHTML + "</a>" )
-        .appendTo( ul );
+    return  $("<li class=ui-menu-item-" + first + "></li>")
+        .data("item.autocomplete", item)
+        .append("<a>" + innerHTML + "</a>")
+        .appendTo(ul);
   };
-  
+
   $.ui.autocomplete.prototype._resizeMenu = function() {
-    var ul = this.menu.element; 
-    ul.outerWidth(Math.max( ul.width("").outerWidth() + 5, this.options.position.of == null ? this.element.outerWidth() : this.options.position.of.outerWidth()));
+    var ul = this.menu.element;
+    ul.outerWidth(Math.max(ul.width("").outerWidth() + 5, this.options.position.of == null ? this.element.outerWidth() : this.options.position.of.outerWidth()));
   };
-  
+
   Drupal.behaviors.search_autocomplete = {
     attach: function(context) {
       if (Drupal.settings.search_autocomplete) {

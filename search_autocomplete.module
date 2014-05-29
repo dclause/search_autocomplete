@@ -59,7 +59,8 @@ function search_autocomplete_init() {
         if ($match->data_source != 'static') {
           if (url_is_external($match->data_callback)) {
             $data_source = 'external';
-          } else {
+          }
+          else {
             $data_source = 'internal';
             $data_callback = urldecode(url($match->data_callback, array('absolute' => TRUE)));
           }
@@ -126,8 +127,10 @@ function search_autocomplete_image_default_styles() {
 /**
  * HELP FUNCTION: replace placeholders in the input string.
  *
- * @param $input  the string to be replaced
- * @param $args   the array of placeholders and values
+ * @param string $input
+ *   the string to be replaced
+ * @param array $args
+ *   the array of placeholders and values
  */
 function search_autocomplete_replaceArguments(&$input, &$args) {
   $modified = FALSE;

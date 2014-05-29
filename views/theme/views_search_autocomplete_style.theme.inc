@@ -13,9 +13,21 @@
  * @see search_autocomplete.views.inc
  */
 
-
+/**
+ * Prepares variables for views search autocomplete styles templates.
+ *
+ * Default template: views-search-autocomplete-style.tpl.php
+ *
+ * @param array $vars
+ *   An associative array containing:
+ *   - view: The view object to style.
+ *   - rows: An array of rows to render.
+ *   - options: An array of style options.
+ *
+ * @ingroup themeable
+ */
 function template_preprocess_views_search_autocomplete_style(&$vars) {
-global $base_root;
+  global $base_root;
 
   $view = $vars['view'];
   $rows = $vars['rows'];
@@ -69,24 +81,22 @@ global $base_root;
         $objects[$group_name] = array();
       }
       $objects[$group_name][] = $object;
-    } else{
+    }
+    else {
       $objects[] = $object;
     }
   }
 
-//   if ($style_options['group_by']) {
-//     array_multisort($key_objects, SORT_ASC, $objects);
-//   }
-
   $returns = array();
   if ($style_options['group_by']) {
     foreach ($objects as $group_name => $group) {
-      $group[0]['group']['group_id'] = preg_replace('/\W+/','',strtolower(strip_tags($group_name)));;
+      $group[0]['group']['group_id'] = preg_replace('/\W+/', '', strtolower(strip_tags($group_name)));;
       $group[0]['group']['group_name'] = trim($group_name);
       $returns = array_merge($returns, $group);
     }
     $vars["rows"] = $returns;
-  } else {
+  }
+  else {
     // Check if user wants nested arrays.
     $vars["rows"] = $objects;
   }

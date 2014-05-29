@@ -115,11 +115,11 @@ function search_autocomplete_form_configure($form, &$form_state) {
       // The default size is a bit large...
       '#size'           => 80,
       // End of the "form-radios" style.
-       '#suffix'        => '',
+      '#suffix'        => '',
       '#attributes'     => array('onClick' => '$("input[name=suggestions][value=1]").attr("checked", true);'),
     );
 
-    // Use static resources
+    // Use static resources.
     $form['search_autocomplete_what']['suggestions']['staticresource'] = array();
     $form['search_autocomplete_what']['staticresource']['staticresource_option'] = array(
       '#type'           => 'radio',
@@ -139,22 +139,22 @@ function search_autocomplete_form_configure($form, &$form_state) {
     // Use a view.
     $form['search_autocomplete_what']['suggestions']['view'] = array();
     $form['search_autocomplete_what']['view']['view_option'] = array(
-        '#type'           => 'radio',
-        '#title'          => t('Use an existing view:'),
-        '#return_value'   => 'view',
-        '#default_value'  => $item->data_source,
-        '#suffix'         => '</div>',
-        '#parents'        => array('suggestions'),
-        '#attributes'     => array('onClick' => '$("input[name=suggestions][value=3]").attr("checked", true);'),
+      '#type'           => 'radio',
+      '#title'          => t('Use an existing view:'),
+      '#return_value'   => 'view',
+      '#default_value'  => $item->data_source,
+      '#suffix'         => '</div>',
+      '#parents'        => array('suggestions'),
+      '#attributes'     => array('onClick' => '$("input[name=suggestions][value=3]").attr("checked", true);'),
     );
     $form['search_autocomplete_what']['view']['view_textfield'] = array(
-        '#type'           => 'textfield',
-        '#description'    => t('Use autocompletion to match an eligible view.'),
-        '#default_value'  => $item->data_view,
-        '#autocomplete_path' => 'views/autocomplete',
-        // The default size is a bit large...
-        '#size'           => 80,
-        '#attributes'     => array('onClick' => '$("input[name=suggestions][value=3]").attr("checked", true);'),
+      '#type'           => 'textfield',
+      '#description'    => t('Use autocompletion to match an eligible view.'),
+      '#default_value'  => $item->data_view,
+      '#autocomplete_path' => 'views/autocomplete',
+      // The default size is a bit large...
+      '#size'           => 80,
+      '#attributes'     => array('onClick' => '$("input[name=suggestions][value=3]").attr("checked", true);'),
     );
 
     // Template to use.
@@ -241,7 +241,7 @@ function search_autocomplete_form_configure_submit($form, &$form_state) {
       }
     }
   }
-  // in the case of view, we use a custom callback to retrieve the view data
+  // In the case of view, we use a custom callback to retrieve the view data.
   if ($data_type == 'view') {
     $callback = 'search_autocomplete/autocomplete/' . $values['fid'] . '/';
   }
@@ -294,8 +294,7 @@ function search_autocomplete_form_configure_submit($form, &$form_state) {
 
 // ----------------------------------------------------------------------------.
 /**
- * Helper function: get the array of fids every of his children of
- * the caller but not caller fid.
+ * Get the fids from all the children of the caller, excluding the caller.
  */
 function _search_autocomplete_get_all_children($fid, &$items = array(), $depth = 0) {
   if ($depth) {
