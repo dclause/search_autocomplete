@@ -11,7 +11,7 @@
 
 include_once('search_autocomplete.admin.inc');
 include_once('search_autocomplete.view_autocomplete.inc');
-
+include_once('search_autocomplete.features.inc');
 
 /**
  * Implements hook_init().
@@ -154,4 +154,22 @@ function search_autocomplete_get_translite() {
     ->fetchField();
 
   return $result;
+}
+
+/**
+ * Implementation of hook_features_api
+ *
+ * Here we define the components that we want to make exportable.  For this
+ * particular module, we want to make the configurations exportable.
+ */
+function search_autocomplete_features_api() {
+
+  return array(
+      'search_autocomplete_config' => array(
+          'name' => 'Search Autocomplete features ',
+          'file' => 'search_autocomplete.features.inc',
+          'default_hook' => 'search_autocomplete_config_features_default_settings',
+          'feature_source' => TRUE,
+      ),
+  );
 }
