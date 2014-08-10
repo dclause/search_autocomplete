@@ -32,7 +32,7 @@ function search_autocomplete_form_add() {
     '#maxlength'      => 255,
     '#required'       => TRUE,
   );
-  $descr = t('Enter a valid query selector for the form. This should be an id or a class surrounding the input box.') . '<br/>' . t('Do not include input. In case of a doubt, refer to the <a href="http://projects.axiomcafe.fr/search-autocomplete">documentation</a>');
+  $descr = t('Enter a valid query selector for the form. This should be an id or a class surrounding the input box.') . '<br/>' . t('Do not include input. In case of a doubt, refer to the <a href="http://drupal-addict.com/nos-projets/search-autocomplete">documentation</a>');
   $form['selector'] = array(
     '#title'          => t('Selector'),
     '#description'    => $descr,

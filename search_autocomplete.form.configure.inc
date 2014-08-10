@@ -130,7 +130,7 @@ function search_autocomplete_form_configure($form, &$form_state) {
     );
     $form['search_autocomplete_what']['staticresource']['staticresource_textfield'] = array(
       '#type'           => 'textarea',
-      '#description'    => t('Please enter one suggestion per line. You can use the syntax: "foo => http://bar" per line if you wish to add a jumping to URL for the suggestion. Please refer to <a href="http://projects.axiomcafe.fr/search-autocomplete">documentation</a>.'),
+      '#description'    => t('Please enter one suggestion per line. You can use the syntax: "foo => http://bar" per line if you wish to add a jumping to URL for the suggestion. Please refer to <a href="http://drupal-addict.com/nos-projets/search-autocomplete">documentation</a>.'),
       '#default_value'  => $item->data_static,
       '#size'           => 20,
       '#attributes'     => array('onClick' => '$("input[name=suggestions][value=2]").attr("checked", true);'),
@@ -170,7 +170,7 @@ function search_autocomplete_form_configure($form, &$form_state) {
       '#title'          => t('Select a theme for your suggestions'),
       '#options'        => $themes,
       '#default_value'  => $item->theme,
-      '#description'    => t('Choose the theme to use for autocompletion dropdown popup. Read <a href="http://projects.axiomcafe.fr/search-autocomplete">documentation</a> to learn how to make your own.'),
+      '#description'    => t('Choose the theme to use for autocompletion dropdown popup. Read <a href="http://drupal-addict.com/nos-projets/search-autocomplete">documentation</a> to learn how to make your own.'),
     );
 
     // ------------------------------------------------------------------.
@@ -184,7 +184,7 @@ function search_autocomplete_form_configure($form, &$form_state) {
     $form['search_autocomplete_advanced']['selector'] = array(
       '#type'             => 'textfield',
       '#title'            => t('ID selector for this form'),
-      '#description'      => t('Please change only if you know what you do, read <a href="http://projects.axiomcafe.fr/search-autocomplete">documentation</a> first.'),
+      '#description'      => t('Please change only if you know what you do, read <a href="http://drupal-addict.com/nos-projets/search-autocomplete">documentation</a> first.'),
       '#default_value'    => $item->selector,
       '#maxlength'        => 255,
       '#size'             => 35,

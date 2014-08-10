@@ -135,7 +135,7 @@ function search_autocomplete_help($path, $arg) {
 
     case 'admin/config/search/search_autocomplete/add':
       $help  = '<div>' . t('This page allows you to add a new form to be autocompleted with the Search Autocomplete module.') . '</div>';
-      $help .= '<div>' . t('This is an advanced feature configuration. Use it only if you know what you are doing and after reading <a href="http://projects.axiomcafe.fr/search-autocomplete">documentation</a>. If you wish help, please ask for a new default form to be added in the next release of Search Autocomplete module.') . '</div>';
+      $help .= '<div>' . t('This is an advanced feature configuration. Use it only if you know what you are doing and after reading <a href="http://drupal-addict.com/nos-projets/search-autocomplete">documentation</a>. If you wish help, please ask for a new default form to be added in the next release of Search Autocomplete module.') . '</div>';
       break;
 
     case 'admin/config/search/search_autocomplete/%/configure':

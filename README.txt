@@ -43,7 +43,7 @@ You can also perform a full and complete uninstall of Search Autocomplete and
 try to re-install.
 
 Another solution would be to refer to the documentation:
-http://projects.axiomcafe.fr/search-autocomplete
+http://drupal-addict.com/nos-projets/search-autocomplete
 
 Finally, you can also post an issue at:
 https://drupal.org/project/issues/search_autocomplete
@@ -55,7 +55,7 @@ Navigate to /admin/config/search/search_autocomplete
 
 The configuration options are not as quite easy to understand as it was in
 previous version. Please consider reading the documentation available at:
-http://projects.axiomcafe.fr/search-autocomplete
+http://drupal-addict.com/nos-projets/search-autocomplete
 
 --------------------------------------------------------------------------------
 -- 4.  Translating Search Autocomplete
