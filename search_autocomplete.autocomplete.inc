@@ -63,7 +63,13 @@ function search_autocomplete_autocomplete($fid, $user_input = '') {
   ->fetchAssoc();
 
   $view = views_get_view($result['data_view']);
-  $view->exposed_input['filter'] = $user_input;
+  $viewToGetExposedFilters = views_get_view($result['data_view']);
+  $viewToGetExposedFilters->set_display('default');
+  $viewToGetExposedFilters->is_cacheable = FALSE;
+  $viewToGetExposedFilters->execute();
+  foreach ($viewToGetExposedFilters->exposed_raw_input as $key => $value) {
+    $view->exposed_input[$key] = $user_input;
+  }
 
   if (method_exists($view, 'render')) {
     echo $view->render();
