@@ -48,62 +48,65 @@
     attach: function(context) {
       if (Drupal.settings.search_autocomplete) {
         $.each(Drupal.settings.search_autocomplete, function(key, value) {
-          var NoResultsLabel = Drupal.settings.search_autocomplete[key].no_results;
-          $(Drupal.settings.search_autocomplete[key].selector).addClass('ui-autocomplete-processed ui-theme-' + Drupal.settings.search_autocomplete[key].theme).autocomplete({
-            minLength: Drupal.settings.search_autocomplete[key].minChars,
-            source: function(request, response) {
-              // External URL:
-              if (Drupal.settings.search_autocomplete[key].type == 'external') {
-                $.getJSON(Drupal.settings.search_autocomplete[key].datas, { q: request.term }, function (results) {
-                  // Only return the number of values set in the settings.
-                  if (!results.length && NoResultsLabel) {
-                      results = [NoResultsLabel];
-                  }
-                  response(results.slice(0, Drupal.settings.search_autocomplete[key].max_sug));
-                });
-              }
-              // Internal URL:
-              else if (Drupal.settings.search_autocomplete[key].type == 'internal' || Drupal.settings.search_autocomplete[key].type == 'view') {
-                $.getJSON(Drupal.settings.search_autocomplete[key].datas + request.term, { }, function (results) {
-                  // Only return the number of values set in the settings.
-                  if (!results.length && NoResultsLabel) {
-                      results = [NoResultsLabel];
-                  }
-                  response(results.slice(0, Drupal.settings.search_autocomplete[key].max_sug));
-                });
-              }
-              // Static resources:
-              else if (Drupal.settings.search_autocomplete[key].type == 'static') {
-                var results = $.ui.autocomplete.filter(Drupal.settings.search_autocomplete[key].datas, request.term);
-                    if (!results.length && NoResultsLabel) {
-                    results = [NoResultsLabel];
-                }
-                // Only return the number of values set in the settings.
-                response(results.slice(0, Drupal.settings.search_autocomplete[key].max_sug));
-              }
-            },
-            open: function(event, ui) {
-              $(".ui-autocomplete li.ui-menu-item:odd").addClass("ui-menu-item-odd");
-              $(".ui-autocomplete li.ui-menu-item:even").addClass("ui-menu-item-even");
-            },
-            select: function(event, ui) {
-              if (ui.item.label === NoResultsLabel) {
-                event.preventDefault();
-              } else if (Drupal.settings.search_autocomplete[key].auto_redirect == 1 && ui.item.link) {
-                document.location.href = ui.item.link;
-              } else if (Drupal.settings.search_autocomplete[key].auto_submit == 1) {
-                  $(this).val(ui.item.label);
-                  $(this).closest("form").submit();
-              }
-            },
-            focus: function (event, ui) {
-              if (ui.item.label === NoResultsLabel) {
-                  event.preventDefault();
-              }
-            },
-            appendTo: $(Drupal.settings.search_autocomplete[key].selector).parent(),
-          }).autocomplete("widget").attr("id", "ui-theme-" + Drupal.settings.search_autocomplete[key].theme);
-        });
+        	var NoResultsLabel = Drupal.settings.search_autocomplete[key].no_results;
+          $(Drupal.settings.search_autocomplete[key].selector).bind("mouseover", function() {
+             $(Drupal.settings.search_autocomplete[key].selector).addClass('ui-autocomplete-processed ui-theme-' + Drupal.settings.search_autocomplete[key].theme).autocomplete({
+            	 minLength: Drupal.settings.search_autocomplete[key].minChars,
+	            source: function(request, response) {
+	              // External URL:
+	              if (Drupal.settings.search_autocomplete[key].type == 'external') {
+	                $.getJSON(Drupal.settings.search_autocomplete[key].datas, { q: request.term }, function (results) {
+	                  // Only return the number of values set in the settings.
+	                  if (!results.length && NoResultsLabel) {
+	                      results = [NoResultsLabel];
+	                  }
+	                  response(results.slice(0, Drupal.settings.search_autocomplete[key].max_sug));
+	                });
+	              }
+	              // Internal URL:
+	              else if (Drupal.settings.search_autocomplete[key].type == 'internal' || Drupal.settings.search_autocomplete[key].type == 'view') {
+	                $.getJSON(Drupal.settings.search_autocomplete[key].datas + request.term, { }, function (results) {
+	                  // Only return the number of values set in the settings.
+	                  if (!results.length && NoResultsLabel) {
+	                      results = [NoResultsLabel];
+	                  }
+	                  response(results.slice(0, Drupal.settings.search_autocomplete[key].max_sug));
+	                });
+	              }
+	              // Static resources:
+	              else if (Drupal.settings.search_autocomplete[key].type == 'static') {
+	                var results = $.ui.autocomplete.filter(Drupal.settings.search_autocomplete[key].datas, request.term);
+	                    if (!results.length && NoResultsLabel) {
+	                    results = [NoResultsLabel];
+	                }
+	                // Only return the number of values set in the settings.
+	                response(results.slice(0, Drupal.settings.search_autocomplete[key].max_sug));
+	              }
+	            },
+	            open: function(event, ui) {
+	              $(".ui-autocomplete li.ui-menu-item:odd").addClass("ui-menu-item-odd");
+	              $(".ui-autocomplete li.ui-menu-item:even").addClass("ui-menu-item-even");
+	            },
+	            select: function(event, ui) {
+	              if (ui.item.label === NoResultsLabel) {
+	                event.preventDefault();
+	              } else if (Drupal.settings.search_autocomplete[key].auto_redirect == 1 && ui.item.link) {
+	                document.location.href = ui.item.link;
+	              } else if (Drupal.settings.search_autocomplete[key].auto_submit == 1) {
+	                  $(this).val(ui.item.label);
+	                  $(this).closest("form").submit();
+	              }
+	            },
+	            focus: function (event, ui) {
+	              if (ui.item.label === NoResultsLabel) {
+	                  event.preventDefault();
+	              }
+	            },
+	            appendTo: $(Drupal.settings.search_autocomplete[key].selector).parent(),
+             }).autocomplete("widget").attr("id", "ui-theme-" + Drupal.settings.search_autocomplete[key].theme);
+        	});
+          $(Drupal.settings.search_autocomplete[key].selector).trigger('mouseover');
+       });
       }
     }
   };
