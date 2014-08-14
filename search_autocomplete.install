@@ -317,14 +317,16 @@ function search_autocomplete_update_7407(&$sandbox) {
  */
 function search_autocomplete_update_7408(&$sandbox) {
 
-  $translite = db_select('search_autocomplete_forms', 'sa')
-    ->fields('sa', array('translite'))
-    ->execute()
-    ->fetchAssoc();
+  if (!db_field_exists('search_autocomplete_forms', 'translite')) {
+    $translite = db_select('search_autocomplete_forms', 'sa')
+      ->fields('sa', array('translite'))
+      ->execute()
+      ->fetchAssoc();
 
-  db_drop_field('search_autocomplete_forms', 'translite');
+    db_drop_field('search_autocomplete_forms', 'translite');
 
-  variable_set('sa_translite', $translite['translite']);
+    variable_set('sa_translite', $translite['translite']);
+  }
 
   return (t('Update to 7.x-4.0 has been done.'));
 }
