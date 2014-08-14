@@ -243,7 +243,7 @@ function search_autocomplete_form_configure_submit($form, &$form_state) {
   }
   // In the case of view, we use a custom callback to retrieve the view data.
   if ($data_type == 'view') {
-    $callback = 'search_autocomplete/autocomplete/' . $values['fid'] . '/';
+    $callback = 'js/search_autocomplete/autocomplete/' . $values['fid'] . '/';
   }
 
   // ###.

@@ -62,6 +62,8 @@ function search_autocomplete_autocomplete($fid, $user_input = '') {
   ->execute()
   ->fetchAssoc();
 
+  define('MAINTENANCE_MODE', 'trick');
+
   $view = views_get_view($result['data_view']);
   $viewToGetExposedFilters = views_get_view($result['data_view']);
   $viewToGetExposedFilters->set_display('default');
@@ -77,5 +79,6 @@ function search_autocomplete_autocomplete($fid, $user_input = '') {
   else {
     echo drupal_json_encode(array());
   }
+
   exit();
 }

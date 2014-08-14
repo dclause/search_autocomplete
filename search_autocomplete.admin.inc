@@ -94,16 +94,6 @@ function search_autocomplete_menu() {
     'access arguments'  => array('administer Search Autocomplete'),
     'file'              => 'search_autocomplete.form.delete.inc',
   );
-  // Create a callback page for JSON suggestions.
-  $items['search_autocomplete/autocomplete'] = array(
-    'title' => 'Autocompleton when using view',
-    'page callback' => 'search_autocomplete_autocomplete',
-    'type' => MENU_CALLBACK,
-    'access callback' => TRUE,
-    'access arguments' => array('access content'),
-    'file' => 'search_autocomplete.autocomplete.inc',
-  );
-
   $items['views/autocomplete'] = array(
     'title' => 'Autocomplete view selector',
     'page callback' => 'search_autocomplete_views_autocomplete',
@@ -113,7 +103,29 @@ function search_autocomplete_menu() {
     'access arguments' => array('access content'),
     'file' => 'search_autocomplete.autocomplete.inc',
   );
+  // create a callback page for JSON suggestions
+  $items['js/search_autocomplete/autocomplete'] = array(
+      'title' => 'Autocompletion when using view',
+      'page callback' => 'search_autocomplete_autocomplete',
+      'type' => MENU_CALLBACK,
+      'access callback' => TRUE,
+      'access arguments' => array('access content'),
+      'file' => 'search_autocomplete.autocomplete.inc',
+  );
   return $items;
+}
+
+function search_autocomplete_js () {
+  return array(
+    'autocomplete' => array(
+      'callback'     => 'search_autocomplete_autocomplete',
+      'includes'     => array('common', 'lock', 'form', 'module', 'ajax', 'theme', 'menu', 'path', 'json-encode'),
+      'dependencies' => array('system', 'user', 'field', 'ctools', 'views', 'search_autocomplete'),
+      'bootstrap'    => DRUPAL_BOOTSTRAP_DATABASE,
+      'file'         => 'search_autocomplete.autocomplete.inc',
+      'skip_hook_init' => TRUE,
+    ),
+  );
 }
 
 /**
