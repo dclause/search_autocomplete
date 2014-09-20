@@ -61,7 +61,7 @@ function search_autocomplete_form_configure($form, &$form_state) {
     $form['search_autocomplete_how']['no_results'] = array(
       '#type'           => 'textfield',
       '#title'          => t('Behavior when no suggestions are found'),
-      '#description'    => t('Enter a message to display when no results are found. Leave empty for no message.'),
+      '#description'    => t('Enter a message to display when no results are found. Leave empty for no message. You can use HTML tags as well as the token [search-phrase] to replace user input.'),
       '#default_value'  => $item->no_results,
       '#maxlength'      => 50,
       '#required'       => FALSE,
