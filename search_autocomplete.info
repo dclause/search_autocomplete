@@ -1,5 +1,5 @@
 name = Search Autocomplete
-description = Provides aucompletion for Drupal search forms.
+description = Provides autocompletion for Drupal search forms and input fields in your site.
 core = 7.x
 package = Search
 files[] = views/plugins/search_autocomplete.views_plugin_style.inc

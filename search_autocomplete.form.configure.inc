@@ -60,7 +60,7 @@ function search_autocomplete_form_configure($form, &$form_state) {
     // Check if form should be autosubmitted.
     $form['search_autocomplete_how']['no_results'] = array(
       '#type'           => 'textfield',
-      '#title'          => t('Behaviour when no suggestions are found'),
+      '#title'          => t('Behavior when no suggestions are found'),
       '#description'    => t('Enter a message to display when no results are found. Leave empty for no message.'),
       '#default_value'  => $item->no_results,
       '#maxlength'      => 50,
