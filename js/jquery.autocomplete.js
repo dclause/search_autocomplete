@@ -58,7 +58,7 @@
 	                $.getJSON(Drupal.settings.search_autocomplete[key].datas, { q: request.term }, function (results) {
 	                  // Only return the number of values set in the settings.
 	                  if (!results.length && NoResultsLabel) {
-	                      results = [NoResultsLabel];
+	                      results = [NoResultsLabel.replace("[search-phrase]", request.term)];
 	                  }
 	                  response(results.slice(0, Drupal.settings.search_autocomplete[key].max_sug));
 	                });
@@ -68,7 +68,7 @@
 	                $.getJSON(Drupal.settings.search_autocomplete[key].datas + request.term, { }, function (results) {
 	                  // Only return the number of values set in the settings.
 	                  if (!results.length && NoResultsLabel) {
-	                      results = [NoResultsLabel];
+	                      results = [NoResultsLabel.replace("[search-phrase]", request.term)];
 	                  }
 	                  response(results.slice(0, Drupal.settings.search_autocomplete[key].max_sug));
 	                });
@@ -77,7 +77,7 @@
 	              else if (Drupal.settings.search_autocomplete[key].type == 'static') {
 	                var results = $.ui.autocomplete.filter(Drupal.settings.search_autocomplete[key].datas, request.term);
 	                    if (!results.length && NoResultsLabel) {
-	                    results = [NoResultsLabel];
+	                    results = [NoResultsLabel.replace("[search-phrase]", request.term)];
 	                }
 	                // Only return the number of values set in the settings.
 	                response(results.slice(0, Drupal.settings.search_autocomplete[key].max_sug));
