@@ -31,7 +31,11 @@ function search_autocomplete_init() {
     // Checkout if the db exists (it should).
     if (db_table_exists('search_autocomplete_forms')) {
       // Get every form to autocomplete.
-      $result = db_query('SELECT * FROM {search_autocomplete_forms} WHERE enabled=1');
+      $result = db_select('search_autocomplete_forms', 'f')
+                  ->fields('f')
+                  ->condition('enabled', 1,'=')
+                  ->execute()
+                  ->fetchAllAssoc('fid');
       // Build the setting array to transfert to JS.
       foreach ($result as $match) {
         $form_id = 'form' . $match->fid;
@@ -73,7 +77,7 @@ function search_autocomplete_init() {
             'max_sug'       => $match->max_sug,
             'no_results'    => $match->no_results,
             'type'          => $data_source,
-            'datas'         => $match->data_source == 2 ? $data_static : $data_callback,
+            'datas'         => $match->data_source == 'static' ? $data_static : $data_callback,
             'fid'           => $match->fid,
             // Get the css filename with '-' instead of ' ', lower case and no '.css'.
             'theme'         => str_replace(' ', '-', strtolower($theme_id)),

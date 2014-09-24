@@ -78,8 +78,8 @@
 	              // Static resources:
 	              else if (Drupal.settings.search_autocomplete[key].type == 'static') {
 	                var results = $.ui.autocomplete.filter(Drupal.settings.search_autocomplete[key].datas, request.term);
-	                    if (!results.length && NoResultsLabel) {
-	                    results = [NoResultsLabel.replace("[search-phrase]", request.term)];
+                  if (!results.length && NoResultsLabel) {
+                  	results = [NoResultsLabel.replace("[search-phrase]", request.term)];
 	                }
 	                // Only return the number of values set in the settings.
 	                response(results.slice(0, Drupal.settings.search_autocomplete[key].max_sug));
