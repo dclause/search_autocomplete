@@ -57,15 +57,7 @@ function search_autocomplete_form_configure($form, &$form_state) {
       '#maxlength'      => 2,
       '#required'       => TRUE,
     );
-    // Check if form should be autosubmitted.
-    $form['search_autocomplete_how']['no_results'] = array(
-      '#type'           => 'textfield',
-      '#title'          => t('Behavior when no suggestions are found'),
-      '#description'    => t('Enter a message to display when no results are found. Leave empty for no message. You can use HTML tags as well as the token [search-phrase] to replace user input.'),
-      '#default_value'  => $item->no_results,
-      '#maxlength'      => 50,
-      '#required'       => FALSE,
-    );
+
     // Check if form should be autosubmitted.
     $form['search_autocomplete_how']['auto_submit'] = array(
       '#type'           => 'checkbox',
@@ -79,6 +71,80 @@ function search_autocomplete_form_configure($form, &$form_state) {
       '#title'          => t('Auto Redirect'),
       '#description'    => t('If enabled, the user will be directly routed to the suggestion he choosed instead of performing form validation process. Only works if "link" attribute is existing and if "Auto Submit" is enabled.'),
       '#default_value'  => $item->auto_redirect,
+    );
+
+    // ###
+    $all_results = json_decode($item->all_results);
+    // "View all results" custom configurations
+    $form['search_autocomplete_how']['view_all_results'] = array(
+        '#type'           => 'fieldset',
+        '#title'          => t('Custom behavior when some suggestions are available'),
+        '#collapsible'    => TRUE,
+        '#collapsed'      => TRUE,
+    );
+    // Check if form should be autosubmitted.
+    $form['search_autocomplete_how']['view_all_results']['all_results_label'] = array(
+        '#type'           => 'textfield',
+        '#title'          => t('Custom "view all results" message label'),
+        '#description'    => t('This message is going to be displayed at the end of suggestion list when suggestions are found. Leave empty to disable this functionality. You can use HTML tags as well as the token [search-phrase] to replace user input.'),
+        '#default_value'  => $all_results->label,
+        '#maxlength'      => 255,
+        '#required'       => FALSE,
+    );
+    // Check if form should be autosubmitted.
+    $form['search_autocomplete_how']['view_all_results']['all_results_value'] = array(
+        '#type'           => 'textfield',
+        '#title'          => t('Custom "view all results" message value'),
+        '#description'    => t('If a label is filled above, this is the value that will be picked when the message is selected. Leave empty if you don\'t when the message to be selectable. You can use the token [search-phrase] to replace user input.'),
+        '#default_value'  => $all_results->value,
+        '#maxlength'      => 255,
+        '#required'       => FALSE,
+    );
+    // Check if form should be autosubmitted.
+    $form['search_autocomplete_how']['view_all_results']['all_results_link'] = array(
+        '#type'           => 'textfield',
+        '#title'          => t('Custom "view all results" URL redirection'),
+        '#description'    => t('If "Auto redirect" is checked and a label is given for this configuration, the user will be redirected to this URL when the message is selected. Leave empty if you rather like a standard Drupal search to be performed on the "value" given above.'),
+        '#default_value'  => $all_results->link,
+        '#maxlength'      => 255,
+        '#required'       => FALSE,
+    );
+
+    // ###
+    $no_results = json_decode($item->no_results);
+    // "No resuls" custom configurations
+    $form['search_autocomplete_how']['no_results'] = array(
+        '#type'           => 'fieldset',
+        '#title'          => t('Custom behavior when no suggestions are found'),
+        '#collapsible'    => TRUE,
+        '#collapsed'      => TRUE,
+    );
+    // Check if form should be autosubmitted.
+    $form['search_autocomplete_how']['no_results']['no_results_label'] = array(
+        '#type'           => 'textfield',
+        '#title'          => t('Custom "no result" message label'),
+        '#description'    => t('This message is going to be displayed when no suggestions can be found. Leave empty to disable this functionality. You can use HTML tags as well as the token [search-phrase] to replace user input.'),
+        '#default_value'  => $no_results->label,
+        '#maxlength'      => 255,
+        '#required'       => FALSE,
+    );
+    // Check if form should be autosubmitted.
+    $form['search_autocomplete_how']['no_results']['no_results_value'] = array(
+        '#type'           => 'textfield',
+        '#title'          => t('Custom "no result" message value'),
+        '#description'    => t('If a label is filled above, this is the value that will be picked when the message is selected. Leave empty if you don\'t when the message to be selectable. You can use the token [search-phrase] to replace user input.'),
+        '#default_value'  => $no_results->value,
+        '#maxlength'      => 255,
+        '#required'       => FALSE,
+    );
+    // Check if form should be autosubmitted.
+    $form['search_autocomplete_how']['no_results']['no_results_link'] = array(
+        '#type'           => 'textfield',
+        '#title'          => t('Custom "no result" URL redirection'),
+        '#description'    => t('If "Auto redirect" is checked and a label is given for this configuration, the user will be redirected to this URL when the message is selected. Leave empty if you rather like a standard Drupal search to be performed on the "value" given above.'),
+        '#default_value'  => $no_results->link,
+        '#maxlength'      => 255,
+        '#required'       => FALSE,
     );
 
     // ------------------------------------------------------------------.
@@ -246,6 +312,23 @@ function search_autocomplete_form_configure_submit($form, &$form_state) {
     $callback = 'search_autocomplete/autocomplete/' . $values['fid'] . '/';
   }
 
+  $all_results = array(
+    'label' => $values['all_results_label'],
+    'value' => $values['all_results_value'],
+    'link' => $values['all_results_link'],
+    'group' => array(
+  	 'group_id' => 'all_results',
+    ),
+  );
+  $no_results = array(
+    'label' => $values['no_results_label'],
+    'value' => $values['no_results_value'],
+    'link' => $values['no_results_link'],
+    'group' => array(
+      	 'group_id' => 'no_results',
+    ),
+  );
+
   // ###.
   // UPDATE THE FORM.
   // -> update form.
@@ -255,7 +338,8 @@ function search_autocomplete_form_configure_submit($form, &$form_state) {
       'max_sug'         => $values['max_sug'],
       'auto_submit'     => $values['auto_submit'],
       'auto_redirect'   => $values['auto_redirect'],
-      'no_results'      => $values['no_results'],
+      'all_results'     => json_encode($all_results),
+      'no_results'      => json_encode($no_results),
       'selector'        => $values['selector'],
       'data_source'     => $values['suggestions'],
       'data_callback'   => $callback,

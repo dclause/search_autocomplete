@@ -77,11 +77,27 @@ function search_autocomplete_form_add_submit($form, &$form_state) {
 
   // Insert the new form in database.
   $fid = db_insert('search_autocomplete_forms')
-          ->fields(array(
-            'title' => $values['title'],
-            'selector' => $values['selector'],
-          ))
-          ->execute();
+    ->fields(array(
+      'title'       => $values['title'],
+      'selector'    => $values['selector'],
+      'no_results'  => json_encode(array( // manually add no_results default
+        'label' => 'No results found for <b>[search-phrase]</b>.<br/>Click to perform full search.',
+        'value' => '[search-phrase]',
+        'link'  => '',
+        'group' => array(
+          'group_id' => 'no_results',
+        ),
+      )),
+      'all_results'  => json_encode(array( // manually add all_results default
+        'label' => 'View all results for <b>[search-phrase]</b>.',
+        'value' => '[search-phrase]',
+        'link'  => '',
+        'group' => array(
+          'group_id' => 'all_results',
+        ),
+      )),
+    ))
+    ->execute();
 
   // Redirect to configuration page.
   $form_state['redirect'] = 'admin/config/search/search_autocomplete/' . $fid . '/configure';
