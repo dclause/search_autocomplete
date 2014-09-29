@@ -109,9 +109,10 @@
 		              } else if (Drupal.settings.search_autocomplete[key].auto_submit == 1 && ui.item.value) {
 		                  $(this).val(ui.item.value);
 		                  $(this).closest("form").submit();
-		              } else {
-			            	event.preventDefault();
 		              }
+//		              } else {
+//			            	event.preventDefault();
+//		              }
 		            },
 		            focus: function (event, ui) {
 		              if (ui.item.label === no_results) {
