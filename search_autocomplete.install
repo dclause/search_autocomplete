@@ -405,6 +405,13 @@ function search_autocomplete_update_7411(&$sandbox) {
       'size'        => 'big',
     );
     db_add_field('search_autocomplete_forms', 'no_results', $field);
+  } else {
+    db_change_field('search_autocomplete_forms', 'no_results', 'no_results',
+      array(
+      'description' => 'Display field when no suggestion available.',
+      'type'        => 'text',
+      'size'        => 'big',
+    ));
   }
   db_update('search_autocomplete_forms') // Table name no longer needs {}
   ->fields(array('no_results'   => json_encode(array(
