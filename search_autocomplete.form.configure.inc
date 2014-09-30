@@ -95,7 +95,7 @@ function search_autocomplete_form_configure($form, &$form_state) {
     $form['search_autocomplete_how']['view_all_results']['all_results_value'] = array(
         '#type'           => 'textfield',
         '#title'          => t('Custom "view all results" message value'),
-        '#description'    => t('If a label is filled above, this is the value that will be picked when the message is selected. Leave empty if you don\'t when the message to be selectable. You can use the token [search-phrase] to replace user input.'),
+        '#description'    => t('If a label is filled above, this is the value that will be picked when the message is selected. Leave empty if you don\'t want the message to be selectable. You can use the token [search-phrase] to replace user input.'),
         '#default_value'  => $all_results->value,
         '#maxlength'      => 255,
         '#required'       => FALSE,
@@ -132,7 +132,7 @@ function search_autocomplete_form_configure($form, &$form_state) {
     $form['search_autocomplete_how']['no_results']['no_results_value'] = array(
         '#type'           => 'textfield',
         '#title'          => t('Custom "no result" message value'),
-        '#description'    => t('If a label is filled above, this is the value that will be picked when the message is selected. Leave empty if you don\'t when the message to be selectable. You can use the token [search-phrase] to replace user input.'),
+        '#description'    => t('If a label is filled above, this is the value that will be picked when the message is selected. Leave empty if you don\'t want the message to be selectable. You can use the token [search-phrase] to replace user input.'),
         '#default_value'  => $no_results->value,
         '#maxlength'      => 255,
         '#required'       => FALSE,
