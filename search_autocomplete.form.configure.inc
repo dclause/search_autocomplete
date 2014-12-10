@@ -155,7 +155,6 @@ function search_autocomplete_form_configure($form, &$form_state) {
       '#description'    => t('Choose which data should be added to autocompletion suggestions.'),
       '#collapsible'    => TRUE,
       '#collapsed'      => FALSE,
-      '#theme'          => 'search_autocomplete_form_configuration_fieldset',
     );
     $form['search_autocomplete_what']['suggestions'] = array(
       '#type'           => 'item',
