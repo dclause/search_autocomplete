@@ -52,11 +52,17 @@ function template_preprocess_views_search_autocomplete_style(&$vars) {
 
     // Extract the URL...
     $regexp = "<a\s[^>]*href=(\"??)([^\" >]*?)\\1[^>]*>(.*)<\/a>";
+    $link_value = $row[$style_options['input_link']]->content;
     if (preg_match("/$regexp/siU", htmlspecialchars_decode($row[$style_options['input_link']]->content, ENT_QUOTES), $matches)) {
-      $link = $base_root . $matches[2];
-      // And build the link object.
-      $object['link'] = trim($link);
+        $link_value = $matches[2];
     }
+    if (url_is_external($link_value) || valid_url($link_value, TRUE)) {
+       $link = $link_value;
+    } else {
+        $link = $base_root . $link_value;
+    }
+    // And build the link object.
+    $object['link'] = trim($link);
 
     /* ----------------
      * Build the value...
