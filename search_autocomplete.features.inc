@@ -27,7 +27,7 @@ function search_autocomplete_config_features_export_options() {
  * This is a component hook, rather then a module hook, therefore this is the
  * callback from hook_features_api which relates to the specific component we
  * are looking to export.  When a specific instance of the component we are
- * looking to export is selected, this will include the necessariy item, plus
+ * looking to export is selected, this will include the necessary item, plus
  * any dependencies into our export array.
  *
  * @param array $data
@@ -107,7 +107,7 @@ function search_autocomplete_config_features_rebuild($module) {
       }
       drupal_write_record('search_autocomplete_forms', $value, $new ? array() : 'fid');
     } catch (Exception $e) {
-      watchdog("Erroor in updating", $e->getMessage(), array(), WATCHDOG_ERROR);
+      watchdog("Error in updating", $e->getMessage(), array(), WATCHDOG_ERROR);
     }
   }
 }
@@ -127,7 +127,7 @@ function search_autocomplete_get_data() {
 }
 
 /**
- * Will retrive data on basis of fid
+ * Will retrieve data on basis of fid
  * @param type $fid
  * @return type
  */

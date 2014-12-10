@@ -3,7 +3,7 @@
 /**
  * @file
  * Search Autocomplete
- * Display the list of form to autocomplete and themis it as a draggable table.
+ * Display the list of form to autocomplete and theme it as a draggable table.
  *
  * Sponsored by:
  * www.axiomcafe.fr
@@ -11,7 +11,7 @@
 
 // ---------------------------------------------------------------------------
 /**
- * Menu Callback: create the form to list the searchforms.
+ * Menu Callback: create the form to list the search forms.
  *
  * @return array
  *   the form
@@ -93,7 +93,7 @@ function search_autocomplete_treelist_form($form, &$form_state) {
   $form['admin_helper'] = array(
     '#type'           => 'checkbox',
     '#title'          => $title,
-    '#description'    => t('If enabled, user with "administer Search Autocomplete" permission will be able to use admin helper tool on input fields (recommanded).'),
+    '#description'    => t('If enabled, user with "administer Search Autocomplete" permission will be able to use admin helper tool on input fields (recommended).'),
     '#default_value'  => $admin_helper,
   );
 
@@ -170,7 +170,7 @@ function theme_search_autocomplete_treelist_form($variables) {
       'colspan' => 2,
     ),
   );
-  // Themize the table and render the form.
+  // Theme the table and render the form.
   $output  = theme('table', array(
     'header' => $header,
     'rows' => $rows,

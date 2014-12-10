@@ -41,7 +41,7 @@ function search_autocomplete_form_add() {
     '#maxlength'      => 255,
     '#required'       => TRUE,
   );
-  // Submit buton.
+  // Submit button.
   $form['submit'] = array(
     '#type'           => 'submit',
     '#value'          => t('Save'),
@@ -62,7 +62,7 @@ function search_autocomplete_form_add_submit($form, &$form_state) {
   // Get the form values.
   $values = $form_state['values'];
 
-  // Check if aready existing records.
+  // Check if already existing records.
   $result = db_select('search_autocomplete_forms', 'f')
     ->fields('f')
     ->condition('title', $values['title'])
@@ -103,5 +103,5 @@ function search_autocomplete_form_add_submit($form, &$form_state) {
   $form_state['redirect'] = 'admin/config/search/search_autocomplete/' . $fid . '/configure';
 
   // Give a return to the user.
-  $ok_query ? drupal_set_message(t('The form has been created successfully !') . '<br/>' . t('Please check its configuration.')) : drupal_set_message(t("An error has occured while creating the form. Please, double check your settings!"), 'error');
+  $ok_query ? drupal_set_message(t('The form has been created successfully!') . '<br/>' . t('Please check its configuration.')) : drupal_set_message(t("An error has occurred while creating the form. Please, double check your settings!"), 'error');
 }

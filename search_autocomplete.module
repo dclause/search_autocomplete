@@ -16,7 +16,7 @@ include_once('search_autocomplete.features.inc');
 /**
  * Implements hook_init().
  *
- * Add autocomplete.js on everypage.
+ * Add autocomplete.js on every page.
  */
 function search_autocomplete_page_build() {
 
@@ -36,7 +36,7 @@ function search_autocomplete_page_build() {
                   ->condition('enabled', 1,'=')
                   ->execute()
                   ->fetchAllAssoc('fid');
-      // Build the setting array to transfert to JS.
+      // Build the setting array to transfer to JS.
       foreach ($result as $match) {
         $form_id = 'form' . $match->fid;
         $input_data  = explode("\n", $match->data_static);
