@@ -162,7 +162,7 @@ function theme_search_autocomplete_treelist_form($variables) {
     );
   }
   // Create table headers.
-  $header = array(t('Form nam'),
+  $header = array(t('Form name'),
     t('Enabled'),
     t('Weight'),
     array(
