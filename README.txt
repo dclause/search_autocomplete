@@ -28,11 +28,15 @@ files.
 --------------------------------------------------------------------------------
 -- 2.  Updating Search Autocomplete:
 
-Delete every files in the module directory sites/all/modules/search_autocomplete
+Delete every files in the module directory sites/all/modules/contrib/search_autocomplete
 or in the equivalent directory of your Drupal installation.
 
 Place all files from this 4.x version in this
 sites/all/modules/search_autocomplete or equivalent folder.
+
+You can alternatively use drush to Download the module:
+drush dl search_autocomplete
+
 
 Run the update script. Make sure to run the update functions.
 
