@@ -87,7 +87,7 @@ function search_autocomplete_form_configure($form, &$form_state) {
         '#type'           => 'textfield',
         '#title'          => t('Custom "view all results" message label'),
         '#description'    => t('This message is going to be displayed at the end of suggestion list when suggestions are found. Leave empty to disable this functionality. You can use HTML tags as well as the token [search-phrase] to replace user input.'),
-        '#default_value'  => $all_results->label,
+        '#default_value'  => t($all_results->label),
         '#maxlength'      => 255,
         '#required'       => FALSE,
     );
@@ -124,7 +124,7 @@ function search_autocomplete_form_configure($form, &$form_state) {
         '#type'           => 'textfield',
         '#title'          => t('Custom "no result" message label'),
         '#description'    => t('This message is going to be displayed when no suggestions can be found. Leave empty to disable this functionality. You can use HTML tags as well as the token [search-phrase] to replace user input.'),
-        '#default_value'  => $no_results->label,
+        '#default_value'  => t($no_results->label),
         '#maxlength'      => 255,
         '#required'       => FALSE,
     );

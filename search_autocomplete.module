@@ -70,13 +70,21 @@ function search_autocomplete_page_build() {
           }
         }
 
+        // Translate no_results label
+        $no_results = json_decode($match->no_results);
+        $no_results->label = t($no_results->label);
+
+        // Translate all_results label
+        $all_results = json_decode($match->all_results);
+        $all_results->label = t($all_results->label);
+
         drupal_add_js(array('search_autocomplete' => array(
           $form_id          => array(
             'selector'      => $match->selector,
             'minChars'      => $match->min_char,
             'max_sug'       => $match->max_sug,
-            'no_results'    => t($match->no_results),
-            'all_results'   => t($match->all_results),
+            'no_results'    => $no_results->label ? json_encode($no_results) : null,
+            'all_results'   => $all_results->label ? json_encode($all_results) : null,
             'type'          => $data_source,
             'datas'         => $match->data_source == 'static' ? $data_static : $data_callback,
             'fid'           => $match->fid,

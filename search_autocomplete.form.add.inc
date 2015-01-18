@@ -81,7 +81,7 @@ function search_autocomplete_form_add_submit($form, &$form_state) {
       'title'       => $values['title'],
       'selector'    => $values['selector'],
       'no_results'  => json_encode(array( // manually add no_results default
-        'label' => 'No results found for <b>[search-phrase]</b>.<br/>Click to perform full search.',
+        'label' => t('No results found for [search-phrase]. Click to perform full search.'),
         'value' => '[search-phrase]',
         'link'  => '',
         'group' => array(
@@ -89,7 +89,7 @@ function search_autocomplete_form_add_submit($form, &$form_state) {
         ),
       )),
       'all_results'  => json_encode(array( // manually add all_results default
-        'label' => 'View all results for <b>[search-phrase]</b>.',
+        'label' => t('View all results for [search-phrase].'),
         'value' => '[search-phrase]',
         'link'  => '',
         'group' => array(
