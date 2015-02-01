@@ -1,0 +1,25 @@
+# Schema for the configuration files of the autocompletion_configuration entity.
+
+# This schema tells the config system how to read our config YML files.
+# See for example the files 
+# install/config/search_autocomplete.autocompletion_configuration.xxx.yml
+
+# Documentation for schema files like this one is located here:
+# https://drupal.org/node/1905070
+
+search_autocomplete.autocompletion_configuration.*:
+  type: mapping
+  label: 'Autocompletion Configuration'
+  mapping:
+    id:
+      type: string
+      label: 'Robot id'
+    uuid:
+      type: string
+      label: 'UUID'
+    label:
+      type: label
+      label: 'Label'
+    floopy:
+      type: boolean
+      label: 'Floopy'
