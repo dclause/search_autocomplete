@@ -109,10 +109,11 @@ class AutocompletionConfigurationFormBase extends EntityForm {
       ),
       '#disabled' => !$autocompletion_configuration->isNew(),
     );
-    $form['floopy'] = array(
-      '#type' => 'checkbox',
-      '#title' => $this->t('Floopy'),
-      '#default_value' => $autocompletion_configuration->floopy,
+    $form['selector'] = array(
+      '#type' => 'textfield',
+      '#title' => $this->t('ID selector this configuration should apply to'),
+      '#default_value' => $autocompletion_configuration->getSelector(),
+      '#required' => TRUE,
     );
 
     // Return the form.

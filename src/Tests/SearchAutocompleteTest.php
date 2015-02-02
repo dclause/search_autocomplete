@@ -17,7 +17,7 @@ use Drupal\simpletest\WebTestBase;
  *
  * @ingroup search_autocomplete
  */
-class ConfigEntityExampleTest extends WebTestBase {
+class SearchAutocompleteTest extends WebTestBase {
 
   /**
    * Modules to enable.
@@ -41,8 +41,8 @@ class ConfigEntityExampleTest extends WebTestBase {
    */
   public static function getInfo() {
     return array(
-      'name' => 'Config Entity Example functional test',
-      'description' => 'Test the Config Entity Example module.',
+      'name' => 'Search Autocomplete functional test',
+      'description' => 'Test the Search Autocomplete settings configuration.',
       'group' => 'Examples',
     );
   }
@@ -58,7 +58,7 @@ class ConfigEntityExampleTest extends WebTestBase {
    *
    * 4) Verify that the entity we add can be re-edited.
    */
-  public function testConfigEntityExample() {
+  public function testSearchAutocomplete() {
     // 1) Verify that the Marvin entity was created when the module was
     // installed.
     $entity = entity_load('autocompletion_configuration', 'marvin');
@@ -68,10 +68,10 @@ class ConfigEntityExampleTest extends WebTestBase {
     // Define some paths. Since the Marvin entity is defined, we can use it
     // in our management paths.
     $forbidden_paths = array(
-      'examples/search_autocomplete',
-      'examples/search_autocomplete/add',
-      'examples/search_autocomplete/manage/marvin',
-      'examples/search_autocomplete/manage/marvin/delete',
+      '/admin/config/search/search_autocomplete',
+      '/admin/config/search/search_autocomplete/add',
+      '/admin/config/search/search_autocomplete/manage/marvin',
+      '/admin/config/search/search_autocomplete/manage/marvin/delete',
     );
     // Check each of the paths to make sure we don't have access. At this point
     // we haven't logged in any users, so the client is anonymous.
@@ -101,13 +101,13 @@ class ConfigEntityExampleTest extends WebTestBase {
 
     // Now that we have the admin user logged in, check the menu links.
     $this->drupalGet('/');
-    $this->assertLinkByHref('examples/search_autocomplete');
+    $this->assertLinkByHref('/admin/config/search/search_autocomplete');
 
     // 3) Verify that we can manage entities through the user interface.
     // We still have the admin user logged in, so we'll create, update, and
     // delete an entity.
     // Go to the list page.
-    $this->drupalGet('examples/search_autocomplete');
+    $this->drupalGet('/admin/config/search/search_autocomplete');
     $this->clickLink('Add autocompletion_configuration');
     $robot_machine_name = 'roboname';
     $this->drupalPostForm(
@@ -121,7 +121,7 @@ class ConfigEntityExampleTest extends WebTestBase {
     );
 
     // 4) Verify that our autocompletion_configuration appears when we edit it.
-    $this->drupalGet('examples/search_autocomplete/manage/' . $robot_machine_name);
+    $this->drupalGet('/admin/config/search/search_autocomplete/manage/' . $robot_machine_name);
     $this->assertField('label');
     $this->assertFieldChecked('edit-floopy');
   }
