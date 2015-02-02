@@ -1,8 +1,8 @@
-# Schema for the configuration files of the autocompletion_configuration entity.
+# Schema for the configuration files of the Autocompletion Configuration.
 
 # This schema tells the config system how to read our config YML files.
-# See for example the files 
-# install/config/search_autocomplete.autocompletion_configuration.xxx.yml
+# Our default configurations are stored in files 
+# config/search_autocomplete.autocompletion_configuration.%.yml
 
 # Documentation for schema files like this one is located here:
 # https://drupal.org/node/1905070
@@ -13,13 +13,53 @@ search_autocomplete.autocompletion_configuration.*:
   mapping:
     id:
       type: string
-      label: 'Robot id'
+      label: 'Autocompletion Configuration ID'
     uuid:
       type: string
       label: 'UUID'
     label:
       type: label
       label: 'Label'
-    floopy:
+    selector:
+      type: string
+      label: 'Field Selector'
+    status:
       type: boolean
-      label: 'Floopy'
+      label: 'Enabled'
+    minChar:
+      type: integer
+      label: 'Number of char before autocompletion'
+    maxSuggestion:
+      type: integer
+      label: 'Maximum number of displayed suggestions'
+    noResultSuggestion:
+      type: search_autocomplete.suggestion
+      label: 'Custom suggestion displayed when no results are available'
+    moreResultsSuggestion:
+      type: search_autocomplete.suggestion
+      label: 'Custom suggestion displayed when more results are available'
+
+search_autocomplete.suggestion:
+  type: mapping
+  label: 'Suggestion'
+  mapping:
+    label:
+      type: label
+      label: 'Display label'
+    value:
+      type: string
+      label: 'Input value'
+    link:
+      type: uri
+      label: 'Redirection link'
+    group:
+      type: search_autocomplete.suggestion_group
+      label: 'Group of the suggestion'
+
+search_autocomplete.suggestion_group:
+  type: mapping
+  label: 'Suggestion Group'
+  mapping:
+    id:
+      type: string
+      label: 'Group ID'

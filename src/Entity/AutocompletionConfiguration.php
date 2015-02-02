@@ -11,6 +11,9 @@
 namespace Drupal\search_autocomplete\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
+use Drupal\search_autocomplete\AutocompletionConfigurationInterface;
+use Drupal\search_autocomplete\Suggestion;
+use Drupal\search_autocomplete\SuggestionGroup;
 
 /**
  * Defines the autocompletion_configuration entity.
@@ -44,7 +47,7 @@ use Drupal\Core\Config\Entity\ConfigEntityBase;
  *
  * @ConfigEntityType(
  *   id = "autocompletion_configuration",
- *   label = @Translation("autocompletion configuration"),
+ *   label = @Translation("Autocompletion Configuration"),
  *   admin_permission = "administer search autocomplete",
  *   handlers = {
  *     "access" = "Drupal\search_autocomplete\AutocompletionConfigurationAccessControlHandler",
@@ -65,33 +68,162 @@ use Drupal\Core\Config\Entity\ConfigEntityBase;
  *   }
  * )
  */
-class AutocompletionConfiguration extends ConfigEntityBase {
+class AutocompletionConfiguration extends ConfigEntityBase implements AutocompletionConfigurationInterface {
 
   /**
    * The autocompletion_configuration ID.
    *
    * @var string
    */
-  public $id;
+  protected $id;
 
   /**
    * The autocompletion_configuration UUID.
    *
    * @var string
    */
-  public $uuid;
+  protected $uuid;
 
   /**
    * The autocompletion_configuration label.
    *
    * @var string
    */
-  public $label;
+  protected $label;
 
   /**
-   * The autocompletion_configuration floopy flag.
+   * The field selector to apply the autocompletion on.
    *
    * @var string
    */
-  public $floopy;
+  protected $selector;
+
+  /**
+   * Define if the configuration is enabled, ie if the autocompletion will occur.
+   *
+   * @var bool
+   */
+  protected $status;
+
+  /**
+   * Define how much characters needs to be entered in the field before
+   * autocompletion occurs.
+   *
+   * @var int
+   */
+  protected $minChar;
+
+  /**
+   * Define how much suggestions should be displayed among matching suggestions
+   * available.
+   *
+   * @var int
+   */
+  protected $maxSuggestion;
+
+  /**
+   * Define a label that should be displayed when no results are available.
+   *
+   * @var \Drupal\search_autocomplete\Suggestion
+   */
+  protected $noResultSuggestion;
+
+  /**
+   * Define a label that should be displayed when more results then what can
+   * be displayed are available.
+   *
+   * @var \Drupal\search_autocomplete\Suggestion
+   */
+  protected $moreResultsSuggestion;
+
+  // -----------------------------
+  // ---------  GETTERS  ---------
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getSelector() {
+    return $this->selector;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getStatus() {
+    return $this->status;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getMinChar() {
+    return $this->minChar;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getMaxSuggestion() {
+    return $this->maxSuggestion;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getNoResultSuggestion() {
+    return $this->noResultSuggestion;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getMoreResultsSuggestion() {
+    return $this->moreResultsSuggestion;
+  }
+
+  // -----------------------------
+  // ---------  SETTERS  ---------
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setSelector($selector) {
+    $this->selector = $selector;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setStatus($status) {
+    $this->status = $status;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setMinChar($minChar) {
+    $this->minChar = $minChar;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setMaxSuggestion($maxSuggestion) {
+    $this->maxSuggestion = $maxSuggestion;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setNoResultSuggestion($noResultSuggestion) {
+    $this->noResultSuggestion = $noResultSuggestion;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setMoreResultsSuggestion($moreResultsSuggestion) {
+    $this->moreResultsSuggestion = $moreResultsSuggestion;
+  }
+
 }

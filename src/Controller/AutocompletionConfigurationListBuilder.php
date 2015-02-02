@@ -41,10 +41,8 @@ class AutocompletionConfigurationListBuilder extends ConfigEntityListBuilder {
    * @see Drupal\Core\Entity\EntityListController::render()
    */
   public function buildHeader() {
-    $header['enable'] = $this->t('Activation');
-    $header['label'] = $this->t('Autocompletion Configuration');
-    $header['machine_name'] = $this->t('Machine Name');
-    $header['floopy'] = $this->t('Floopy');
+    $header['label'] = $this->t('Autocompletion Configuration Name');
+    $header['selector'] = $this->t('Selector');
     return $header + parent::buildHeader();
   }
 
@@ -60,16 +58,8 @@ class AutocompletionConfigurationListBuilder extends ConfigEntityListBuilder {
    * @see Drupal\Core\Entity\EntityListController::render()
    */
   public function buildRow(EntityInterface $entity) {
-    $row['enable'] = array(
-        '#type' => 'checkbox',
-        '#title' => $this->t('Enable'),
-        '#default_value' => true,
-        '#disabled' => false,
-    );
     $row['label'] = $this->getLabel($entity);
-    $row['machine_name'] = $entity->id();
-    $row['floopy'] = $entity->floopy;
-
+    $row['selector'] = $entity->getSelector();
     return $row + parent::buildRow($entity);
   }
 
