@@ -54,38 +54,26 @@
     attach: function(context) {
       if (Drupal.settings.search_autocomplete) {
         $.each(Drupal.settings.search_autocomplete, function(key, value) {
-        	var no_results = Drupal.settings.search_autocomplete[key].no_results;
-        	var all_results = Drupal.settings.search_autocomplete[key].all_results;
           $(Drupal.settings.search_autocomplete[key].selector).bind("mouseover", function() {
              $(Drupal.settings.search_autocomplete[key].selector).addClass('ui-autocomplete-processed ui-theme-' + Drupal.settings.search_autocomplete[key].theme).autocomplete({
             	 	minLength: Drupal.settings.search_autocomplete[key].minChars,
             	 	source: function(request, response) {
 		              // External URL:
 		              if (Drupal.settings.search_autocomplete[key].type == 'external') {
-		                $.getJSON(Drupal.settings.search_autocomplete[key].datas, { q: request.term }, function (results) {
+		                $.getJSON(Drupal.settings.search_autocomplete[key].datas, { q: encodeURIComponent(request.term) }, function (results) {
 		                  // Only return the number of values set in the settings.
-		                  if (!results.length && no_results) {
-		                      results = [jQuery.parseJSON(no_results.replace(/\[search-phrase\]/g, '<span class=\\"ui-autocomplete-field-term\\">' + request.term + '</span>'))];
-		                  } else {
+		                  if (results.length) {
 		                  	results.slice(0, Drupal.settings.search_autocomplete[key].max_sug);
-	                  		if (all_results) {
-	                  			results.push(jQuery.parseJSON(all_results.replace(/\[search-phrase\]/g, '<span class=\\"ui-autocomplete-field-term\\">' + request.term + '</span>')));
-	                  		}
 		                  }
 		                  response(results);
 		                });
 		              }
 		              // Internal URL:
 		              else if (Drupal.settings.search_autocomplete[key].type == 'internal' || Drupal.settings.search_autocomplete[key].type == 'view') {
-		                $.getJSON(Drupal.settings.search_autocomplete[key].datas + request.term, { }, function (results) {
+		                $.getJSON(Drupal.settings.search_autocomplete[key].datas, request, function (results) {
 		                  // Only return the number of values set in the settings.
-		                  if (!results.length && no_results) {
-		                      results = [jQuery.parseJSON(no_results.replace(/\[search-phrase\]/g, '<span class=\\"ui-autocomplete-field-term\\">' + request.term + '</span>'))];
-		                  } else {
-		                  	results.slice(0, Drupal.settings.search_autocomplete[key].max_sug);
-		                  	if (all_results) {
-		                  		results.push(jQuery.parseJSON(all_results.replace(/\[search-phrase\]/g, '<span class=\\"ui-autocomplete-field-term\\">' + request.term + '</span>')));
-		                  	}
+		                  if (results.length) {
+	                	    results.slice(0, Drupal.settings.search_autocomplete[key].max_sug);
 		                  }
 		                  response(results);
 		                });
@@ -93,13 +81,8 @@
 		              // Static resources:
 		              else if (Drupal.settings.search_autocomplete[key].type == 'static') {
 		                var results = $.ui.autocomplete.filter(Drupal.settings.search_autocomplete[key].datas, request.term);
-	                  if (!results.length && no_results) {
-	                  	results = [jQuery.parseJSON(no_results.replace(/\[search-phrase\]/g, '<span class=\\"ui-autocomplete-field-term\\">' + request.term + '</span>'))];
-	                  } else {
-	                  	results.slice(0, Drupal.settings.search_autocomplete[key].max_sug);
-	                  	if (all_results) {
-	                  		results.push(jQuery.parseJSON(all_results.replace(/\[search-phrase\]/g, '<span class=\\"ui-autocomplete-field-term\\">' + request.term + '</span>')));
-	                  	}
+	                  if (results.length) {
+	                    results.slice(0, Drupal.settings.search_autocomplete[key].max_sug);
 	                  }
 	                  response(results);
 		              }
@@ -115,12 +98,9 @@
 		                  $(this).val(ui.item.value);
 		                  $(this).closest("form").submit();
 		              }
-//		              } else {
-//			            	event.preventDefault();
-//		              }
 		            },
 		            focus: function (event, ui) {
-		              if (ui.item.label === no_results) {
+		              if (ui.item.group.group_id == 'no_results' || ui.item.group.group_id == 'all_results') {
 		                  event.preventDefault();
 		              }
 		            },

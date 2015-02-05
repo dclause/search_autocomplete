@@ -83,8 +83,6 @@ function search_autocomplete_page_build() {
             'selector'      => $match->selector,
             'minChars'      => $match->min_char,
             'max_sug'       => $match->max_sug,
-            'no_results'    => $no_results->label ? json_encode($no_results) : null,
-            'all_results'   => $all_results->label ? json_encode($all_results) : null,
             'type'          => $data_source,
             'datas'         => $match->data_source == 'static' ? $data_static : $data_callback,
             'fid'           => $match->fid,
