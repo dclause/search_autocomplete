@@ -65,11 +65,11 @@ function search_autocomplete_autocomplete($fid) {
   ->fetchAssoc();
 
   $view = views_get_view($result['data_view']);
-  $viewToGetExposedFilters = views_get_view($result['data_view']);
-  $viewToGetExposedFilters->set_display('default');
-  $viewToGetExposedFilters->is_cacheable = FALSE;
-  $viewToGetExposedFilters->execute();
-  foreach ($viewToGetExposedFilters->exposed_raw_input as $key => $value) {
+  $view_exposed_filters = views_get_view($result['data_view']);
+  $view_exposed_filters->set_display('default');
+  $view_exposed_filters->is_cacheable = FALSE;
+  $view_exposed_filters->execute();
+  foreach ($view_exposed_filters->exposed_raw_input as $key => $value) {
     $view->exposed_input[$key] = $user_input;
   }
 

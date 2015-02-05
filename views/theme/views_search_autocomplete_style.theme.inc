@@ -58,7 +58,8 @@ function template_preprocess_views_search_autocomplete_style(&$vars) {
     }
     if (url_is_external($link_value) || valid_url($link_value, TRUE)) {
        $link = $link_value;
-    } else {
+    }
+    else {
         $link = $base_root . $link_value;
     }
     // And build the link object.
@@ -125,7 +126,8 @@ function template_preprocess_views_search_autocomplete_style(&$vars) {
       $no_result_json = str_replace('[search-phrase]', $view->autocompletion_data['user_input'], $view->autocompletion_data['no_results']);
       $suggestion = json_decode($no_result_json);
       $group_id = 'no_results';
-    } else {
+    }
+    else {
       // All results case
       $all_results_json = str_replace('[search-phrase]', $view->autocompletion_data['user_input'], $view->autocompletion_data['all_results']);
       $suggestion = json_decode($all_results_json);

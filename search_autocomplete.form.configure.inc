@@ -316,7 +316,7 @@ function search_autocomplete_form_configure_submit($form, &$form_state) {
     'value' => $values['all_results_value'],
     'link' => $values['all_results_link'],
     'group' => array(
-  	 'group_id' => 'all_results',
+      'group_id' => 'all_results',
     ),
   );
   $no_results = array(
@@ -324,7 +324,7 @@ function search_autocomplete_form_configure_submit($form, &$form_state) {
     'value' => $values['no_results_value'],
     'link' => $values['no_results_link'],
     'group' => array(
-      	 'group_id' => 'no_results',
+      'group_id' => 'no_results',
     ),
   );
 

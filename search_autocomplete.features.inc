@@ -1,7 +1,16 @@
 <?php
 
 /**
- * Implementation of hook_features_export_options. [component_hook]
+ * @file
+ * Search Autocomplete
+ * Add support for CTools and feature import/export.
+ *
+ * Sponsored by:
+ * www.axiomcafe.fr
+ */
+
+/**
+ * Implements hook_features_export_options().
  *
  * This hook will alert features of which specific items of this component may
  * be exported. For instances, in this case, we want to make available all the
@@ -114,7 +123,7 @@ function search_autocomplete_config_features_rebuild($module) {
 
 /*
  * Get machine name of all search data
- * @return array of machine name 
+ * @return array of machine name
  * @return
  *   An associative array, or FALSE if there is no next row.
  */

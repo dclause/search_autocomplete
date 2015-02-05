@@ -33,7 +33,7 @@ function search_autocomplete_page_build() {
       // Get every form to autocomplete.
       $result = db_select('search_autocomplete_forms', 'f')
                   ->fields('f')
-                  ->condition('enabled', 1,'=')
+                  ->condition('enabled', 1, '=')
                   ->execute()
                   ->fetchAllAssoc('fid');
       // Build the setting array to transfer to JS.
