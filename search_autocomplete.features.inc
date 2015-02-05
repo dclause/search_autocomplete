@@ -31,7 +31,7 @@ function search_autocomplete_config_features_export_options() {
 }
 
 /**
- * Implementation of hook_features_export [component hook]
+ * Implements hook_features_export().
  *
  * This is a component hook, rather then a module hook, therefore this is the
  * callback from hook_features_api which relates to the specific component we
@@ -58,7 +58,7 @@ function search_autocomplete_config_features_export($data, &$export, $module_nam
 }
 
 /**
- * Implementation of hook_features_export_render. [component hook]
+ * Implements hook_features_export_render().
  *
  * This hook will be invoked in order to export
  * Component hook. The hook should be implemented using the name ot the
@@ -78,7 +78,8 @@ function search_autocomplete_config_features_export($data, &$export, $module_nam
  * @return array
  *   An associative array of rendered PHP code where the key is the name of the
  *   hook that should wrap the PHP code. The hook should not include the name
- *   of the module, e.g. the key for `hook_example` should simply be `example`.
+ *   of the module, for example the key for `hook_example` should simply be
+ *   `example`.
  */
 function search_autocomplete_config_features_export_render($module_name, $data, $export = NULL) {
   $code = array();
@@ -96,7 +97,7 @@ function search_autocomplete_config_features_export_render($module_name, $data, 
 }
 
 /**
- * Implements hook_features_revert(). [component_hook]
+ * Implements hook_features_revert().
  */
 function search_autocomplete_config_features_revert($module) {
   search_autocomplete_config_features_rebuild($module);
@@ -121,13 +122,11 @@ function search_autocomplete_config_features_rebuild($module) {
   }
 }
 
-/*
- * Get machine name of all search data
- * @return array of machine name
+/**
+ * Get machine name of all search data.
  * @return
  *   An associative array, or FALSE if there is no next row.
  */
-
 function search_autocomplete_get_data() {
   $codes = db_select('search_autocomplete_forms', 'sa')
       ->fields('sa', array())
@@ -136,7 +135,7 @@ function search_autocomplete_get_data() {
 }
 
 /**
- * Will retrieve data on basis of fid
+ * Will retrieve data on basis of fid.
  * @param type $fid
  * @return type
  */

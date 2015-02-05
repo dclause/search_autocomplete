@@ -168,7 +168,7 @@ function search_autocomplete_get_translite() {
 }
 
 /**
- * Implementation of hook_features_api
+ * Implements hook_features_api().
  *
  * Here we define the components that we want to make exportable.  For this
  * particular module, we want to make the configurations exportable.

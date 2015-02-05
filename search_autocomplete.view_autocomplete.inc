@@ -99,7 +99,7 @@ function _search_autocomplete_render_fields($view, $row) {
  * @deprecated The $option parameter in PHP 5.4.0 json_encode() deprecates this
  * function.
  *
- * @see _search_autocomplete_json_encode
+ * @see _search_autocomplete_json_encode()
  */
 function _search_autocomplete_encode_formatted($json, $depth = 0) {
 
@@ -157,21 +157,6 @@ function _search_autocomplete_encode_formatted($json, $depth = 0) {
     default:
       return 'null';
   }
-}
-
-/**
- * Helper function to finish debugging.
- *
- * @param mixed $var
- *   A variable to dump.
- * @param string $location
- *   A location to output.
- */
-function _search_autocomplete_debug_stop($var, $location) {
-  print("Location:$location\n");
-  var_dump($var);
-  module_Invoke_all('exit');
-  exit;
 }
 
 /**

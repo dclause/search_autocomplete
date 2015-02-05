@@ -57,10 +57,10 @@ function template_preprocess_views_search_autocomplete_style(&$vars) {
         $link_value = $matches[2];
     }
     if (url_is_external($link_value) || valid_url($link_value, TRUE)) {
-       $link = $link_value;
+      $link = $link_value;
     }
     else {
-        $link = $base_root . $link_value;
+      $link = $base_root . $link_value;
     }
     // And build the link object.
     $object['link'] = trim($link);

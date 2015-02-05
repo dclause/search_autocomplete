@@ -7,7 +7,7 @@
 /**
  * Implements views_plugin_style
  */
-class search_autocomplete_views_plugin_style extends views_plugin_style {
+class SearchAutocompleteViewsPluginStyle extends views_plugin_style {
   /**
    * {@inheritdoc}
    */
