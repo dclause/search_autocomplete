@@ -23,6 +23,9 @@ class SuggestionGroup {
    */
   private $id;
 
+  function __construct(array $values) {
+//     $this->id = $values['id'];
+  }
 
   // ---------  GETTERS  ---------
 

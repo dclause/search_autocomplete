@@ -136,6 +136,15 @@ class AutocompletionConfiguration extends ConfigEntityBase implements Autocomple
    */
   protected $moreResultsSuggestion;
 
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __construct(array $values, $entity_type_id = 'autocompletion_configuration') {
+    parent::__construct($values, $entity_type_id);
+  }
+
+
   // -----------------------------
   // ---------  GETTERS  ---------
 

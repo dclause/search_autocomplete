@@ -45,6 +45,16 @@ class Suggestion {
    */
   protected $group;
 
+//   function __construct(array $values) {
+//     $this->label = $values['label'];
+//     $this->value = $values['value'];
+//     $this->link = $values['link'];
+//     $this->group = new SuggestionGroup($values['group']);
+//   }
+
+  function __construct() {
+  }
+
   // ---------  GETTERS  ---------
 
   public function getLabel() {

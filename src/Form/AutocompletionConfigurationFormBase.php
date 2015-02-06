@@ -91,13 +91,18 @@ class AutocompletionConfigurationFormBase extends EntityForm {
     $autocompletion_configuration = $this->entity;
 
     // Build the form.
+
+    // Label
     $form['label'] = array(
       '#type' => 'textfield',
-      '#title' => $this->t('Label'),
+      '#title' => $this->t('Human readable name'),
       '#maxlength' => 255,
+      '#description'    => 'Please enter a label for this autocompletion configuration.',
       '#default_value' => $autocompletion_configuration->label(),
       '#required' => TRUE,
     );
+
+    // ID
     $form['id'] = array(
       '#type' => 'machine_name',
       '#title' => $this->t('Machine name'),
@@ -108,12 +113,6 @@ class AutocompletionConfigurationFormBase extends EntityForm {
         'error' => 'The machine-readable name must be unique, and can only contain lowercase letters, numbers, and underscores. Additionally, it can not be the reserved word "custom".',
       ),
       '#disabled' => !$autocompletion_configuration->isNew(),
-    );
-    $form['selector'] = array(
-      '#type' => 'textfield',
-      '#title' => $this->t('ID selector this configuration should apply to'),
-      '#default_value' => $autocompletion_configuration->getSelector(),
-      '#required' => TRUE,
     );
 
     // Return the form.

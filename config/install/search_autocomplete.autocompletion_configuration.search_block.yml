@@ -1,0 +1,26 @@
+# This file defines a default autocompletion configuration for autocompleting 
+# the default Drupal search blockv'out of the box'.
+
+# This default configuration is created in Drupal when this module is enabled.
+# It is removed when the module is uninstalled.
+
+# See schema/search_autocomplete.schema.yml for field definition
+
+id: search_block
+label: 'Search Block'
+selector: '#edit-keys'
+status: true
+minChar: 3
+maxSuggestion: 10
+noResultSuggestion:
+  label: 'No results found for [search-phrase].Click to perform full search.'
+  value: '[search-phrase]'
+  link: ''
+  group:
+    id: 'no_result'
+moreResultsSuggestion:
+  label: 'View all results for [search-phrase].'
+  value: '[search-phrase]'
+  link: ''
+  group:
+    id: 'more_results'
