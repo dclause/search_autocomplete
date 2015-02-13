@@ -60,7 +60,8 @@ use Drupal\search_autocomplete\SuggestionGroup;
  *   },
  *   entity_keys = {
  *     "id" = "id",
- *     "label" = "label"
+ *     "label" = "label",
+ *     "selector" = "selector"
  *   },
  *   links = {
  *     "edit-form" = "/examples/search_autocomplete/manage/{autocompletion_configuration}",
@@ -126,7 +127,10 @@ class AutocompletionConfiguration extends ConfigEntityBase implements Autocomple
    *
    * @var \Drupal\search_autocomplete\Suggestion
    */
-  protected $noResultSuggestion;
+  protected $noResultLabel;
+  protected $noResultValue;
+  protected $noResultLink;
+
 
   /**
    * Define a label that should be displayed when more results then what can
@@ -134,8 +138,9 @@ class AutocompletionConfiguration extends ConfigEntityBase implements Autocomple
    *
    * @var \Drupal\search_autocomplete\Suggestion
    */
-  protected $moreResultsSuggestion;
-
+  protected $moreResultsLabel;
+  protected $moreResultsValue;
+  protected $moreResultsLink;
 
   /**
    * {@inheritdoc}
@@ -179,15 +184,43 @@ class AutocompletionConfiguration extends ConfigEntityBase implements Autocomple
   /**
    * {@inheritdoc}
    */
-  public function getNoResultSuggestion() {
-    return $this->noResultSuggestion;
+  public function getNoResultLabel() {
+    return $this->noResultLabel;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getMoreResultsSuggestion() {
-    return $this->moreResultsSuggestion;
+  public function getNoResultValue() {
+    return $this->noResultValue;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getNoResultLink() {
+    return $this->noResultLink;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getMoreResultsLabel() {
+    return $this->moreResultsLabel;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getMoreResultsValue() {
+    return $this->moreResultsValue;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getMoreResultsLink() {
+    return $this->moreResultsLink;
   }
 
   // -----------------------------
@@ -224,15 +257,42 @@ class AutocompletionConfiguration extends ConfigEntityBase implements Autocomple
   /**
    * {@inheritdoc}
    */
-  public function setNoResultSuggestion($noResultSuggestion) {
-    $this->noResultSuggestion = $noResultSuggestion;
+  public function setNoResultLabel($noResultLabel) {
+    $this->noResultLabel = $noResultLabel;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function setMoreResultsSuggestion($moreResultsSuggestion) {
-    $this->moreResultsSuggestion = $moreResultsSuggestion;
+  public function setNoResultValue($noResultValue) {
+    $this->noResultValue = $noResultValue;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function setNoResultLink($noResultLink) {
+    $this->noResultLink = $noResultLink;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setMoreResultsLabel($moreResultsLabel) {
+    $this->moreResultsLabel = $moreResultsLabel;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setMoreResultsValue($moreResultsValue) {
+    $this->moreResultsValue = $moreResultsValue;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setMoreResultsLink($moreResultsLink) {
+    $this->moreResultsLink = $moreResultsLink;
+  }
 }

@@ -32,34 +32,21 @@ search_autocomplete.autocompletion_configuration.*:
     maxSuggestion:
       type: integer
       label: 'Maximum number of displayed suggestions'
-    noResultSuggestion:
-      type: search_autocomplete.suggestion
-      label: 'Custom suggestion displayed when no results are available'
-    moreResultsSuggestion:
-      type: search_autocomplete.suggestion
-      label: 'Custom suggestion displayed when more results are available'
-
-search_autocomplete.suggestion:
-  type: mapping
-  label: 'Suggestion'
-  mapping:
-    label:
+    noResultLabel:
       type: label
-      label: 'Display label'
-    value:
+      label: 'Custom "no result" message label'
+    noResultValue:
       type: string
-      label: 'Input value'
-    link:
+      label: 'Custom "no result" message value'
+    noResultLink:
       type: uri
-      label: 'Redirection link'
-    group:
-      type: search_autocomplete.suggestion_group
-      label: 'Group of the suggestion'
-
-search_autocomplete.suggestion_group:
-  type: mapping
-  label: 'Suggestion Group'
-  mapping:
-    id:
+      label: 'Custom "no result" URL redirection'
+    moreResultsLabel:
+      type: label
+      label: 'Custom "view all results" message label'
+    moreResultsValue:
       type: string
-      label: 'Group ID'
+      label: 'Custom "view all results" message value'
+    moreResultsLink:
+      type: uri
+      label: 'Custom "view all results" URL redirection'

@@ -12,15 +12,9 @@ selector: '#edit-keys'
 status: true
 minChar: 3
 maxSuggestion: 10
-noResultSuggestion:
-  label: 'No results found for [search-phrase].Click to perform full search.'
-  value: '[search-phrase]'
-  link: ''
-  group:
-    id: 'no_result'
-moreResultsSuggestion:
-  label: 'View all results for [search-phrase].'
-  value: '[search-phrase]'
-  link: ''
-  group:
-    id: 'more_results'
+noResultLabel: 'No results found for [search-phrase]. Click to perform full search.'
+noResultValue: '[search-phrase]'
+noResultLink: ''
+moreResultsLabel: 'View all results for [search-phrase].'
+moreResultsValue: '[search-phrase]'
+moreResultsLink: ''

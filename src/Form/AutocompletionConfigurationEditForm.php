@@ -104,74 +104,74 @@ class AutocompletionConfigurationEditForm extends AutocompletionConfigurationFor
 
     // ###
     // "View all results" custom configurations
-    $form['search_autocomplete_how']['view_all_results'] = array(
-        '#type'           => 'details',
-        '#title'          => t('Custom behaviour when some suggestions are available'),
-        '#collapsible'    => TRUE,
-        '#collapsed'      => TRUE,
+    $form['search_autocomplete_how']['moreResultsSuggestion'] = array(
+      '#type'           => 'details',
+      '#title'          => t('Custom behaviour when some suggestions are available'),
+      '#collapsible'    => TRUE,
+      '#collapsed'      => TRUE,
     );
     // Check if form should be auto submitted.
-    $form['search_autocomplete_how']['view_all_results']['all_results_label'] = array(
-        '#type'           => 'textfield',
-        '#title'          => t('Custom "view all results" message label'),
-        '#description'    => t('This message is going to be displayed at the end of suggestion list when suggestions are found. Leave empty to disable this functionality. You can use HTML tags as well as the token [search-phrase] to replace user input.'),
-//         '#default_value'  => $this->entity->getMoreResultsSuggestion() != null ? $this->t($this->entity->getMoreResultsSuggestion()->getLabel()) : NULL,
-        '#maxlength'      => 255,
-        '#required'       => FALSE,
+    $form['search_autocomplete_how']['moreResultsSuggestion']['moreResultsLabel'] = array(
+      '#type'           => 'textfield',
+      '#title'          => t('Custom "view all results" message label'),
+      '#description'    => t('This message is going to be displayed at the end of suggestion list when suggestions are found.') . $this->t('Leave empty to disable this functionality.') . '<br/>' . $this->t('You can use HTML tags as well as the token [search-phrase] to replace user input.'),
+      '#default_value'  => $this->t($this->entity->getMoreResultsLabel()),
+      '#maxlength'      => 255,
+      '#required'       => FALSE,
     );
     // Check if form should be auto submitted.
-    $form['search_autocomplete_how']['view_all_results']['all_results_value'] = array(
-        '#type'           => 'textfield',
-        '#title'          => t('Custom "view all results" message value'),
-        '#description'    => t('If a label is filled above, this is the value that will be picked when the message is selected. Leave empty if you don\'t want the message to be selectable. You can use the token [search-phrase] to replace user input.'),
-//         '#default_value'  => $this->entity->getMoreResultsSuggestion() != null ? $this->entity->getMoreResultsSuggestion()->getValue() : NULL,
-        '#maxlength'      => 255,
-        '#required'       => FALSE,
+    $form['search_autocomplete_how']['moreResultsSuggestion']['moreResultsValue'] = array(
+      '#type'           => 'textfield',
+      '#title'          => t('Custom "view all results" message value'),
+      '#description'    => t('If a label is filled above, this is the value that will be picked when the message is selected.') . $this->t('Leave empty if you don\'t want the message to be selectable.') . '<br/>' . $this->t('You can use the token [search-phrase] to replace user input.'),
+      '#default_value'  => $this->t($this->entity->getMoreResultsValue()),
+      '#maxlength'      => 255,
+      '#required'       => FALSE,
     );
     // Check if form should be auto submitted.
-    $form['search_autocomplete_how']['view_all_results']['all_results_link'] = array(
-        '#type'           => 'textfield',
-        '#title'          => t('Custom "view all results" URL redirection'),
-        '#description'    => t('If "Auto redirect" is checked and a label is given for this configuration, the user will be redirected to this URL when the message is selected. Leave empty if you rather like a standard Drupal search to be performed on the "value" given above.'),
-//         '#default_value'  => $this->entity->getMoreResultsSuggestion() != null ? $this->entity->getMoreResultsSuggestion()->getLink() : NULL,
-        '#maxlength'      => 255,
-        '#required'       => FALSE,
+    $form['search_autocomplete_how']['moreResultsSuggestion']['moreResultsLink'] = array(
+      '#type'           => 'textfield',
+      '#title'          => t('Custom "view all results" URL redirection'),
+      '#description'    => t('If "Auto redirect" is checked and a label is given for this configuration, the user will be redirected to this URL when the message is selected. Leave empty if you rather like a standard Drupal search to be performed on the "value" given above.'),
+      '#default_value'  => $this->t($this->entity->getMoreResultsLink()),
+      '#maxlength'      => 255,
+      '#required'       => FALSE,
     );
 
     // ###
-    // "No resuls" custom configurations
-    $form['search_autocomplete_how']['no_results'] = array(
-        '#type'           => 'details',
-        '#title'          => t('Custom behaviour when no suggestions are found'),
-        '#collapsible'    => TRUE,
-        '#collapsed'      => TRUE,
+    // "No resuls" custom configurations.
+    $form['search_autocomplete_how']['noResultSuggestion'] = array(
+      '#type'           => 'details',
+      '#title'          => t('Custom behaviour when no suggestions are found'),
+      '#collapsible'    => TRUE,
+      '#collapsed'      => TRUE,
     );
     // Check if form should be auto submitted.
-    $form['search_autocomplete_how']['no_results']['no_results_label'] = array(
-        '#type'           => 'textfield',
-        '#title'          => t('Custom "no result" message label'),
-        '#description'    => t('This message is going to be displayed when no suggestions can be found. Leave empty to disable this functionality. You can use HTML tags as well as the token [search-phrase] to replace user input.'),
-//         '#default_value'  => $this->entity->getNoResultSuggestion() != null ? $this->t($this->entity->getMoreResultsSuggestion()->getLabel()) : NULL,
-        '#maxlength'      => 255,
-        '#required'       => FALSE,
+    $form['search_autocomplete_how']['noResultSuggestion']['noResultLabel'] = array(
+      '#type'           => 'textfield',
+      '#title'          => t('Custom "no result" message label'),
+      '#description'    => t('This message is going to be displayed when no suggestions can be found.') . $this->t('Leave empty to disable this functionality.') . '<br/>' . $this->t('You can use HTML tags as well as the token [search-phrase] to replace user input.'),
+      '#default_value'  => $this->t($this->entity->getNoResultLabel()),
+      '#maxlength'      => 255,
+      '#required'       => FALSE,
     );
     // Check if form should be auto submitted.
-    $form['search_autocomplete_how']['no_results']['no_results_value'] = array(
-        '#type'           => 'textfield',
-        '#title'          => t('Custom "no result" message value'),
-        '#description'    => t('If a label is filled above, this is the value that will be picked when the message is selected. Leave empty if you don\'t want the message to be selectable. You can use the token [search-phrase] to replace user input.'),
-//         '#default_value'  => $this->entity->getNoResultSuggestion() != null ? $this->entity->getNoResultSuggestion()->getValue() : NULL,
-        '#maxlength'      => 255,
-        '#required'       => FALSE,
+    $form['search_autocomplete_how']['noResultSuggestion']['noResultValue'] = array(
+      '#type'           => 'textfield',
+      '#title'          => t('Custom "no result" message value'),
+      '#description'    => t('If a label is filled above, this is the value that will be picked when the message is selected.') . $this->t('Leave empty if you don\'t want the message to be selectable.') . '<br/>' . $this->t('You can use the token [search-phrase] to replace user input.'),
+      '#default_value'  => $this->t($this->entity->getNoResultValue()),
+      '#maxlength'      => 255,
+      '#required'       => FALSE,
     );
     // Check if form should be auto submitted.
-    $form['search_autocomplete_how']['no_results']['no_results_link'] = array(
-        '#type'           => 'textfield',
-        '#title'          => t('Custom "no result" URL redirection'),
-        '#description'    => t('If "Auto redirect" is checked and a label is given for this configuration, the user will be redirected to this URL when the message is selected. Leave empty if you rather like a standard Drupal search to be performed on the "value" given above.'),
-//         '#default_value'  => $this->entity->getNoResultSuggestion() != null ? $this->entity->getNoResultSuggestion()->getLink() : NULL,
-        '#maxlength'      => 255,
-        '#required'       => FALSE,
+    $form['search_autocomplete_how']['noResultSuggestion']['noResultLink'] = array(
+      '#type'           => 'textfield',
+      '#title'          => t('Custom "no result" URL redirection'),
+      '#description'    => t('If "Auto redirect" is checked and a label is given for this configuration, the user will be redirected to this URL when the message is selected. Leave empty if you rather like a standard Drupal search to be performed on the "value" given above.'),
+      '#default_value'  => $this->t($this->entity->getNoResultLink()),
+      '#maxlength'      => 255,
+      '#required'       => FALSE,
     );
 
     // ------------------------------------------------------------------.
@@ -285,26 +285,4 @@ class AutocompletionConfigurationEditForm extends AutocompletionConfigurationFor
     // Return the form.
     return $form;
   }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function save(array $form, FormStateInterface $form_state) {
-
-    $noResultSuggestion = new Suggestion();
-    $noResultSuggestion->setLabel($form_state->getValue('no_results_label'));
-
-    $this->entity->setNoResultSuggestion($noResultSuggestion);
-
-    parent::save($form, $form_state);
-
-  }
-
-
-
-
-
-
-
-
 }

@@ -15,10 +15,11 @@ use Drupal\Core\Form\FormStateInterface;
  * Class AutocompletionConfigurationDeleteForm.
  *
  * Provides a confirm form for deleting the entity. This is different from the
- * add and edit forms as it does not inherit from AutocompletionConfigurationFormBase. The reason for
- * this is that we do not need to build the same form. Instead, we present the
- * user with a simple yes/no question. For this reason, we derive from
- * EntityConfirmFormBase instead.
+ * add and edit forms as it does not inherit from
+ * AutocompletionConfigurationFormBase. The reason for this is that we do not
+ * need to build the same form. Instead, we present the user with a simple
+ * yes/no question. For this reason, we derive from EntityConfirmFormBase
+ * instead.
  *
  * @package Drupal\search_autocomplete\Form
  *

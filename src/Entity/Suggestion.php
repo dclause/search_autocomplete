@@ -2,16 +2,26 @@
 
 /**
  * @file
- * Contains Drupal\search_autocomplete\Suggestion.
+ * Contains Drupal\search_autocomplete\Entity\Suggestion.
  */
 
-namespace Drupal\search_autocomplete;
+namespace Drupal\search_autocomplete\Entity;
 
 /**
  * Define what a suggestion is.
  *
  * It helps to create some extra suggestions to be inserted such as "no_result"
  * of "more_results" suggestions.
+ *
+ * @ConfigEntityType(
+ *   id = "suggestion",
+ *   label = @Translation("Autocompletion Suggestion"),
+ *   entity_keys = {
+ *     "id" = "id",
+ *     "label" = "label"
+ *   }
+ * )
+ *
  */
 class Suggestion {
 
