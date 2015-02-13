@@ -8,7 +8,7 @@
 namespace Drupal\search_autocomplete\Form;
 
 use Drupal\Core\Entity\EntityForm;
-use Drupal\Core\Entity\Query\QueryFactory;
+use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -28,9 +28,9 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class AutocompletionConfigurationFormBase extends EntityForm {
 
   /**
-   * @var \Drupal\Core\Entity\Query\QueryFactory
+   * @var \Drupal\Core\Entity\EntityStorageInterface
    */
-  protected $entityQueryFactory;
+  protected $entity_storage;
 
   /**
    * Construct the AutocompletionConfigurationFormBase.
@@ -40,11 +40,11 @@ class AutocompletionConfigurationFormBase extends EntityForm {
    * factory to be injected into it from the container. We later use this query
    * factory to build an entity query for the exists() method.
    *
-   * @param \Drupal\Core\Entity\Query\QueryFactory $query_factory
+   * @param \Drupal\Core\Entity\EntityStorageInterface $entity_storage
    *   An entity query factory for the autocompletion_configuration entity type.
    */
-  public function __construct(QueryFactory $query_factory) {
-    $this->entityQueryFactory = $query_factory;
+  public function __construct(EntityStorageInterface $entity_storage) {
+    $this->entity_storage = $entity_storage;
   }
 
   /**
@@ -62,7 +62,9 @@ class AutocompletionConfigurationFormBase extends EntityForm {
    * pass the factory to our class as a constructor parameter.
    */
   public static function create(ContainerInterface $container) {
-    return new static($container->get('entity.query'));
+    return new static(
+      $container->get('entity.manager')->getStorage('autocompletion_configuration')
+    );
   }
 
   /**
@@ -90,9 +92,7 @@ class AutocompletionConfigurationFormBase extends EntityForm {
     // annotation on our AutocompletionConfiguration class.
     $autocompletion_configuration = $this->entity;
 
-    // Build the form.
-
-    // Label
+    // Label.
     $form['label'] = array(
       '#type' => 'textfield',
       '#title' => $this->t('Human readable name'),
@@ -102,13 +102,13 @@ class AutocompletionConfigurationFormBase extends EntityForm {
       '#required' => TRUE,
     );
 
-    // ID
+    // ID.
     $form['id'] = array(
       '#type' => 'machine_name',
       '#title' => $this->t('Machine name'),
       '#default_value' => $autocompletion_configuration->id(),
       '#machine_name' => array(
-        'exists' => array($this, 'exists'),
+        'exists' => array($this->entity_storage, 'load'),
         'replace_pattern' => '([^a-z0-9_]+)|(^custom$)',
         'error' => 'The machine-readable name must be unique, and can only contain lowercase letters, numbers, and underscores. Additionally, it can not be the reserved word "custom".',
       ),
@@ -117,31 +117,6 @@ class AutocompletionConfigurationFormBase extends EntityForm {
 
     // Return the form.
     return $form;
-  }
-
-  /**
-   * Checks for an existing autocompletion_configuration.
-   *
-   * @param string|int $entity_id
-   *   The entity ID.
-   * @param array $element
-   *   The form element.
-   * @param FormStateInterface $form_state
-   *   The form state.
-   *
-   * @return bool
-   *   TRUE if this format already exists, FALSE otherwise.
-   */
-  public function exists($entity_id, array $element, FormStateInterface $form_state) {
-    // Use the query factory to build a new autocompletion_configuration entity query.
-    $query = $this->entityQueryFactory->get('autocompletion_configuration');
-
-    // Query the entity ID to see if its in use.
-    $result = $query->condition('id', $element['#field_prefix'] . $entity_id)
-      ->execute();
-
-    // We don't need to return the ID, only if it exists or not.
-    return (bool) $result;
   }
 
   /**
@@ -197,7 +172,7 @@ class AutocompletionConfigurationFormBase extends EntityForm {
    */
   public function save(array $form, FormStateInterface $form_state) {
     // EntityForm provides us with the entity we're working on.
-    $autocompletion_configuration = $this->getEntity();
+    $autocompletion_configuration = $this->entity;
 
     // Drupal already populated the form values in the entity object. Each
     // form field was saved as a public variable in the entity class. PHP

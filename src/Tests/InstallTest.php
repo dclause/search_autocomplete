@@ -33,7 +33,7 @@ class InstallTest extends WebTestBase {
    *
    * @var string
    */
-  protected $profile = 'minimal';
+  //protected $profile = 'standard';
 
   /**
    * {@inheritdoc}
@@ -95,8 +95,8 @@ class InstallTest extends WebTestBase {
     // 3) Verify that admin userscan access admin paths.
 
     // Create a user who can administer search autocomplete.
-    $admin_user = $this->drupalCreateUser(array('administer search autocomplete'));
-    $this->drupalLogin($admin_user);
+    $perms_user = $this->drupalCreateUser(array('administer search autocomplete'));
+    $this->drupalLogin($perms_user);
     // Forbidden paths aren't forbidden any more.
     foreach ($admin_paths as $unforbidden) {
       $this->drupalGet($unforbidden);
@@ -106,9 +106,12 @@ class InstallTest extends WebTestBase {
     // ----------------------------------------------------------------------
     // 4) Check that menu links is added in Search fieldset of Configuration page.
 
+    // Create admin user.
+    $admin_user = $this->drupalCreateUser(array('access administration pages', 'administer search autocomplete'));
+    $this->drupalLogin($admin_user);
     // Now that we have the admin user logged in, check the menu links.
     $this->drupalGet('/admin/config');
-    $this->assertLinkByHref('/admin/config/search/search_autocomplete');
+    $this->assertLinkByHref('admin/config/search/search_autocomplete');
 
   }
 

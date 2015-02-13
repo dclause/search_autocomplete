@@ -53,10 +53,39 @@ class DefaultConfigEntityTest extends WebTestBase {
    */
   public function testDefaultConfigEntityInclusion() {
 
+    // Build a configuration data.
+    $config = array(
+      'id'            => 'search_block',
+      'label'         => 'Search Block',
+      'selector'      => '#edit-keys',
+      'status'        => TRUE,
+      'minChar'       => 3,
+      'maxSuggestion' => 10,
+      'noResultLabel' => t('No results found for [search-phrase]. Click to perform full search.'),
+      'noResultValue' => '[search-phrase]',
+      'noResultLink'  => '',
+      'moreResultsLabel' => t('View all results for [search-phrase].'),
+      'moreResultsValue' => '[search-phrase]',
+      'moreResultsLink'  => '',
+    );
+
     // ----------------------------------------------------------------------
     // 1) Verify that the search_block default config is properly added.
-    $entity = entity_load('autocompletion_configuration', 'search_block');
+    $entity = entity_load('autocompletion_configuration', $config['id']);
     $this->assertNotNull($entity, 'Default configuration search_block created during installation process.');
+
+    $this->assertEqual($entity->id(), $config['id']);
+    $this->assertEqual($entity->label(), $config['label']);
+    $this->assertEqual($entity->getStatus(), $config['status']);
+    $this->assertEqual($entity->getSelector(), $config['selector']);
+    $this->assertEqual($entity->getMinChar(), $config['minChar']);
+    $this->assertEqual($entity->getMaxSuggestion(), $config['maxSuggestion']);
+    $this->assertEqual($entity->getNoResultLabel(), $config['noResultLabel']);
+    $this->assertEqual($entity->getNoResultValue(), $config['noResultValue']);
+    $this->assertEqual($entity->getNoResultLink(), $config['noResultLink']);
+    $this->assertEqual($entity->getMoreResultsLabel(), $config['moreResultsLabel']);
+    $this->assertEqual($entity->getMoreResultsValue(), $config['moreResultsValue']);
+    $this->assertEqual($entity->getMoreResultsLink(), $config['moreResultsLink']);
 
   }
 

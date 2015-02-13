@@ -60,9 +60,7 @@ class AutocompletionConfigurationAddForm extends AutocompletionConfigurationForm
     // Get anything we need from the base class.
     $form = parent::buildForm($form, $form_state);
 
-    // Build the form.
-
-    // Selector
+    // Selector.
     $form['selector'] = array(
       '#type' => 'textfield',
       '#title' => $this->t('ID selector this configuration should apply to'),
@@ -73,6 +71,15 @@ class AutocompletionConfigurationAddForm extends AutocompletionConfigurationForm
 
     // Return the form.
     return $form;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function save(array $form, FormStateInterface $form_state) {
+    parent::save($form, $form_state);
+    // Redirect to edit form once entity is added.
+    $form_state->setRedirectUrl($this->entity->urlInfo('edit-form'));
   }
 
 }
