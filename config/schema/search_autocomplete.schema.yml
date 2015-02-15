@@ -50,3 +50,15 @@ search_autocomplete.autocompletion_configuration.*:
     moreResultsLink:
       type: uri
       label: 'Custom "view all results" URL redirection'
+      
+search_autocomplete.settings:
+  type: mapping
+  label: 'Search Autocomplete module settings'
+  mapping:
+    translite:
+      type: boolean
+      label: 'Translite results'
+    admin_helper:
+      type: boolean
+      label: 'Use admin tool'
+      

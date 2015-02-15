@@ -154,8 +154,6 @@ class AutocompletionConfigurationFormBase extends EntityForm {
   public function validate(array $form, FormStateInterface $form_state) {
     parent::validate($form, $form_state);
 
-    // Add code here to validate your config entity's form elements.
-    // Nothing to do here.
   }
 
   /**

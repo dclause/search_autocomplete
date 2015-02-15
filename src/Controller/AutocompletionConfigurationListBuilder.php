@@ -8,6 +8,9 @@ namespace Drupal\search_autocomplete\Controller;
 
 use Drupal\Core\Config\Entity\ConfigEntityListBuilder;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Form\FormInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Component\Utility\String;
 
 /**
  * Provides a listing of autocompletion_configuration entities.
@@ -30,37 +33,113 @@ use Drupal\Core\Entity\EntityInterface;
  *
  * @ingroup search_autocomplete
  */
-class AutocompletionConfigurationListBuilder extends ConfigEntityListBuilder {
+class AutocompletionConfigurationListBuilder extends ConfigEntityListBuilder implements FormInterface {
 
   /**
-   * Builds the header row for the entity listing.
-   *
-   * @return array
-   *   A render array structure of header strings.
-   *
-   * @see Drupal\Core\Entity\EntityListController::render()
+   * {@inheritdoc}
    */
-  public function buildHeader() {
-    $header['label'] = $this->t('Autocompletion Configuration Name');
-    $header['selector'] = $this->t('Selector');
-    return $header + parent::buildHeader();
+  public function getFormId() {
+    return 'search_autocomplete_admin_form';
   }
 
   /**
-   * Builds a row for an entity in the entity listing.
-   *
-   * @param EntityInterface $entity
-   *   The entity for which to build the row.
-   *
-   * @return array
-   *   A render array of the table row for displaying the entity.
-   *
-   * @see Drupal\Core\Entity\EntityListController::render()
+   * {@inheritdoc}
    */
-  public function buildRow(EntityInterface $entity) {
-    $row['label'] = $this->getLabel($entity);
-    $row['selector'] = $entity->getSelector();
-    return $row + parent::buildRow($entity);
+  protected function getEditableConfigNames() {
+    return ['search_autocomplete.settings'];
+  }
+
+
+  /**
+   * Implements \Drupal\Core\Form\FormInterface::buildForm().
+   *
+   * Form constructor for the main block administration form.
+   */
+  public function buildForm(array $form, FormStateInterface $form_state) {
+    $settings = \Drupal::config('search_autocomplete.settings');
+
+    // Define the table of configurations.
+    $form['configs'] = array(
+      '#type' => 'table',
+      '#header' => array(
+        $this->t('Autocompletion Configuration Name'),
+        $this->t('Enabled'),
+        $this->t('truc'),
+        $this->t('Operations'),
+      ),
+    );
+    $entities = $this->load();
+
+    // Build blocks first for each region.
+    $configs = array();
+    foreach ($entities as $entity_id => $entity) {
+      $form['configs'][$entity_id]['label'] = array(
+        '#markup' => String::checkPlain($entity->label()),
+      );
+      $form['configs'][$entity_id]['enabled'] = array(
+        '#type' => 'checkbox',
+        '#default_value' => $entity->getStatus(),
+      );
+      $form['configs'][$entity_id]['selector'] = array(
+        '#markup' => String::checkPlain($entity->getSelector()),
+      );
+      $form['configs'][$entity_id]['operations'] = $this->buildOperations($entity);
+    }
+
+    // Transliteration option settings.
+    $form['translite'] = array(
+      '#type'           => 'checkbox',
+      '#title'          => t('Translite special characters.'),
+      '#description'    => t('If enabled, the user will be suggested with all special characters suggestions when using standard characters. In other word, when entering "foo", suggestions may contain also "f&oacute;&ocirc;bar", "fo&otilde;bar", ...'),
+      '#default_value'  => $settings->get('translite'),
+    );
+
+    // Use admin helper tool option settings.
+    $form['admin_helper'] = array(
+      '#type'           => 'checkbox',
+      '#title'          => t('Use autocompletion helper tool for Search Autocomplete administrators.'),
+      '#description'    => t('If enabled, user with "administer Search Autocomplete" permission will be able to use admin helper tool on input fields (recommended).'),
+      '#default_value'  => $settings->get('admin_helper'),
+    );
+
+    $form['actions']['submit'] = array(
+      '#type' => 'submit',
+      '#value' => t('Save changes'),
+      '#button_type' => 'primary',
+    );
+
+    return $form;
+
+  }
+
+  /**
+   * Implements \Drupal\Core\Form\FormInterface::validateForm().
+   */
+  public function validateForm(array &$form, FormStateInterface $form_state) {
+    // No validation.
+  }
+
+  /**
+   * Implements \Drupal\Core\Form\FormInterface::submitForm().
+   *
+   * Form submission handler for the main block administration form.
+   */
+  public function submitForm(array &$form, FormStateInterface $form_state) {
+    $values = $form_state->getValues();
+
+    \Drupal::configFactory()->getEditable('search_autocomplete.settings')
+      ->set('translite', $values['translite'])
+      ->set('admin_helper', $values['admin_helper'])
+      ->save();
+
+    $entities = $this->storage->loadMultiple(array_keys($form_state->getValue('configs')));
+    foreach ($entities as $entity_id => $entity) {
+      $entity_values = $form_state->getValue(array('configs', $entity_id));
+      $entity->setStatus($entity_values['enabled']);
+      $entity->save();
+    }
+    //$settings->set('translite', $form_state->getValue(array('translite', 'TRUE')));
+    //$settings->set('admin_helper', $form_state->getValue(array('admin_helper', 'FALSE')));
   }
 
   /**
@@ -72,19 +151,8 @@ class AutocompletionConfigurationListBuilder extends ConfigEntityListBuilder {
    * @return array
    *   Renderable array.
    */
-//   public function render() {
-//     $build['description'] = array(
-//       '#markup' => $this->t("<p>The Config Entity Example module defines a"
-//         . " AutocompletionConfiguration entity type. This is a list of the AutocompletionConfiguration entities currently"
-//         . " in your Drupal site.</p><p>By default, when you enable this"
-//         . " module, one entity is created from configuration. This is why we"
-//         . " call them Config Entities. Marvin, the paranoid android, is created"
-//         . " in the database when the module is enabled.</p><p>You can view a"
-//         . " list of AutocompletionConfigurations here. You can also use the 'Operations' column to"
-//         . " edit and delete AutocompletionConfigurations.</p>"),
-//     );
-//     $build[] = parent::render();
-//     return $build;
-//   }
+  public function render() {
+    return \Drupal::formBuilder()->getForm($this);
+  }
 
 }
