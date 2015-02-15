@@ -26,16 +26,6 @@ class InstallTest extends WebTestBase {
   public static $modules = array('search_autocomplete');
 
   /**
-   * The installation profile to use with this test.
-   *
-   * We need the 'minimal' profile in order to make sure the Search module is
-   * available.
-   *
-   * @var string
-   */
-  //protected $profile = 'standard';
-
-  /**
    * {@inheritdoc}
    */
   public static function getInfo() {

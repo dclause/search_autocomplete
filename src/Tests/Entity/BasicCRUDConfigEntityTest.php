@@ -26,16 +26,6 @@ class BasicCRUDConfigEntityTest extends WebTestBase {
   public static $modules = array('search_autocomplete');
 
   /**
-   * The installation profile to use with this test.
-   *
-   * We need the 'minimal' profile in order to make sure the Search module is
-   * available.
-   *
-   * @var string
-   */
-  //protected $profile = 'minimal';
-
-  /**
    * {@inheritdoc}
    */
   public static function getInfo() {
@@ -65,7 +55,9 @@ class BasicCRUDConfigEntityTest extends WebTestBase {
    *
    * 3) Verify that default add configuration values are inserted.
    *
-   * 4) Verify that we can edit the configuration through admin UI.
+   * 4) Verify that user is redirected to listing page.
+   *
+   * 5) Verify that we can edit the configuration through admin UI.
    */
   public function testManageConfigEntity() {
 
@@ -123,7 +115,8 @@ class BasicCRUDConfigEntityTest extends WebTestBase {
 
     // Change default values.
     $config['minChar'] = 1;
-    $config['noResultLabel'] = 1;
+    $config['noResultLabel'] = 'No result test label';
+    $config['moreResultsLink'] = 'http://google.com';
 
     $this->drupalPostForm(
       NULL,
