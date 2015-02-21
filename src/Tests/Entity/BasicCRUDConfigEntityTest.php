@@ -65,25 +65,28 @@ class BasicCRUDConfigEntityTest extends WebTestBase {
     // 1) Verify that we can add new configuration through admin UI.
     // We  have the admin user logged in (through test setup), so we'll create
     // a new configuration.
-
-    // Open admin UI.
     $this->drupalGet('/admin/config/search/search_autocomplete');
+
     // Click Add new button.
     $this->clickLink('Add new Autocompletion Configuration');
 
     // Build a configuration data.
     $config_name = 'testing_config';
     $config = array(
-      'label'         => 'Unit testing configuration.',
-      'selector'      => '#test-key',
-      'minChar'       => 3,
-      'maxSuggestion' => 10,
-      'noResultLabel' => t('No results found for [search-phrase]. Click to perform full search.'),
-      'noResultValue' => '[search-phrase]',
-      'noResultLink'  => '',
-      'moreResultsLabel' => t('View all results for [search-phrase].'),
-      'moreResultsValue' => '[search-phrase]',
-      'moreResultsLink'  => '',
+      'label'             => 'Unit testing configuration.',
+      'selector'          => '#test-key',
+      'minChar'           => 3,
+      'maxSuggestions'    => 10,
+      'autoSubmit'        => TRUE,
+      'autoRedirect'      => TRUE,
+      'noResultLabel'     => t('No results found for [search-phrase]. Click to perform full search.'),
+      'noResultValue'     => '[search-phrase]',
+      'noResultLink'      => '',
+      'moreResultsLabel'  => t('View all results for [search-phrase].'),
+      'moreResultsValue'  => '[search-phrase]',
+      'moreResultsLink'   => '',
+      'source'            => 'view',
+      'theme'             => 'basic-green',
     );
 
     $this->drupalPostForm(
@@ -102,21 +105,27 @@ class BasicCRUDConfigEntityTest extends WebTestBase {
 
     // ----------------------------------------------------------------------
     // 3) Verify that default add configuration values are inserted.
-    $this->assertField('label', $config['label']);
-    $this->assertField('selector', $config['selector']);
-    $this->assertField('minChar', $config['minChar']);
-    $this->assertField('maxSuggestion', $config['maxSuggestion']);
-    $this->assertField('noResultLabel', $config['noResultLabel']);
-    $this->assertField('noResultValue', $config['noResultValue']);
-    $this->assertField('noResultLink', $config['noResultLink']);
-    $this->assertField('moreResultsLabel', $config['moreResultsLabel']);
-    $this->assertField('moreResultsValue', $config['moreResultsValue']);
-    $this->assertField('moreResultsLink', $config['moreResultsLink']);
+    $this->assertFieldByName('label', $config['label']);
+    $this->assertFieldByName('selector', $config['selector']);
+    $this->assertFieldByName('minChar', $config['minChar']);
+    $this->assertFieldByName('maxSuggestions', $config['maxSuggestions']);
+    $this->assertFieldByName('autoSubmit', $config['autoSubmit']);
+    $this->assertFieldByName('autoRedirect', $config['autoRedirect']);
+    $this->assertFieldByName('noResultLabel', $config['noResultLabel']);
+    $this->assertFieldByName('noResultValue', $config['noResultValue']);
+    $this->assertFieldByName('noResultLink', $config['noResultLink']);
+    $this->assertFieldByName('moreResultsLabel', $config['moreResultsLabel']);
+    $this->assertFieldByName('moreResultsValue', $config['moreResultsValue']);
+    $this->assertFieldByName('moreResultsLink', $config['moreResultsLink']);
+    $this->assertFieldByName('source', $config['source']);
+    $this->assertOptionSelected('edit-theme', $config['theme']);
 
     // Change default values.
     $config['minChar'] = 1;
     $config['noResultLabel'] = 'No result test label';
+    $config['autoRedirect'] = FALSE;
     $config['moreResultsLink'] = 'http://google.com';
+    $config['source'] = 'callback';
 
     $this->drupalPostForm(
       NULL,
@@ -131,16 +140,20 @@ class BasicCRUDConfigEntityTest extends WebTestBase {
     // ----------------------------------------------------------------------
     // 5) Verify that we can edit the configuration through admin UI.
     $this->drupalGet('/admin/config/search/search_autocomplete/manage/' . $config_name);
-    $this->assertField('label', $config['label']);
-    $this->assertField('selector', $config['selector']);
-    $this->assertField('minChar', $config['minChar']);
-    $this->assertField('maxSuggestion', $config['maxSuggestion']);
-    $this->assertField('noResultLabel', $config['noResultLabel']);
-    $this->assertField('noResultValue', $config['noResultValue']);
-    $this->assertField('noResultLink', $config['noResultLink']);
-    $this->assertField('moreResultsLabel', $config['moreResultsLabel']);
-    $this->assertField('moreResultsValue', $config['moreResultsValue']);
-    $this->assertField('moreResultsLink', $config['moreResultsLink']);
+    $this->assertFieldByName('label', $config['label']);
+    $this->assertFieldByName('selector', $config['selector']);
+    $this->assertFieldByName('minChar', $config['minChar']);
+    $this->assertFieldByName('maxSuggestions', $config['maxSuggestions']);
+    $this->assertFieldByName('autoSubmit', $config['autoSubmit']);
+    $this->assertFieldByName('autoRedirect', $config['autoRedirect']);
+    $this->assertFieldByName('noResultLabel', $config['noResultLabel']);
+    $this->assertFieldByName('noResultValue', $config['noResultValue']);
+    $this->assertFieldByName('noResultLink', $config['noResultLink']);
+    $this->assertFieldByName('moreResultsLabel', $config['moreResultsLabel']);
+    $this->assertFieldByName('moreResultsValue', $config['moreResultsValue']);
+    $this->assertFieldByName('moreResultsLink', $config['moreResultsLink']);
+    $this->assertFieldByName('source', $config['source']);
+    $this->assertOptionSelected('edit-theme', $config['theme']);
 
   }
 

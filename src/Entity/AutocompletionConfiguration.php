@@ -28,8 +28,9 @@ use Drupal\search_autocomplete\SuggestionGroup;
  *    translate it in the user interface.
  *  - controllers: An array specifying controller classes that handle various
  *    aspects of the entity type's functionality. Below, we've specified
- *    controllers which can list, add, edit, and delete our autocompletion_configuration entity, and
- *    which control user access to these capabilities.
+ *    controllers which can list, add, edit, and delete our
+ *    autocompletion_configuration entity, and which control user access to
+ *    these capabilities.
  *  - config_prefix: This tells the config system the prefix to use for
  *    filenames when storing entities. Because we don't specify, it will be
  *    the module's name. This means that the default entity we include in our
@@ -100,7 +101,8 @@ class AutocompletionConfiguration extends ConfigEntityBase implements Autocomple
   protected $selector;
 
   /**
-   * Define if the configuration is enabled, ie if the autocompletion will occur.
+   * Define if the configuration is enabled,
+   * ie if the autocompletion will occur.
    *
    * @var bool
    */
@@ -120,15 +122,41 @@ class AutocompletionConfiguration extends ConfigEntityBase implements Autocomple
    *
    * @var int
    */
-  protected $maxSuggestion;
+  protected $maxSuggestions;
+
+  /**
+   * Define if form should be submitted when suggestion is chosen.
+   *
+   * @var boolean
+   */
+  protected $autoSubmit;
+
+  /**
+   * Define if user should be redirected to suggestion when it is chosen.
+   *
+   * @var boolean
+   */
+  protected $autoRedirect;
 
   /**
    * Define a label that should be displayed when no results are available.
    *
-   * @var \Drupal\search_autocomplete\Suggestion
+   * @var string
    */
   protected $noResultLabel;
+
+  /**
+   * Define a value entered when clicking the "no result" label.
+   *
+   * @var string
+   */
   protected $noResultValue;
+
+  /**
+   * Define a link to be redirected to, wen "no result" is available.
+   *
+   * @var string
+   */
   protected $noResultLink;
 
 
@@ -136,11 +164,38 @@ class AutocompletionConfiguration extends ConfigEntityBase implements Autocomple
    * Define a label that should be displayed when more results then what can
    * be displayed are available.
    *
-   * @var \Drupal\search_autocomplete\Suggestion
+   * @var string
    */
   protected $moreResultsLabel;
+
+  /**
+   * Define a value entered when clicking the "more results" label.
+   *
+   * @var string
+   */
   protected $moreResultsValue;
+
+  /**
+   * Define a link to be redirected to, wen "more results" links are available.
+   *
+   * @var string
+   */
   protected $moreResultsLink;
+
+  /**
+   * Define the source of the completions.
+   *
+   * @var string
+   */
+  protected $source;
+
+  /**
+   * Define the theme to be used for autocompletion display.
+   *
+   * @var string
+   */
+  protected $theme;
+
 
   /**
    * {@inheritdoc}
@@ -150,8 +205,8 @@ class AutocompletionConfiguration extends ConfigEntityBase implements Autocomple
   }
 
 
-  // -----------------------------
-  // ---------  GETTERS  ---------
+  /** ------------------------------ *
+   *  ---------  GETTERS  ---------- */
 
   /**
    * {@inheritdoc}
@@ -177,8 +232,22 @@ class AutocompletionConfiguration extends ConfigEntityBase implements Autocomple
   /**
    * {@inheritdoc}
    */
-  public function getMaxSuggestion() {
-    return $this->maxSuggestion;
+  public function getMaxSuggestions() {
+    return $this->maxSuggestions;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getAutoSubmit() {
+    return $this->autoSubmit;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getAutoRedirect() {
+    return $this->autoRedirect;
   }
 
   /**
@@ -223,8 +292,22 @@ class AutocompletionConfiguration extends ConfigEntityBase implements Autocomple
     return $this->moreResultsLink;
   }
 
-  // -----------------------------
-  // ---------  SETTERS  ---------
+  /**
+   * {@inheritdoc}
+   */
+  public function getSource() {
+    return $this->source;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getTheme() {
+    return $this->theme;
+  }
+
+  /** ----------------------------- *
+   *  ---------  SETTERS  --------- */
 
   /**
    * {@inheritdoc}
@@ -243,56 +326,84 @@ class AutocompletionConfiguration extends ConfigEntityBase implements Autocomple
   /**
    * {@inheritdoc}
    */
-  public function setMinChar($minChar) {
-    $this->minChar = $minChar;
+  public function setMinChar($min_char) {
+    $this->minChar = $min_char;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function setMaxSuggestion($maxSuggestion) {
-    $this->maxSuggestion = $maxSuggestion;
+  public function setMaxSuggestions($max_suggestions) {
+    $this->maxSuggestions = $max_suggestions;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function setNoResultLabel($noResultLabel) {
-    $this->noResultLabel = $noResultLabel;
+  public function setAutoSubmit($auto_submit) {
+    $this->autoSubmit = $auto_submit;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function setNoResultValue($noResultValue) {
-    $this->noResultValue = $noResultValue;
+  public function setAutoRedirect($auto_redirect) {
+    $this->autoRedirect = $auto_redirect;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function setNoResultLink($noResultLink) {
-    $this->noResultLink = $noResultLink;
+  public function setNoResultLabel($no_result_label) {
+    $this->noResultLabel = $no_result_label;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function setMoreResultsLabel($moreResultsLabel) {
-    $this->moreResultsLabel = $moreResultsLabel;
+  public function setNoResultValue($no_result_value) {
+    $this->noResultValue = $no_result_value;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function setMoreResultsValue($moreResultsValue) {
-    $this->moreResultsValue = $moreResultsValue;
+  public function setNoResultLink($no_result_link) {
+    $this->noResultLink = $no_result_link;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function setMoreResultsLink($moreResultsLink) {
-    $this->moreResultsLink = $moreResultsLink;
+  public function setMoreResultsLabel($more_results_label) {
+    $this->moreResultsLabel = $more_results_label;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setMoreResultsValue($more_results_value) {
+    $this->moreResultsValue = $more_results_value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setMoreResultsLink($more_results_link) {
+    $this->moreResultsLink = $more_results_link;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setSource($source) {
+    $this->source = $source;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setTheme($theme) {
+    $this->theme = $theme;
   }
 }

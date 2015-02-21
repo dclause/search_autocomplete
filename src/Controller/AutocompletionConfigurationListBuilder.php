@@ -127,19 +127,19 @@ class AutocompletionConfigurationListBuilder extends ConfigEntityListBuilder imp
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $values = $form_state->getValues();
 
+    // Save global configurations.
     \Drupal::configFactory()->getEditable('search_autocomplete.settings')
       ->set('translite', $values['translite'])
       ->set('admin_helper', $values['admin_helper'])
       ->save();
 
+    // Save all configuration activations.
     $entities = $this->storage->loadMultiple(array_keys($form_state->getValue('configs')));
     foreach ($entities as $entity_id => $entity) {
       $entity_values = $form_state->getValue(array('configs', $entity_id));
       $entity->setStatus($entity_values['enabled']);
       $entity->save();
     }
-    //$settings->set('translite', $form_state->getValue(array('translite', 'TRUE')));
-    //$settings->set('admin_helper', $form_state->getValue(array('admin_helper', 'FALSE')));
   }
 
   /**

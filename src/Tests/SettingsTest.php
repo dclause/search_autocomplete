@@ -65,9 +65,9 @@ class SettingsTest extends WebTestBase {
     // ----------------------------------------------------------------------
     // 1) Check the default settings value : configs are activated,
     // translite is TRUE and admin_helper is FALSE.
-    $this->assertFieldChecked('edit-configs-search-block-enabled');
-    $this->assertFieldChecked('edit-translite');
-    $this->assertNoFieldChecked('edit-admin-helper');
+    $this->assertFieldChecked('edit-configs-search-block-enabled', 'Default config search_block is activated.');
+    $this->assertFieldChecked('edit-translite', 'Translite option is activated.');
+    $this->assertNoFieldChecked('edit-admin-helper', 'Admin helper tool is disabled.');
 
     // ----------------------------------------------------------------------
     // 2) Desactivate all available configurations and reverse settings.
@@ -80,10 +80,9 @@ class SettingsTest extends WebTestBase {
 
     // 3) Check that all default configurations are desactivate,
     // and settings are toogled.
-    $this->assertNoFieldChecked('edit-translite');
-    $this->assertFieldChecked('edit-admin-helper');
-    $this->assertNoFieldChecked('edit-configs-search-block-enabled');
-
+    $this->assertNoFieldChecked('edit-configs-search-block-enabled', 'Default config search_block is disabled.');
+    $this->assertNoFieldChecked('edit-translite', 'Translite option is disabled.');
+    $this->assertFieldChecked('edit-admin-helper', 'Admin helper tool is activated.');
   }
 
 }
