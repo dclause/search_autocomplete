@@ -50,13 +50,17 @@ class DefaultConfigEntityTest extends WebTestBase {
       'selector'      => '#edit-keys',
       'status'        => TRUE,
       'minChar'       => 3,
-      'maxSuggestion' => 10,
+      'maxSuggestions' => 10,
+      'autoSubmit'    => TRUE,
+      'autoRedirect'  => TRUE,
       'noResultLabel' => t('No results found for [search-phrase]. Click to perform full search.'),
       'noResultValue' => '[search-phrase]',
       'noResultLink'  => '',
       'moreResultsLabel' => t('View all results for [search-phrase].'),
       'moreResultsValue' => '[search-phrase]',
       'moreResultsLink'  => '',
+      'source'           => 'view',
+      'theme'            => 'basic-red',
     );
 
     // ----------------------------------------------------------------------
@@ -69,13 +73,17 @@ class DefaultConfigEntityTest extends WebTestBase {
     $this->assertEqual($entity->getStatus(), $config['status']);
     $this->assertEqual($entity->getSelector(), $config['selector']);
     $this->assertEqual($entity->getMinChar(), $config['minChar']);
-    $this->assertEqual($entity->getMaxSuggestion(), $config['maxSuggestion']);
+    $this->assertEqual($entity->getMaxSuggestions(), $config['maxSuggestions']);
+    $this->assertEqual($entity->getAutoSubmit(), $config['autoSubmit']);
+    $this->assertEqual($entity->getAutoRedirect(), $config['autoRedirect']);
     $this->assertEqual($entity->getNoResultLabel(), $config['noResultLabel']);
     $this->assertEqual($entity->getNoResultValue(), $config['noResultValue']);
     $this->assertEqual($entity->getNoResultLink(), $config['noResultLink']);
     $this->assertEqual($entity->getMoreResultsLabel(), $config['moreResultsLabel']);
     $this->assertEqual($entity->getMoreResultsValue(), $config['moreResultsValue']);
     $this->assertEqual($entity->getMoreResultsLink(), $config['moreResultsLink']);
+    $this->assertEqual($entity->getSource(), $config['source']);
+    $this->assertEqual($entity->getTheme(), $config['theme']);
 
   }
 

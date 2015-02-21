@@ -78,6 +78,21 @@ class AutocompletionConfigurationAddForm extends AutocompletionConfigurationForm
    */
   public function save(array $form, FormStateInterface $form_state) {
     parent::save($form, $form_state);
+
+    // Add default values on the entity.
+    $this->entity->setStatus(TRUE);
+    $this->entity->setMinChar(3);
+    $this->entity->setMaxSuggestions(10);
+    $this->entity->setAutoSubmit(TRUE);
+    $this->entity->setAutoRedirect(TRUE);
+    $this->entity->setMoreResultsLabel($this->t('View all results for [search-phrase].'));
+    $this->entity->setMoreResultsValue($this->t('[search-phrase]'));
+    $this->entity->setNoResultLabel($this->t('No results found for [search-phrase]. Click to perform full search.'));
+    $this->entity->setNoResultValue($this->t('[search-phrase]'));
+    $this->entity->setSource('view');
+    $this->entity->setTheme('basic-red');
+    $this->entity->save();
+
     // Redirect to edit form once entity is added.
     $form_state->setRedirectUrl($this->entity->urlInfo('edit-form'));
   }

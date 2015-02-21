@@ -58,8 +58,9 @@ class InstallTest extends WebTestBase {
       '/admin/config/search/search_autocomplete/manage/search_block/delete',
     );
 
-    // ----------------------------------------------------------------------
-    // 1) Verify that anonymous users can't access admin paths.
+    /* ----------------------------------------------------------------------
+     * 1) Verify that anonymous users can't access admin paths.
+     */
 
     // Check each of the paths to make sure we don't have access. At this point
     // we haven't logged in any users, so the client is anonymous.
@@ -68,8 +69,9 @@ class InstallTest extends WebTestBase {
       $this->assertResponse(403, "Access denied to anonymous for path: $path");
     }
 
-    // ----------------------------------------------------------------------
-    // 2) Verify that registered users can't access admin paths.
+    /* ----------------------------------------------------------------------
+     * 2) Verify that registered users can't access admin paths.
+     */
 
     // Create a user with no permissions.
     $noperms_user = $this->drupalCreateUser();
@@ -81,8 +83,9 @@ class InstallTest extends WebTestBase {
       $this->assertResponse(403, "Access denied to generic user for path: $path");
     }
 
-    // ----------------------------------------------------------------------
-    // 3) Verify that admin userscan access admin paths.
+    /* ----------------------------------------------------------------------
+     * 3) Verify that admin userscan access admin paths.
+     */
 
     // Create a user who can administer search autocomplete.
     $perms_user = $this->drupalCreateUser(array('administer search autocomplete'));
@@ -93,15 +96,17 @@ class InstallTest extends WebTestBase {
       $this->assertResponse(200, "Access granted to admin user for path: $unforbidden");
     }
 
-    // ----------------------------------------------------------------------
-    // 4) Check that menu links is added in Search fieldset of Configuration page.
+    /* ----------------------------------------------------------------------
+     * 4) Check that menu links is added in Search fieldset of Configuration
+     * page.
+     */
 
     // Create admin user.
     $admin_user = $this->drupalCreateUser(array('access administration pages', 'administer search autocomplete'));
     $this->drupalLogin($admin_user);
     // Now that we have the admin user logged in, check the menu links.
     $this->drupalGet('/admin/config');
-    $this->assertLinkByHref('admin/config/search/search_autocomplete');
+    $this->assertLinkByHref('admin/config/search/search_autocomplete', 'Link to admin page is present in Configuration section of admin page.');
 
   }
 

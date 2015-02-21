@@ -30,7 +30,7 @@ class AutocompletionConfigurationFormBase extends EntityForm {
   /**
    * @var \Drupal\Core\Entity\EntityStorageInterface
    */
-  protected $entity_storage;
+  protected $entityStorage;
 
   /**
    * Construct the AutocompletionConfigurationFormBase.
@@ -44,7 +44,7 @@ class AutocompletionConfigurationFormBase extends EntityForm {
    *   An entity query factory for the autocompletion_configuration entity type.
    */
   public function __construct(EntityStorageInterface $entity_storage) {
-    $this->entity_storage = $entity_storage;
+    $this->entityStorage = $entity_storage;
   }
 
   /**
@@ -108,7 +108,7 @@ class AutocompletionConfigurationFormBase extends EntityForm {
       '#title' => $this->t('Machine name'),
       '#default_value' => $autocompletion_configuration->id(),
       '#machine_name' => array(
-        'exists' => array($this->entity_storage, 'load'),
+        'exists' => array($this->entityStorage, 'load'),
         'replace_pattern' => '([^a-z0-9_]+)|(^custom$)',
         'error' => 'The machine-readable name must be unique, and can only contain lowercase letters, numbers, and underscores. Additionally, it can not be the reserved word "custom".',
       ),
@@ -153,6 +153,23 @@ class AutocompletionConfigurationFormBase extends EntityForm {
    */
   public function validate(array $form, FormStateInterface $form_state) {
     parent::validate($form, $form_state);
+
+    // Retrieve all configurations with same selector.
+    $entities = $this->entityStorage->loadByProperties(
+      array(
+        'selector'  => $form_state->getValue('selector'),
+      )
+    );
+
+    // If other configurations have the same selector, notify it.
+    if ($entities != NULL) {
+      if (count($entities) == 1 && $entities[$this->entity->id()]->getSelector() == $this->entity->getSelector()) {
+        return;
+      }
+      else {
+        $form_state->setErrorByName('selector', $this->t('The selector ID must be unique.'));
+      }
+    }
 
   }
 
