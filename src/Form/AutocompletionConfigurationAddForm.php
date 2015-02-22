@@ -89,8 +89,8 @@ class AutocompletionConfigurationAddForm extends AutocompletionConfigurationForm
     $this->entity->setMoreResultsValue($this->t('[search-phrase]'));
     $this->entity->setNoResultLabel($this->t('No results found for [search-phrase]. Click to perform full search.'));
     $this->entity->setNoResultValue($this->t('[search-phrase]'));
-    $this->entity->setSource('view');
-    $this->entity->setTheme('basic-red');
+    $this->entity->setSource('user-path:/callback/nodes');
+    $this->entity->setTheme('basic-blue');
     $this->entity->save();
 
     // Redirect to edit form once entity is added.

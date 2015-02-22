@@ -45,22 +45,22 @@ class DefaultConfigEntityTest extends WebTestBase {
 
     // Build a configuration data.
     $config = array(
-      'id'            => 'search_block',
-      'label'         => 'Search Block',
-      'selector'      => '#edit-keys',
-      'status'        => TRUE,
-      'minChar'       => 3,
-      'maxSuggestions' => 10,
-      'autoSubmit'    => TRUE,
-      'autoRedirect'  => TRUE,
-      'noResultLabel' => t('No results found for [search-phrase]. Click to perform full search.'),
-      'noResultValue' => '[search-phrase]',
-      'noResultLink'  => '',
-      'moreResultsLabel' => t('View all results for [search-phrase].'),
-      'moreResultsValue' => '[search-phrase]',
-      'moreResultsLink'  => '',
-      'source'           => 'view',
-      'theme'            => 'basic-red',
+      'id'                => 'search_block',
+      'label'             => 'Search Block',
+      'selector'          => '#edit-keys',
+      'status'            => TRUE,
+      'minChar'           => 3,
+      'maxSuggestions'    => 10,
+      'autoSubmit'        => TRUE,
+      'autoRedirect'      => TRUE,
+      'noResultLabel'     => t('No results found for [search-phrase]. Click to perform full search.'),
+      'noResultValue'     => '[search-phrase]',
+      'noResultLink'      => '',
+      'moreResultsLabel'  => t('View all results for [search-phrase].'),
+      'moreResultsValue'  => '[search-phrase]',
+      'moreResultsLink'   => '',
+      'source'            => 'user-path:/callback/nodes',
+      'theme'             => 'basic-red',
     );
 
     // ----------------------------------------------------------------------
@@ -84,7 +84,6 @@ class DefaultConfigEntityTest extends WebTestBase {
     $this->assertEqual($entity->getMoreResultsLink(), $config['moreResultsLink']);
     $this->assertEqual($entity->getSource(), $config['source']);
     $this->assertEqual($entity->getTheme(), $config['theme']);
-
   }
 
 }
