@@ -85,8 +85,8 @@ class BasicCRUDConfigEntityTest extends WebTestBase {
       'moreResultsLabel'  => t('View all results for [search-phrase].'),
       'moreResultsValue'  => '[search-phrase]',
       'moreResultsLink'   => '',
-      'source'            => 'view',
-      'theme'             => 'basic-green',
+      'source'            => '/callback/nodes',
+      'theme'             => 'basic-blue',
     );
 
     $this->drupalPostForm(
@@ -125,7 +125,7 @@ class BasicCRUDConfigEntityTest extends WebTestBase {
     $config['noResultLabel'] = 'No result test label';
     $config['autoRedirect'] = FALSE;
     $config['moreResultsLink'] = 'http://google.com';
-    $config['source'] = 'callback';
+    $config['source'] = 'entity-node:/node/1';
 
     $this->drupalPostForm(
       NULL,

@@ -1,0 +1,57 @@
+<?php
+
+/**
+ * @file
+ * Provides autocompletion in any field from GUI.
+ *
+ * The Search Autocomplete module provides autocompletion configurations
+ * to help autocompleting any fields.
+ */
+
+/**
+ * Implements hook_page_attachments().
+ *
+ * Adds the settings from user defined autocomplete_configurations to the page.
+ * Also loads the necessary JS library if needed.
+ */
+function search_autocomplete_page_attachments(array &$attachments) {
+  // Check user permissions.
+  if (!\Drupal::currentUser()->hasPermission('use search autocomplete')) {
+    return;
+  }
+
+  // Load module settings.
+  $module_settings = \Drupal::config('search_autocomplete.settings');
+
+  // TODO Load only configs where a selector is defined.
+  $autocomplete_configuration_entities = \Drupal::entityManager()->getStorage('autocompletion_configuration')->loadByProperties(array('status' => TRUE));
+
+  // End-up here if no config to set.
+  if (empty($autocomplete_configuration_entities)) {
+    return;
+  }
+
+  // Add the autocompletion library.
+  // @todo define and add properly the library here
+  //$page ['#attached']['library'][] = 'quickedit/quickedit';
+
+// Add the settings to be pass to JS:
+  $autocomplete_configurations = array();
+  foreach ($autocomplete_configuration_entities as $config_id => $config) {
+    // Do not add configs when selector is empty.
+    // @see todo uo in the fonction.
+    if (!empty($config->getSelector())) {
+      $settings = array(
+        'source'          => $config->getSource(),
+        'selector'        => $config->getSelector(),
+        'minChars'        => $config->getMinChar(),
+        'maxSuggestions'  => $config->getMaxSuggestions(),
+        'theme'           => $config->getTheme(),
+        'autoSubmit'      => $config->getAutoSubmit(),
+        'autoRedirect'    => $config->getAutoRedirect(),
+      );
+      $autocomplete_configurations[$config_id] = $settings;
+    }
+  }
+  $attachments['#attached']['drupalSettings']['search_autocomplete'] = $autocomplete_configurations;
+}
