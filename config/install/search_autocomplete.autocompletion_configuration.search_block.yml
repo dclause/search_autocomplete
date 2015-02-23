@@ -11,14 +11,14 @@ label: 'Search Block'
 selector: '#edit-keys'
 status: true
 minChar: 3
-maxSuggestions: 10
 autoSubmit: true
 autoRedirect: true
+maxSuggestions: 10
 noResultLabel: 'No results found for [search-phrase]. Click to perform full search.'
 noResultValue: '[search-phrase]'
 noResultLink: ''
 moreResultsLabel: 'View all results for [search-phrase].'
 moreResultsValue: '[search-phrase]'
 moreResultsLink: ''
-source: 'user-path:/callback/nodes'
-theme: 'basic-red'
+source: 'nodes_autocomplete_callback::nodes_callback'
+theme: basic-blue.css

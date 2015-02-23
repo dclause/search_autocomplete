@@ -28,7 +28,8 @@ use Drupal\Component\Utility\String;
  *   help = @Translation("Create an autocompletion callback resource."),
  *   uses_route = TRUE,
  *   admin = @Translation("Autocompletion Callback"),
- *   returns_response = TRUE
+ *   returns_response = TRUE,
+ *   autocompletion_callback_display = TRUE
  * )
  */
 class AutocompletionCallback extends PathPluginBase {
@@ -189,7 +190,6 @@ class AutocompletionCallback extends PathPluginBase {
 
     // Set the default style plugin to 'json'.
     $options['style']['contains']['type']['default'] = 'serializer';
-    //$options['row']['contains']['type']['default'] = 'data_entity';
     $options['defaults']['default']['style'] = FALSE;
     $options['defaults']['default']['row'] = FALSE;
 

@@ -54,3 +54,11 @@ entity.autocompletion_configuration.delete_form:
     _entity_form: autocompletion_configuration.delete
   requirements:
     _entity_access: autocompletion_configuration.delete
+
+# This is router for autocompletion callback to autocomplete the view.
+search_autocomplete.view_autocomplete:
+  path: '/view_autocomplete'
+  defaults:
+    _controller: '\Drupal\search_autocomplete\Form\AutocompletionConfigurationEditForm::viewAutocomplete'
+  requirements:
+    _access: 'TRUE'

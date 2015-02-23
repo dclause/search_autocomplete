@@ -9,9 +9,14 @@ namespace Drupal\search_autocomplete\Form;
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\search_autocomplete\Suggestion;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Drupal\Core\Entity\Element\EntityAutocomplete;
 use Drupal\Core\Url;
 use Drupal\Component\Utility\UrlHelper;
+use Drupal\Component\Utility\Tags;
+use Drupal\Component\Utility\Unicode;
+use Drupal\views\Views;
 
 /**
  * Class AutocompletionConfigurationEditForm
@@ -188,14 +193,13 @@ class AutocompletionConfigurationEditForm extends AutocompletionConfigurationFor
     );
     $source = $this->entity->getSource();
     $form['search_autocomplete_what']['source'] = array(
-      '#type'                   => 'entity_autocomplete',
-      '#target_type'            => 'view',
-      '#description'            => t('Enter the URL of your callback for suggestions.') . '<br/>' . $this->t('You can also enter an internal path such as %node-xx or an external URL such as %url. You can also use autocompletion to target a View.', array('%node-xx' => '/node/xx', '%url' => 'http://example.com')),
-      '#element_validate'       => array(array(get_called_class(), 'validateUriElement')),
-      '#default_value'          => (!empty($source) && (\Drupal::currentUser()->hasPermission('link to any page') || Url::fromUri($source)->access())) ? static::getUriAsDisplayableString($source) : NULL,
-      '#process_default_value'  => FALSE,
-      '#size'                   => 80,
-      '#attributes'             => array(
+      '#type'                     => 'textfield',
+      '#autocomplete_route_name' => 'search_autocomplete.view_autocomplete',
+      '#description'              => t('Enter the URL of your callback for suggestions.') . '<br/>' . $this->t('You can enter an internal path such as %node-xx or an external URL such as %url. You can also use autocompletion to target a specific View display.', array('%node-xx' => '/node/xx', '%url' => 'http://example.com')),
+      '#element_validate'         => array(array(get_called_class(), 'validateUriElement')),
+      '#default_value'            => $this->entity->getSource(),
+      '#size'                     => 80,
+      '#attributes'               => array(
         'data-autocomplete-first-character-blacklist' => '/#?',
       ),
     );
@@ -238,135 +242,57 @@ class AutocompletionConfigurationEditForm extends AutocompletionConfigurationFor
   }
 
   /**
-   * -----------------------------------------------------------------------------
-   * The Following is inspired from LinkWidget.php in Drupal 8 Core.
+   * {@inheritdoc}
    */
+  public function validate(array $form, FormStateInterface $form_state) {
+    parent::validate($form, $form_state);
 
-  /**
-   * Disallows saving inaccessible or untrusted URLs.
-   */
-  public static function validateUriElement($element, FormStateInterface $form_state, $form) {
-    $uri = static::getUserEnteredStringAsUri($element['#value']);
-    $form_state->setValueForElement($element, $uri);
+    $source = $form_state->getValue('source');
 
-    // If getUserEnteredStringAsUri() mapped the entered value to a 'user-path:'
-    // URI , ensure the raw value begins with '/', '?' or '#'.
-    if (parse_url($uri, PHP_URL_SCHEME) === 'user-path' && !in_array($element['#value'][0], ['/', '?', '#'], TRUE) && substr($element['#value'], 0, 7) !== '<front>') {
-      $form_state->setError($element, t('Manually entered paths should start with /, ? or #.'));
+    // Check if source input is a valid View display.
+    $input_source = explode('::', $source);
+    $entity_ids = \Drupal::service('entity.query')->get('view')
+      ->condition('status', TRUE)
+      ->condition('id', $input_source[0])
+      ->condition("display.*.id", $input_source[1])
+      ->execute();
+    if (!empty($entity_ids)) {
       return;
     }
-
-    // If the URI is empty or not well-formed, the link field type's validation
-    // constraint will detect it.
-    // @see \Drupal\link\Plugin\Validation\Constraint\LinkTypeConstraint::validate()
-    if (!empty($uri) && parse_url($uri)) {
-      $url = Url::fromUri($uri);
-
-      // Disallow unrouted internal URLs (i.e. disallow 'base:' URIs).
-      $disallowed  = !$url->isRouted() && !$url->isExternal();
-      // Disallow URLs if the current user doesn't have the 'link to any page'
-      // permission nor can access this URI.
-      $disallowed = $disallowed || (!\Drupal::currentUser()->hasPermission('link to any page') && !$url->access());
-      // Disallow external URLs using untrusted protocols.
-      $disallowed = $disallowed || ($url->isExternal() && !in_array(parse_url($uri, PHP_URL_SCHEME), UrlHelper::getAllowedProtocols()));
-      // Disallow routed URLs that don't exist.
-      if (!$disallowed && $url->isRouted()) {
-        try {
-          $url->toString();
-        }
-        catch (RouteNotFoundException $e) {
-          $disallowed = TRUE;
-        }
-      }
-
-      if ($disallowed) {
-        $form_state->setError($element, t("The path '@link_path' is either invalid or you do not have access to it.", ['@link_path' => static::getUriAsDisplayableString($uri)]));
+    elseif (UrlHelper::isExternal($source)) {
+      return;
+    }
+    else {
+      if (!\Drupal::service('path.validator')->isValid($source)) {
+        $form_state->setErrorByName('source', $this->t('The input source is not valid. Please enter a Drupal valid path, a View display (using completion) or a valid external URL.'));
       }
     }
   }
 
   /**
-   * Gets the user-entered string as a URI.
+   * Autocomplete the label of a view.
    *
-   * The following two forms of input are mapped to URIs:
-   * - entity autocomplete ("label (entity id)") strings: to 'entity:' URIs;
-   * - strings without a detectable scheme: to 'user-path:' URIs.
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The request object that contains the typed tags.
    *
-   * This method is the inverse of ::getUriAsDisplayableString().
-   *
-   * @param string $string
-   *   The user-entered string.
-   *
-   * @return string
-   *   The URI, if a non-empty $uri was passed.
-   *
-   * @see static::getUriAsDisplayableString()
+   * @return \Symfony\Component\HttpFoundation\JsonResponse
+   *   The matched entity labels as a JSON response.
    */
-  protected static function getUserEnteredStringAsUri($string) {
-    // By default, assume the entered string is an URI.
-    $uri = $string;
+  public function viewAutocomplete(Request $request) {
+    $matches = array();
 
-    // Detect entity autocomplete string, map to 'entity:' URI.
-    $entity_id = EntityAutocomplete::extractEntityIdFromAutocompleteInput($string);
-    if ($entity_id !== NULL) {
-      // @todo Support entity types other than 'view'. Will be fixed in
-      // https://www.drupal.org/node/2423093.
-      $uri = 'entity:node/' . $entity_id;
+    $displays = Views::getApplicableViews('autocompletion_callback_display');
+    // Filter views that list the entity type we want, and group the separate
+    // displays by view.
+    $options = array();
+    foreach ($displays as $data) {
+      list($view, $display_id) = $data;
+      $display = $view->storage->get('display');
+      $suggestion_value = $view->storage->get('id') . '::' . $display_id;
+      $suggestion_label = $view->storage->get('label') . '::' . $display[$display_id]['display_title'];
+      $matches[] = array('value' => $suggestion_value, 'label' => $suggestion_label);
     }
-    // Detect a schemeless string, map to 'user-path:' URI.
-    elseif (!empty($string) && parse_url($string, PHP_URL_SCHEME) === NULL) {
-      $uri = 'user-path:' . $string;
-    }
-
-    return $uri;
-  }
-
-  /**
-   * Gets the URI without the 'user-path:' or 'entity:' scheme.
-   *
-   * The following two forms of URIs are transformed:
-   * - 'entity:' URIs: to entity autocomplete ("label (entity id)") strings;
-   * - 'user-path:' URIs: the scheme is stripped.
-   *
-   * This method is the inverse of ::getUserEnteredStringAsUri().
-   *
-   * @param string $uri
-   *   The URI to get the displayable string for.
-   *
-   * @return string
-   *   The URI as a string URL.
-   *
-   * @see static::getUserEnteredStringAsUri()
-   */
-  protected static function getUriAsDisplayableString($uri) {
-    $scheme = parse_url($uri, PHP_URL_SCHEME);
-
-    // By default, the displayable string is the URI.
-    $displayable_string = $uri;
-
-    // A different displayable string may be chosen in case of the 'user-path:'
-    // or 'entity:' built-in schemes.
-    if ($scheme === 'user-path') {
-      $uri_reference = explode(':', $uri, 2)[1];
-
-      // @todo '<front>' is valid input for BC reasons, may be removed by
-      //   https://www.drupal.org/node/2421941
-      $path = parse_url($uri, PHP_URL_PATH);
-      if ($path === '/') {
-        $uri_reference = '<front>' . substr($uri_reference, 1);
-      }
-
-      $displayable_string = $uri_reference;
-    }
-    elseif ($scheme === 'entity') {
-      list($entity_type, $entity_id) = explode('/', substr($uri, 7), 2);
-      // Show the 'entity:' URI as the entity autocomplete would.
-      $entity_manager = \Drupal::entityManager();
-      if ($entity_manager->getDefinition($entity_type, FALSE) && $entity = \Drupal::entityManager()->getStorage($entity_type)->load($entity_id)) {
-        $displayable_string = EntityAutocomplete::getEntityLabels(array($entity));
-      }
-    }
-    return $displayable_string;
+    return new JsonResponse($matches);
   }
 
 }
