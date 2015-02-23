@@ -1,5 +1,6 @@
 <?php
 
+use Drupal\Core\Entity\Element\EntityAutocomplete;
 /**
  * @file
  * Provides autocompletion in any field from GUI.
@@ -35,7 +36,7 @@ function search_autocomplete_page_attachments(array &$attachments) {
   // @todo define and add properly the library here
   //$page ['#attached']['library'][] = 'quickedit/quickedit';
 
-// Add the settings to be pass to JS:
+  // Add the settings to be pass to JS:
   $autocomplete_configurations = array();
   foreach ($autocomplete_configuration_entities as $config_id => $config) {
     // Do not add configs when selector is empty.
@@ -53,5 +54,7 @@ function search_autocomplete_page_attachments(array &$attachments) {
       $autocomplete_configurations[$config_id] = $settings;
     }
   }
+  $view = \Drupal::entityManager()->getStorage('view')->load(EntityAutocomplete::extractEntityIdFromAutocompleteInput($config->getSource()));
+
   $attachments['#attached']['drupalSettings']['search_autocomplete'] = $autocomplete_configurations;
 }

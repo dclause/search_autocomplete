@@ -150,7 +150,7 @@ interface AutocompletionConfigurationInterface extends ConfigEntityInterface {
    * Sets how many suggestions should be displayed among matching suggestions
    * available.
    *
-   * @param int $max_suggestion
+   * @param int $max_suggestions
    *   The maximum number of suggestions to be displayed.
    */
   public function setMaxSuggestions($max_suggestions);

@@ -7,6 +7,7 @@
 
 namespace Drupal\search_autocomplete\Plugin\views\style;
 
+use Drupal\node\Entity\NodeType;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
@@ -47,6 +48,14 @@ class Serializer extends StylePluginBase {
   protected $serializer;
 
   /**
+   * Stores the content types defined. This is used for machine to human name
+   * conversion of content types.
+   *
+   * @var array
+   */
+  protected $types = array();
+
+  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
@@ -68,6 +77,7 @@ class Serializer extends StylePluginBase {
     $this->definition = $plugin_definition + $configuration;
     $this->serializer = $serializer;
     $this->formats = $serializer_formats;
+    $this->types = NodeType::loadMultiple();
   }
 
   /**
@@ -76,7 +86,7 @@ class Serializer extends StylePluginBase {
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
 
-    // Unset unecessary configurations
+    // Unset unecessary configurations.
     unset($form['grouping']['0']['rendered']);
     unset($form['grouping']['0']['rendered_strip']);
     unset($form['grouping']['0']['rendered_strip']);
@@ -88,39 +98,26 @@ class Serializer extends StylePluginBase {
     // Build the input field option.
     $input_label_descr = (empty($field_labels) ? '<b>' . t('Warning') . ': </b> ' . t('Requires at least one field in the view.') . '<br/>' : '') . t('Select the autocompletion input value. If the autocompletion settings are set to auto-submit, this value will be submitted as the suggestion is selected.');
     $form['input_label'] = array(
-        '#title'          => t('Input Label'),
-        '#type'           => 'select',
-        '#description'    => String::checkPlain($input_label_descr),
-        '#default_value'  => $this->options['input_label'],
-        '#disabled'       => empty($field_labels),
-        '#required'       => TRUE,
-        '#options'        => $field_labels,
+      '#title'          => t('Input Label'),
+      '#type'           => 'select',
+      '#description'    => String::checkPlain($input_label_descr),
+      '#default_value'  => $this->options['input_label'],
+      '#disabled'       => empty($field_labels),
+      '#required'       => TRUE,
+      '#options'        => $field_labels,
     );
 
     // Build the link field option.
     $input_link_descr = (empty($field_labels) ? '<b>' . t('Warning') . ': </b> ' . t('Requires at least one field in the view.') . '<br/>' : '') . t('Select the autocompletion input link. If the autocompletion settings are set to auto-redirect, this link is where the user will be redirected as the suggestion is selected.');
     $form['input_link'] = array(
-        '#title'          => t('Input Link'),
-        '#type'           => 'select',
-        '#description'    => String::checkPlain($input_link_descr),
-        '#default_value'  => $this->options['input_link'],
-        '#disabled'       => empty($field_labels),
-        '#required'       => TRUE,
-        '#options'        => $field_labels,
+      '#title'          => t('Input Link'),
+      '#type'           => 'select',
+      '#description'    => String::checkPlain($input_link_descr),
+      '#default_value'  => $this->options['input_link'],
+      '#disabled'       => empty($field_labels),
+      '#required'       => TRUE,
+      '#options'        => $field_labels,
     );
-
-    // Build the link option.
-//     $output_field_descr = (empty($field_labels) ? '<b>' . t('Warning') . ': </b> ' . t('Requires at least one field in the view.') . '<br/>' : '') . t("Select the autocompletion output values. Thoses fields are the one that will show in the autocompletion popup suggestion list. This may be, the username and picture for instance, or the node title and it's author.");
-//     $form['output_fields'] = array(
-//         '#title'          => t('Output Fields'),
-//         '#type'           => 'select',
-//         '#description'    => String::checkPlain($output_field_descr),
-//         '#default_value'  => $this->options['output_fields'],
-//         '#disabled'       => empty($field_labels),
-//         '#required'       => TRUE,
-//         '#multiple'       => TRUE,
-//         '#options'        => $field_labels,
-//     );
   }
 
   /**
@@ -149,6 +146,8 @@ class Serializer extends StylePluginBase {
     // Iterate through all records for transformation.
     foreach ($records as $index => $row) {
 
+      $this->view->rowPlugin->setRowOptions($this->options);
+
       // Render the row according to our custom needs.
       $rendered_row = $this->view->rowPlugin->render($row);
 
@@ -159,16 +158,16 @@ class Serializer extends StylePluginBase {
         // Currently only one level of grouping allowed.
         foreach ($groupings as $info) {
 
-          $field_type = $info['field'];
+          $group_field_name = $info['field'];
           $group_id = '';
           $group_content = '';
 
           // Extract group data if available.
-          if (isset($this->view->field[$field_type])) {
-            // Extract group_id and transform it to machine name
-            $group_id = strtolower(str_replace(' ', '-', $this->getField($index, $field_type)));
+          if (isset($this->view->field[$group_field_name])) {
+            // Extract group_id and transform it to machine name.
+            $group_id = strtolower(str_replace(' ', '-', $this->getField($index, $group_field_name)));
             // Extract group displayed value.
-            $group_content = $rendered_row[$field_type];
+            $group_content = $this->renderField($index, $group_field_name);
           }
 
           // Create the group if it does not exist yet.
@@ -177,10 +176,12 @@ class Serializer extends StylePluginBase {
             $groups[$group_id]['rows'] = array();
           }
 
-          // Move the set reference into the row set of the group we just determined.
+          // Move the set reference into the row set of the group
+          // we just determined.
           $rows = &$groups[$group_id]['rows'];
         }
-      } else {
+      }
+      else {
         // Create the group if it does not exist yet.
         if (empty($groups[''])) {
           $groups['']['group'] = '';
@@ -188,7 +189,8 @@ class Serializer extends StylePluginBase {
         }
         $rows = &$groups['']['rows'];
       }
-      // Add the row to the hierarchically positioned row set we just determined.
+      // Add the row to the hierarchically positioned
+      // row set we just determined.
       $rows[] = $rendered_row;
     }
 
@@ -206,4 +208,25 @@ class Serializer extends StylePluginBase {
     return $groups;
   }
 
+  /**
+   * This methods returns the render value of a field, plus, in the case of
+   * content types, return the human name instead of machine name.
+   *
+   * @param String $index
+   *   The index of the field to render.
+   * @param String $field_type
+   *   The field type to be rendered.
+   *
+   * @return string|null
+   *   The output of the field (with content type converted as a human name if
+   *   applicable), or NULL if it was empty.
+   */
+  protected function renderField($index, $field_type) {
+    $value = $this->getField($index, $field_type);
+    // Convert content type machine names to human names.
+    if ($field_type == 'type' && isset($this->types[$value])) {
+      $value = $this->types[$value]->get('name');
+    }
+    return $value;
+  }
 }

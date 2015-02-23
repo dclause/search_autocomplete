@@ -47,6 +47,8 @@ class DataFieldRow extends RowPluginBase {
    */
   protected $types = array();
 
+  protected $rowOptions = array();
+
   /**
    * Overrides \Drupal\views\Plugin\views\row\RowPluginBase::init().
    */
@@ -68,7 +70,6 @@ class DataFieldRow extends RowPluginBase {
    */
   protected function defineOptions() {
     $options = parent::defineOptions();
-//     $options['field_options'] = array('default' => array());
 
     return $options;
   }
@@ -105,7 +106,19 @@ class DataFieldRow extends RowPluginBase {
   }
 
   /**
-   * Form element validation handler for \Drupal\search_autocomplete\Plugin\views\row\DataFieldRow::buildOptionsForm().
+   * Setter for rowOptions. This will contains the specific options for the
+   * display.
+   *
+   * @param array $options
+   *   The options grouping, link and value of the display.
+   */
+  public function setRowOptions($options) {
+    $this->rowOptions = $options;
+  }
+
+  /**
+   * Form element validation handler for
+   * \Drupal\search_autocomplete\Plugin\views\row\DataFieldRow::buildOptionsForm().
    */
   public function validateAliasName($element, FormStateInterface $form_state) {
     if (preg_match('@[^A-Za-z0-9_-]+@', $element['#value'])) {
@@ -136,11 +149,6 @@ class DataFieldRow extends RowPluginBase {
     // Render all fields.
     foreach ($this->view->field as $id => $field) {
 
-      // If field is excluded: do not include.
-      if ($field->options['exclude']) {
-        continue;
-      }
-
       // If this is not unknown and the raw output option has been set, just get
       // the raw value.
       if ($field->field_alias != 'unknown') {
@@ -156,13 +164,25 @@ class DataFieldRow extends RowPluginBase {
         $value = $this->types[$value]->get('name');
       }
 
+      // Add input link.
+      if ($this->rowOptions['input_link'] == $id) {
+        $output['link'] = $value;
+      }
+
+      // Add value link.
+      if ($this->rowOptions['input_label'] == $id) {
+        $output['value'] = $value;
+      }
+
       // Add label if defined.
       if ($field->options['label']) {
         $value = $field->options['label'] . ': ' . $value;
       }
 
-      // Add the value to output.
-      $output[$this->getFieldKeyAlias($id)] = $value;
+      // If field is not excluded: include in response.
+      if (!$field->options['exclude']) {
+        $output['fields'][$this->getFieldKeyAlias($id)] = $value;
+      }
     }
 
     return $output;
