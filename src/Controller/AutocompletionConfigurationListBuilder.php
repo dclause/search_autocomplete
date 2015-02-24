@@ -140,6 +140,7 @@ class AutocompletionConfigurationListBuilder extends ConfigEntityListBuilder imp
       $entity->setStatus($entity_values['enabled']);
       $entity->save();
     }
+    drupal_set_message($this->t('Data have been saved.'));
   }
 
   /**

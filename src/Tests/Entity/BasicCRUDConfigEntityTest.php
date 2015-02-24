@@ -25,6 +25,8 @@ class BasicCRUDConfigEntityTest extends WebTestBase {
    */
   public static $modules = array('search_autocomplete');
 
+  public $adminUser;
+
   /**
    * {@inheritdoc}
    */
@@ -41,8 +43,8 @@ class BasicCRUDConfigEntityTest extends WebTestBase {
    */
   protected function setUp() {
     parent::setUp();
-    $admin_user = $this->drupalCreateUser(array('administer search autocomplete'));
-    $this->drupalLogin($admin_user);
+    $this->adminUser = $this->drupalCreateUser(array('administer search autocomplete'));
+    $this->drupalLogin($this->adminUser);
   }
 
 
@@ -85,8 +87,8 @@ class BasicCRUDConfigEntityTest extends WebTestBase {
       'moreResultsLabel'  => t('View all results for [search-phrase].'),
       'moreResultsValue'  => '[search-phrase]',
       'moreResultsLink'   => '',
-      'source'            => '/callback/nodes',
-      'theme'             => 'basic-blue',
+      'source'            => 'nodes_autocomplete_callback::nodes_callback',
+      'theme'             => 'basic-blue.css',
     );
 
     $this->drupalPostForm(
@@ -122,10 +124,10 @@ class BasicCRUDConfigEntityTest extends WebTestBase {
 
     // Change default values.
     $config['minChar'] = 1;
-    $config['noResultLabel'] = 'No result test label';
+    $config['noResultLabel'] = 'No result test label.';
     $config['autoRedirect'] = FALSE;
     $config['moreResultsLink'] = 'http://google.com';
-    $config['source'] = 'entity-node:/node/1';
+    $config['source'] = '/user/' . $this->adminUser->id();
 
     $this->drupalPostForm(
       NULL,
