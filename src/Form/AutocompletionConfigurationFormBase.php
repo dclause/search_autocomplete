@@ -204,12 +204,12 @@ class AutocompletionConfigurationFormBase extends EntityForm {
     if ($status == SAVED_UPDATED) {
       // If we edited an existing entity...
       drupal_set_message($this->t('Autocompletion Configuration %label has been updated.', array('%label' => $autocompletion_configuration->label())));
-      $this->logger('contact')->notice('Autocompletion Configuration %label has been updated.', ['%label' => $autocompletion_configuration->label(), 'link' => $edit_link]);
+      $this->logger('search_autocomplete')->notice('Autocompletion Configuration %label has been updated.', ['%label' => $autocompletion_configuration->label(), 'link' => $edit_link]);
     }
     else {
       // If we created a new entity...
       drupal_set_message($this->t('Autocompletion Configuration %label has been added.', array('%label' => $autocompletion_configuration->label())));
-      $this->logger('contact')->notice('Autocompletion Configuration %label has been added.', ['%label' => $autocompletion_configuration->label(), 'link' => $edit_link]);
+      $this->logger('search_autocomplete')->notice('Autocompletion Configuration %label has been added.', ['%label' => $autocompletion_configuration->label(), 'link' => $edit_link]);
     }
 
     // Redirect the user back to the listing route after the save operation.

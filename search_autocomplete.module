@@ -40,7 +40,7 @@ function search_autocomplete_page_attachments(array &$attachments) {
   $autocomplete_configurations = array();
   foreach ($autocomplete_configuration_entities as $config_id => $config) {
     // Do not add configs when selector is empty.
-    // @see todo uo in the fonction.
+    // @see todo upper in the fonction.
     if (!empty($config->getSelector())) {
       $settings = array(
         'source'          => $config->getSource(),
@@ -54,7 +54,7 @@ function search_autocomplete_page_attachments(array &$attachments) {
       $autocomplete_configurations[$config_id] = $settings;
     }
   }
-  $view = \Drupal::entityManager()->getStorage('view')->load(EntityAutocomplete::extractEntityIdFromAutocompleteInput($config->getSource()));
+  //$view = \Drupal::entityManager()->getStorage('view')->load(EntityAutocomplete::extractEntityIdFromAutocompleteInput($config->getSource()));
 
   $attachments['#attached']['drupalSettings']['search_autocomplete'] = $autocomplete_configurations;
 }

@@ -59,8 +59,8 @@ class DefaultConfigEntityTest extends WebTestBase {
       'moreResultsLabel'  => t('View all results for [search-phrase].'),
       'moreResultsValue'  => '[search-phrase]',
       'moreResultsLink'   => '',
-      'source'            => 'user-path:/callback/nodes',
-      'theme'             => 'basic-red',
+      'source'            => 'nodes_autocomplete_callback::nodes_callback',
+      'theme'             => 'basic-blue.css',
     );
 
     // ----------------------------------------------------------------------

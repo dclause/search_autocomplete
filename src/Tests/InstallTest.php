@@ -106,8 +106,7 @@ class InstallTest extends WebTestBase {
     $this->drupalLogin($admin_user);
     // Now that we have the admin user logged in, check the menu links.
     $this->drupalGet('/admin/config');
-    $this->assertLinkByHref('admin/config/search/search_autocomplete', 'Link to admin page is present in Configuration section of admin page.');
-
+    $this->assertLinkByHref("admin/config/search/search_autocomplete");
   }
 
 }

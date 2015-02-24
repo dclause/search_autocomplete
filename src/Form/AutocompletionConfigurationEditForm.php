@@ -196,7 +196,7 @@ class AutocompletionConfigurationEditForm extends AutocompletionConfigurationFor
       '#type'                     => 'textfield',
       '#autocomplete_route_name' => 'search_autocomplete.view_autocomplete',
       '#description'              => t('Enter the URL of your callback for suggestions.') . '<br/>' . $this->t('You can enter an internal path such as %node-xx or an external URL such as %url. You can also use autocompletion to target a specific View display.', array('%node-xx' => '/node/xx', '%url' => 'http://example.com')),
-      '#element_validate'         => array(array(get_called_class(), 'validateUriElement')),
+      '#element_validate'         => array(array($this, 'validateUriElement')),
       '#default_value'            => $this->entity->getSource(),
       '#size'                     => 80,
       '#attributes'               => array(
@@ -246,25 +246,42 @@ class AutocompletionConfigurationEditForm extends AutocompletionConfigurationFor
    */
   public function validate(array $form, FormStateInterface $form_state) {
     parent::validate($form, $form_state);
+  }
 
+  /**
+   * Validation callback for URI form.
+   *
+   * @param array $element
+   *   The element itself
+   * @param FormStateInterface $form_state
+   *   The submitted form data.
+   */
+  public function validateUriElement($element, FormStateInterface $form_state) {
     $source = $form_state->getValue('source');
+    $entity_ids = NULL;
 
     // Check if source input is a valid View display.
     $input_source = explode('::', $source);
-    $entity_ids = \Drupal::service('entity.query')->get('view')
+    if (count($input_source) == 2) {
+      $entity_ids = \Drupal::service('entity.query')->get('view')
       ->condition('status', TRUE)
       ->condition('id', $input_source[0])
       ->condition("display.*.id", $input_source[1])
       ->execute();
+    }
+    // If Views are found: it's OK.
     if (!empty($entity_ids)) {
       return;
     }
+    // Otherwise, if the source is external URI: it's OK.
     elseif (UrlHelper::isExternal($source)) {
       return;
     }
+    // Finally, if the source is not a Drupal path: we hav not found the nature
+    // of it, so send an error.
     else {
       if (!\Drupal::service('path.validator')->isValid($source)) {
-        $form_state->setErrorByName('source', $this->t('The input source is not valid. Please enter a Drupal valid path, a View display (using completion) or a valid external URL.'));
+        $form_state->setErrorByName('source', t('The input source is not valid. Please enter a Drupal valid path, a View display (using completion) or a valid external URL.'));
       }
     }
   }
@@ -281,16 +298,19 @@ class AutocompletionConfigurationEditForm extends AutocompletionConfigurationFor
   public function viewAutocomplete(Request $request) {
     $matches = array();
 
+    // Retrieve elligible views.
     $displays = Views::getApplicableViews('autocompletion_callback_display');
-    // Filter views that list the entity type we want, and group the separate
-    // displays by view.
+
+    // Add the view as a suggestion if meeting user_input
     $options = array();
     foreach ($displays as $data) {
       list($view, $display_id) = $data;
       $display = $view->storage->get('display');
       $suggestion_value = $view->storage->get('id') . '::' . $display_id;
       $suggestion_label = $view->storage->get('label') . '::' . $display[$display_id]['display_title'];
-      $matches[] = array('value' => $suggestion_value, 'label' => $suggestion_label);
+      if (stristr($suggestion_label, $request->query->get('q')) !== FALSE) {
+        $matches[] = array('value' => $suggestion_value, 'label' => $suggestion_label);
+      }
     }
     return new JsonResponse($matches);
   }
