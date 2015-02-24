@@ -5,6 +5,7 @@ use Drupal\views\Views;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Url;
 use Drupal\Core\Utility\UnroutedUrlAssembler;
+
 /**
  * @file
  * Provides autocompletion in any field from GUI.
@@ -12,6 +13,40 @@ use Drupal\Core\Utility\UnroutedUrlAssembler;
  * The Search Autocomplete module provides autocompletion configurations
  * to help autocompleting any fields.
  */
+
+/**
+ * Implementation of hook_library_info_build().
+ *
+ * Add dynamic library definitions.
+ *
+ * Since we can't add files through css in #attached anymore, this is a trick
+ * defining as many libraries as the number of found CSS in the theme folder.
+ *
+ * @return array[]
+ *   An array of library definitions.
+ */
+function search_autocomplete_library_info_build() {
+  $libraries = [];
+
+  // Find all available themes.
+  $themes = array();
+  $files = file_scan_directory(drupal_get_path('module', 'search_autocomplete') . '/css/themes', '/.*\.css\z/', array('recurse' => FALSE));
+
+  // Create a new library for all themes.
+  foreach ($files as $file) {
+
+    $libraries["theme.$file->filename"] = [
+      'css' => [
+        'base' => [
+          "css/themes/$file->filename" => [],
+        ],
+      ],
+    ];
+
+  }
+  return $libraries;
+}
+
 
 /**
  * Implements hook_page_attachments().
@@ -63,7 +98,7 @@ function search_autocomplete_page_attachments(array &$attachments) {
       // Build filters
       $filters = $view->getHandlers('filter');
       foreach ($filters as $filter) {
-        if ($filter['exposed']) {
+        if (isset($filter['exposed']) && $filter['exposed']) {
           $exposed_filters[] = $filter['field'];
         }
       }
@@ -82,15 +117,20 @@ function search_autocomplete_page_attachments(array &$attachments) {
         'selector'        => $config->getSelector(),
         'minChars'        => $config->getMinChar(),
         'maxSuggestions'  => $config->getMaxSuggestions(),
-        'theme'           => $config->getTheme(),
         'autoSubmit'      => $config->getAutoSubmit(),
         'autoRedirect'    => $config->getAutoRedirect(),
         'filters'         => $exposed_filters,
       );
       $autocomplete_configurations[$config_id] = $settings;
     }
+    // Add the theme library if available
+    if (\Drupal::service('library.discovery')->getLibraryByName('search_autocomplete', 'theme.' . $config->getTheme())) {
+      $attachments['#attached']['library'][] = 'search_autocomplete/theme.' . $config->getTheme();
+    }
+
   }
   //$view = \Drupal::entityManager()->getStorage('view')->load(EntityAutocomplete::extractEntityIdFromAutocompleteInput($config->getSource()));
 
   $attachments['#attached']['drupalSettings']['search_autocomplete'] = $autocomplete_configurations;
+  $attachments['#attached']['library'][] = 'search_autocomplete/autocomplete';
 }

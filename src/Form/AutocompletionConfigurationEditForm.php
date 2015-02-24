@@ -208,9 +208,7 @@ class AutocompletionConfigurationEditForm extends AutocompletionConfigurationFor
     $themes = array();
     $files = file_scan_directory(drupal_get_path('module', 'search_autocomplete') . '/css/themes', '/.*\.css\z/', array('recurse' => FALSE));
     foreach ($files as $file) {
-      if ($file->name != 'jquery.autocomplete') {
-        $themes[$file->filename] = $file->name;
-      }
+      $themes[$file->filename] = $file->name;
     }
     $form['search_autocomplete_what']['theme'] = array(
       '#type'           => 'select',
