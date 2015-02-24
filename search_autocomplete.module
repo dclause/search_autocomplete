@@ -1,6 +1,10 @@
 <?php
 
 use Drupal\Core\Entity\Element\EntityAutocomplete;
+use Drupal\views\Views;
+use Drupal\Component\Utility\UrlHelper;
+use Drupal\Core\Url;
+use Drupal\Core\Utility\UnroutedUrlAssembler;
 /**
  * @file
  * Provides autocompletion in any field from GUI.
@@ -39,17 +43,49 @@ function search_autocomplete_page_attachments(array &$attachments) {
   // Add the settings to be pass to JS:
   $autocomplete_configurations = array();
   foreach ($autocomplete_configuration_entities as $config_id => $config) {
+
+    $source = $config->getSource();
+    $exposed_filters = array();
+
+    // Build the callback URL.
+    $input_source = explode('::', $source);
+    // If from View, build view URL.
+    if (count($input_source) == 2) {
+      // Load the view.
+      $view = Views::getView($input_source[0]);
+      // Load the required display.
+      if ($view != null && $view->setDisplay($input_source[1])) {
+        // Retrieve the display URL.
+        $display = $view->getDisplay();
+        $source = '/' . $display->getPath();
+      }
+
+      // Build filters
+      $filters = $view->getHandlers('filter');
+      foreach ($filters as $filter) {
+        if ($filter['exposed']) {
+          $exposed_filters[] = $filter['field'];
+        }
+      }
+    }
+
+    // In case of internal URL, convert it to absolute.
+    if (!UrlHelper::isExternal($source)) {
+      $source = Url::fromUri('user-path:' . $source, array('absolute' => TRUE))->toString();
+    }
+
     // Do not add configs when selector is empty.
     // @see todo upper in the fonction.
     if (!empty($config->getSelector())) {
       $settings = array(
-        'source'          => $config->getSource(),
+        'source'          => $source,
         'selector'        => $config->getSelector(),
         'minChars'        => $config->getMinChar(),
         'maxSuggestions'  => $config->getMaxSuggestions(),
         'theme'           => $config->getTheme(),
         'autoSubmit'      => $config->getAutoSubmit(),
         'autoRedirect'    => $config->getAutoRedirect(),
+        'filters'         => $exposed_filters,
       );
       $autocomplete_configurations[$config_id] = $settings;
     }

@@ -86,14 +86,6 @@ class AutocompletionConfigurationListBuilder extends ConfigEntityListBuilder imp
       $form['configs'][$entity_id]['operations'] = $this->buildOperations($entity);
     }
 
-    // Transliteration option settings.
-    $form['translite'] = array(
-      '#type'           => 'checkbox',
-      '#title'          => t('Translite special characters.'),
-      '#description'    => t('If enabled, the user will be suggested with all special characters suggestions when using standard characters. In other word, when entering "foo", suggestions may contain also "f&oacute;&ocirc;bar", "fo&otilde;bar", ...'),
-      '#default_value'  => $settings->get('translite'),
-    );
-
     // Use admin helper tool option settings.
     $form['admin_helper'] = array(
       '#type'           => 'checkbox',
@@ -129,7 +121,6 @@ class AutocompletionConfigurationListBuilder extends ConfigEntityListBuilder imp
 
     // Save global configurations.
     \Drupal::configFactory()->getEditable('search_autocomplete.settings')
-      ->set('translite', $values['translite'])
       ->set('admin_helper', $values['admin_helper'])
       ->save();
 
