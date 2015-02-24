@@ -67,9 +67,6 @@ search_autocomplete.settings:
   type: mapping
   label: 'Search Autocomplete module settings'
   mapping:
-    translite:
-      type: boolean
-      label: 'Translite results'
     admin_helper:
       type: boolean
       label: 'Use admin tool'

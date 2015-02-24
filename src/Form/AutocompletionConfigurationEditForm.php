@@ -242,13 +242,6 @@ class AutocompletionConfigurationEditForm extends AutocompletionConfigurationFor
   }
 
   /**
-   * {@inheritdoc}
-   */
-  public function validate(array $form, FormStateInterface $form_state) {
-    parent::validate($form, $form_state);
-  }
-
-  /**
    * Validation callback for URI form.
    *
    * @param array $element
