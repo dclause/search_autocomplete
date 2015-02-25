@@ -61,4 +61,4 @@ search_autocomplete.view_autocomplete:
   defaults:
     _controller: '\Drupal\search_autocomplete\Form\AutocompletionConfigurationEditForm::viewAutocomplete'
   requirements:
-    _access: 'TRUE'
+    _permission: 'administer search autocomplete'
