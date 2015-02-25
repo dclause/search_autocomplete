@@ -106,7 +106,7 @@ function search_autocomplete_page_attachments(array &$attachments) {
 
     // In case of internal URL, convert it to absolute.
     if (!UrlHelper::isExternal($source)) {
-      $source = Url::fromUri('user-path:' . $source, array('absolute' => TRUE))->toString();
+      $source = Url::fromUri('internal:' . $source, array('absolute' => TRUE))->toString();
     }
 
     // Do not add configs when selector is empty.
