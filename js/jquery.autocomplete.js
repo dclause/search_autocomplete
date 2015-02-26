@@ -131,10 +131,19 @@
       showSuggestions(autocomplete.cache[elementId][term]);
     }
     else {
-      var options = $.extend({success: sourceCallbackHandler, data: {q: term}}, autocomplete.ajax);
-      var path = this.element.attr('data-autocomplete-path');
-      var url = path ? path : autocomplete.options.forms[key].source;
-      $.ajax(url, options);
+      var data = {};
+      var path = '';
+      if (key) {
+        path = autocomplete.options.forms[key].source;
+        $.each(autocomplete.options.forms[key].filters, function(key, value) {
+         data[value] = term;
+        });
+      } else {
+    	path = this.element.attr('data-autocomplete-path');
+    	data.q = term;
+      }
+      var options = $.extend({success: sourceCallbackHandler, data: data}, autocomplete.ajax);
+      $.ajax(path, options);
     }
   }
 
@@ -180,10 +189,6 @@
    * @return {Object}
    */   
   function renderItem(ul, item) {
- 	
-	var key = this.element.data("key");
- 	ul.attr("id", "ui-theme-" + autocomplete.options.forms[key].theme);
-
     var term = this.term;
     var first = ("group" in item)  ? 'first' : '';
     var innerHTML = '<div class="ui-autocomplete-fields ' + first + '">';
@@ -246,7 +251,9 @@
           .data("ui-autocomplete")
           ._renderItem = autocomplete.options.renderItem;
         // Add theme id to suggestion list.
-        $autocomplete.autocomplete("widget").attr("id", "ui-theme-" + autocomplete.options.forms[$autocomplete.data('key')].theme);
+        if ($autocomplete.data('key')) {
+          $autocomplete.autocomplete("widget").attr("id", "ui-theme-" + autocomplete.options.forms[$autocomplete.data('key')].theme);
+        }
       }
     },
     detach: function (context, settings, trigger) {
