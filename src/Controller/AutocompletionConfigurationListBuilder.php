@@ -66,7 +66,7 @@ class AutocompletionConfigurationListBuilder extends ConfigEntityListBuilder imp
       '#header' => array(
         $this->t('Autocompletion Configuration Name'),
         $this->t('Enabled'),
-        $this->t('truc'),
+        $this->t('Selector'),
         $this->t('Operations'),
       ),
     );

@@ -14,5 +14,5 @@
  */
 
 .js input.form-autocomplete {
-  border-style: ridge;
+  border: 1px solid #ccc;
 }

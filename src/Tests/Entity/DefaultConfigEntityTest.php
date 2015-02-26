@@ -49,7 +49,7 @@ class DefaultConfigEntityTest extends WebTestBase {
     $config = array(
       'id'                => 'search_block',
       'label'             => 'Search Block',
-      'selector'          => '#edit-keys',
+      'selector'          => 'form[action="/search/node"] input[type="search"]',
       'status'            => TRUE,
       'minChar'           => 3,
       'maxSuggestions'    => 10,
