@@ -3,6 +3,8 @@
 /**
  * @file
  * Test case for testing the Config Entity Example module.
+ *
+ * Sponsored by: www.drupal-addict.com
  */
 
 namespace Drupal\search_autocomplete\Tests\Entity;
@@ -10,7 +12,7 @@ namespace Drupal\search_autocomplete\Tests\Entity;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Test proper module installation.
+ * Test basic CRUD on configurations.
  *
  * @group Search Autocomplete
  *

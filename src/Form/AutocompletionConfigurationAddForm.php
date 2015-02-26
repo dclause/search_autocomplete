@@ -3,6 +3,8 @@
 /**
  * @file
  * Contains Drupal\search_autocomplete\Form\AutocompletionConfigurationAddForm.
+ *
+ * Sponsored by: www.drupal-addict.com
  */
 
 namespace Drupal\search_autocomplete\Form;

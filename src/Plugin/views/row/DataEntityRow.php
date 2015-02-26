@@ -3,6 +3,9 @@
 /**
  * @file
  * Contains \Drupal\search_autocomplete\Plugin\views\row\DataEntityRow.
+ *
+ * Inspired by rest core module.
+ * Sponsored by: www.drupal-addict.com
  */
 
 namespace Drupal\rest\Plugin\views\row;
