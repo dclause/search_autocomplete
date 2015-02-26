@@ -149,7 +149,7 @@ display:
           label: ''
           exclude: true
           alter:
-            alter_text: true
+            alter_text: false
             text: '{{ type }}s'
             make_link: false
             path: ''
