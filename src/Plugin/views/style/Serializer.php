@@ -141,7 +141,11 @@ class Serializer extends StylePluginBase {
   public function renderGrouping($records, $groupings = array(), $group_rendered = NULL) {
 
     $rows = array();
-    $groups = array();
+
+    $new_group_id = '';
+    $group_id = '';
+    $new_group_content = '';
+    $group_content = '';
 
     // Iterate through all records for transformation.
     foreach ($records as $index => $row) {
@@ -152,60 +156,53 @@ class Serializer extends StylePluginBase {
       $rendered_row = $this->view->rowPlugin->render($row);
 
       // Case when it takes grouping.
-      if ($groupings) {
+      if ($groupings && isset($groupings[0])) {
 
         // Iterate through configured grouping field.
         // Currently only one level of grouping allowed.
         foreach ($groupings as $info) {
 
           $group_field_name = $info['field'];
-          $group_id = '';
-          $group_content = '';
 
           // Extract group data if available.
           if (isset($this->view->field[$group_field_name])) {
             // Extract group_id and transform it to machine name.
-            $group_id = strtolower(str_replace(' ', '-', $this->getField($index, $group_field_name)));
+            $new_group_id = strtolower(str_replace(' ', '-', $this->getField($index, $group_field_name)));
             // Extract group displayed value.
-            $group_content = $this->renderField($index, $group_field_name);
+            $new_group_content = $this->renderField($index, $group_field_name);
           }
 
           // Create the group if it does not exist yet.
-          if (empty($groups[$group_id])) {
-            $groups[$group_id]['group'] = $group_content;
-            $groups[$group_id]['rows'] = array();
+          if ($new_group_id != $group_id && $new_group_content != $group_content) {
+            $rendered_row['group']['group_id'] = $new_group_content;
+            $rendered_row['group']['group_name'] = $new_group_id;
+            $group_content = $new_group_content;
+            $group_id = $new_group_id;
           }
 
           // Move the set reference into the row set of the group
           // we just determined.
-          $rows = &$groups[$group_id]['rows'];
+//           $rows = &$groups[$group_id]['rows'];
         }
       }
-      else {
-        // Create the group if it does not exist yet.
-        if (empty($groups[''])) {
-          $groups['']['group'] = '';
-          $groups['']['rows'] = array();
-        }
-        $rows = &$groups['']['rows'];
-      }
+//       else {
+//         // Create the group if it does not exist yet.
+//         if (empty($groups[''])) {
+//           $groups['']['group'] = '';
+//           $groups['']['rows'] = array();
+//         }
+//         $rows = &$groups['']['rows'];
+//       }
       // Add the row to the hierarchically positioned
       // row set we just determined.
       $rows[] = $rendered_row;
     }
 
-    // If this parameter isn't explicitely set modify the output to be fully
-    // backward compatible to code before Views 7.x-3.0-rc2.
-    // @TODO Remove this as soon as possible e.g. October 2020
-    if ($group_rendered === NULL) {
-      $old_style_groups = array();
-      foreach ($groups as $group) {
-        $old_style_groups[$group['group']] = $group['rows'];
-      }
-      $groups = $old_style_groups;
-    }
-
-    return $groups;
+//     $return = array();
+//     foreach ($groups as $group) {
+//       $return[] = $group;
+//     }
+    return $rows;
   }
 
   /**
