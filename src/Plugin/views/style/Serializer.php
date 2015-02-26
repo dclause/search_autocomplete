@@ -179,29 +179,12 @@ class Serializer extends StylePluginBase {
             $group_content = $new_group_content;
             $group_id = $new_group_id;
           }
-
-          // Move the set reference into the row set of the group
-          // we just determined.
-//           $rows = &$groups[$group_id]['rows'];
         }
       }
-//       else {
-//         // Create the group if it does not exist yet.
-//         if (empty($groups[''])) {
-//           $groups['']['group'] = '';
-//           $groups['']['rows'] = array();
-//         }
-//         $rows = &$groups['']['rows'];
-//       }
       // Add the row to the hierarchically positioned
       // row set we just determined.
       $rows[] = $rendered_row;
     }
-
-//     $return = array();
-//     foreach ($groups as $group) {
-//       $return[] = $group;
-//     }
     return $rows;
   }
 
