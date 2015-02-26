@@ -141,14 +141,10 @@ class Serializer extends StylePluginBase {
   /**
    * {@inheritdoc}
    */
-  public function renderGrouping($records, $groupings = array(), $group_rendered = NULL) {
+public function renderGrouping($records, $groupings = array(), $group_rendered = NULL) {
 
     $rows = array();
-
-    $new_group_id = '';
-    $group_id = '';
-    $new_group_content = '';
-    $group_content = '';
+    $groups = array();
 
     // Iterate through all records for transformation.
     foreach ($records as $index => $row) {
@@ -159,36 +155,61 @@ class Serializer extends StylePluginBase {
       $rendered_row = $this->view->rowPlugin->render($row);
 
       // Case when it takes grouping.
-      if ($groupings && isset($groupings[0])) {
+      if ($groupings) {
 
         // Iterate through configured grouping field.
         // Currently only one level of grouping allowed.
         foreach ($groupings as $info) {
 
           $group_field_name = $info['field'];
+          $group_id = '';
+          $group_name = '';
 
           // Extract group data if available.
           if (isset($this->view->field[$group_field_name])) {
             // Extract group_id and transform it to machine name.
-            $new_group_id = strtolower(str_replace(' ', '-', $this->getField($index, $group_field_name)));
+            $group_id = strtolower(str_replace(' ', '-', $this->getField($index, $group_field_name)));
             // Extract group displayed value.
-            $new_group_content = $this->renderField($index, $group_field_name);
+            $group_name = $this->renderField($index, $group_field_name) . 's';
           }
 
           // Create the group if it does not exist yet.
-          if ($new_group_id != $group_id && $new_group_content != $group_content) {
-            $rendered_row['group']['group_id'] = $new_group_id;
-            $rendered_row['group']['group_name'] = $new_group_content;
-            $group_content = $new_group_content;
-            $group_id = $new_group_id;
+          if (empty($groups[$group_id])) {
+            $groups[$group_id]['group']['group_id'] = $group_id;
+            $groups[$group_id]['group']['group_name'] = $group_name;
+            $groups[$group_id]['rows'] = array();
           }
+
+          // Move the set reference into the row set of the group
+          // we just determined.
+          $rows = &$groups[$group_id]['rows'];
         }
+      }
+      else {
+        // Create the group if it does not exist yet.
+        if (empty($groups[''])) {
+          $groups['']['group'] = '';
+          $groups['']['rows'] = array();
+        }
+        $rows = &$groups['']['rows'];
       }
       // Add the row to the hierarchically positioned
       // row set we just determined.
       $rows[] = $rendered_row;
     }
-    return $rows;
+
+    /** Build the result from previous array.
+     * @todo: find a more straight forward way to make it. */
+    $return = array();
+    foreach($groups as $group_id => $group) {
+      // Add group info on first row lign.
+      if (isset($group['rows']) && isset($group['rows'][0])) {
+        $group['rows'][0]['group'] = $group['group'];
+      }
+      // Add rows of this group to result.
+      $return = array_merge($return, $group['rows']);
+    }
+    return $return;
   }
 
   /**
