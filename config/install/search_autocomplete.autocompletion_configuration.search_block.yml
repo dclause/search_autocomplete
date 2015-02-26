@@ -8,7 +8,7 @@
 
 id: search_block
 label: 'Search Block'
-selector: '#edit-keys'
+selector: 'form[action="/search/node"] input[type="search"]'
 status: true
 minChar: 3
 autoSubmit: true

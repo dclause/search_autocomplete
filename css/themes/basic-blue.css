@@ -11,7 +11,7 @@
 
 /* Input box */
 .js input.form-autocomplete {
-  border-style: ridge;
+  border: 1px solid #ccc;
 }
 
 /* Suggestion menu style */
@@ -43,6 +43,7 @@
   text-transform: uppercase;
   font-size: 0.8em;
   background-color: #CCCCCC;
+  padding: 1px 5px;
 }
 
 /* Suggestion menu items */
@@ -66,10 +67,9 @@
 #ui-theme-basic-blue .ui-autocomplete-fields > *:first-child {
   font-weight: bold;
   color: black;
-  font-size: 0.85em;
 }
 #ui-theme-basic-blue .ui-autocomplete-fields > * {
-  font-size: 0.9em;
+  font-size: 0.85em;
   line-height: 1.3em;
   color: #6f6f6f;
 }
