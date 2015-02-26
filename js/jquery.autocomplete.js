@@ -155,7 +155,7 @@
   function focusHandler() {
     return false;
   }
-
+  
   /**
    * Handles an autocompleteselect event.
    *
@@ -217,14 +217,18 @@
     	elem = $("<li class='ui-state-disabled ui-menu-item-" + first + " ui-menu-item'>" + item.label + "</li>" );
     }
 	elem.data("item.autocomplete", item).appendTo(ul);
-    
-//    Drupal.attachBehaviors(elem);
     return elem;
   }
-      
-      
-      
-
+    
+  /**
+   * This methods resize the suggestion panel property.
+   * Not used currently.
+   */
+  function resizeMenu() {
+    var ul = this.menu.element;
+    ul.outerWidth(Math.max(ul.width("").outerWidth() + 5, this.options.position.of == null ? this.element.outerWidth() : this.options.position.of.outerWidth()));
+  }
+        
   /**
    * Attaches the autocomplete behavior to all required fields.
    */
@@ -280,6 +284,7 @@
       search: searchHandler,
       select: selectHandler,
       renderItem: renderItem,
+      resizeMenu: resizeMenu,
       minLength: 1,
       // Custom options, used by Drupal.autocomplete.
       firstCharacterBlacklist: '',
