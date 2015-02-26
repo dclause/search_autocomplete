@@ -3,6 +3,9 @@
 /**
  * @file
  * Contains \Drupal\search_autocomplete\Plugin\views\style\Serializer.
+ *
+ * Inspired by rest core module.
+ * Sponsored by: www.drupal-addict.com
  */
 
 namespace Drupal\search_autocomplete\Plugin\views\style;
@@ -174,8 +177,8 @@ class Serializer extends StylePluginBase {
 
           // Create the group if it does not exist yet.
           if ($new_group_id != $group_id && $new_group_content != $group_content) {
-            $rendered_row['group']['group_id'] = $new_group_content;
-            $rendered_row['group']['group_name'] = $new_group_id;
+            $rendered_row['group']['group_id'] = $new_group_id;
+            $rendered_row['group']['group_name'] = $new_group_content;
             $group_content = $new_group_content;
             $group_id = $new_group_id;
           }
