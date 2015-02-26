@@ -6,6 +6,8 @@
  *
  * This contains our Autocompletion Configuration config entity class. This
  * entity represents a configuration to enable autocompletion on a field.
+ *
+ * Sponsored by: www.drupal-addict.com
  */
 
 namespace Drupal\search_autocomplete\Entity;
