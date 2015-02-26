@@ -176,6 +176,16 @@
       terms.push(ui.item.value);
     }
     event.target.value = terms.join(', ');
+    var key = $(event.target).attr('data-id');
+    
+    // Add our own handling on submission if needed
+    if (autocomplete.options.forms[key].autoRedirect == 1 && ui.item.link) {
+    document.location.href = ui.item.link;
+    } else if (autocomplete.options.forms[key].autoSubmit == 1 && ui.item.value) {
+      $(this).val(ui.item.value);
+      $(this).closest("form").submit();
+    }
+    
     // Return false to tell jQuery UI that we've filled in the value already.
     return false;
   }
@@ -238,7 +248,7 @@
       var $autocomplete = $(context).find('input.form-autocomplete');
       // Act also on registered fields
       $.each(autocomplete.options.forms, function(key, value) {
-    	var elem = $(context).find(autocomplete.options.forms[key].selector).data("key", key).attr("class", "form-autocomplete");
+    	var elem = $(context).find(autocomplete.options.forms[key].selector).data("key", key).attr("class", "form-autocomplete").attr('data-id', key);
 	  	$autocomplete = $.merge($autocomplete, elem);
       });
       // Run only once on found elements
