@@ -152,7 +152,7 @@ class DataFieldRow extends RowPluginBase {
     // Render all fields.
     foreach ($this->view->field as $id => $field) {
 
-      // Render the value
+      // Render the value.
       $value = $field->advancedRender($row);
 
       // Convert content type machine names to human names.

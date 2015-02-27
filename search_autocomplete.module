@@ -128,7 +128,8 @@ function search_autocomplete_page_attachments(array &$attachments) {
 
     // Do not add configs when selector is empty.
     // @see todo upper in the fonction.
-    if (!empty($config->getSelector())) {
+    $selector = $config->getSelector();
+    if (!empty($selector)) {
       $settings = array(
         'source'          => $source,
         'selector'        => $config->getSelector(),
