@@ -141,7 +141,7 @@ class Serializer extends StylePluginBase {
   /**
    * {@inheritdoc}
    */
-public function renderGrouping($records, $groupings = array(), $group_rendered = NULL) {
+  public function renderGrouping($records, $groupings = array(), $group_rendered = NULL) {
 
     $rows = array();
     $groups = array();
@@ -198,10 +198,12 @@ public function renderGrouping($records, $groupings = array(), $group_rendered =
       $rows[] = $rendered_row;
     }
 
-    /** Build the result from previous array.
-     * @todo: find a more straight forward way to make it. */
+    /*
+     * Build the result from previous array.
+     * @todo: find a more straight forward way to make it.
+     */
     $return = array();
-    foreach($groups as $group_id => $group) {
+    foreach ($groups as $group_id => $group) {
       // Add group info on first row lign.
       if (isset($group['rows']) && isset($group['rows'][0])) {
         $group['rows'][0]['group'] = $group['group'];
