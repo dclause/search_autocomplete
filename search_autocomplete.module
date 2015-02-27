@@ -15,6 +15,9 @@ use Drupal\Core\Utility\UnroutedUrlAssembler;
  * to help autocompleting any fields.
  */
 
+function search_autocomplete_install() {
+  \Drupal::service('asset.js.collection_optimizer')->deleteAll();
+}
 /**
  * Implementation of hook_library_info_build().
  *
@@ -135,6 +138,20 @@ function search_autocomplete_page_attachments(array &$attachments) {
         'autoRedirect'    => $config->getAutoRedirect(),
         'theme'           => basename($config->getTheme(), '.css'), // theme without extension
         'filters'         => $exposed_filters,
+        'noResult'       => array(
+          'group' => array(
+            'group_id' => 'no_results',
+           ),
+          'label' => $config->getNoResultLabel(),
+          'value' => $config->getNoResultValue()
+        ),
+        'moreResults'       => array(
+            'group' => array(
+                'group_id' => 'more_results',
+            ),
+            'label' => $config->getMoreResultsLabel(),
+            'value' => $config->getMoreResultsValue()
+        )
       );
       $autocomplete_configurations[$config_id] = $settings;
     }

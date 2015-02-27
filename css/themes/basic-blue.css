@@ -79,3 +79,15 @@
 #ui-theme-basic-blue > li.ui-menu-item:hover .ui-autocomplete-fields > * {
   color: white;
 }
+
+/* Suggestion "no result" and "more resul" customizations */
+#ui-theme-basic-blue > div.ui-autocomplete-field-group.no_results + li.ui-menu-item,
+#ui-theme-basic-blue > div.ui-autocomplete-field-group.more_results + li.ui-menu-item {
+  padding: 0px;
+}
+#ui-theme-basic-blue > div.ui-autocomplete-field-group.no_results + li.ui-menu-item .ui-autocomplete-fields > *:first-child,
+#ui-theme-basic-blue > div.ui-autocomplete-field-group.more_results + li.ui-menu-item .ui-autocomplete-fields > *:first-child {
+  font-weight: normal;
+  text-align: center;
+  font-style: italic;
+}
