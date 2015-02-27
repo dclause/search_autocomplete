@@ -117,6 +117,23 @@
      * @param {Object} data
      */
     function sourceCallbackHandler(data) {
+      
+      // Reduce number to limit.
+      if (key) data.slice(0, autocomplete.options.forms[key].maxSuggestions);
+      
+      // Add no_result or moore_results depending on the situation.
+      // @todo: find a better way eventually ?
+      if (key) {
+        if (data.length) {
+          var moreResults = replaceInObject(autocomplete.options.forms[key].moreResults, '\\[search-phrase\\]', request.term);
+          data.push(moreResults);
+        } else {
+          var noResult = replaceInObject(autocomplete.options.forms[key].noResult, '\\[search-phrase\\]', request.term);
+          data.push(noResult);
+        }
+      }
+      
+      // Cache the results.
       autocomplete.cache[elementId][term] = data;
 
       // Send the new string array of terms to the jQuery UI list.
@@ -155,7 +172,7 @@
   function focusHandler() {
     return false;
   }
-  
+
   /**
    * Handles an autocompleteselect event.
    *
@@ -179,13 +196,12 @@
     var key = $(event.target).attr('data-id');
     
     // Add our own handling on submission if needed
-    if (autocomplete.options.forms[key].autoRedirect == 1 && ui.item.link) {
+    if (key && autocomplete.options.forms[key].autoRedirect == 1 && ui.item.link) {
     document.location.href = ui.item.link;
-    } else if (autocomplete.options.forms[key].autoSubmit == 1 && ui.item.value) {
+    } else if (key && autocomplete.options.forms[key].autoSubmit == 1 && ui.item.value) {
       $(this).val(ui.item.value);
       $(this).closest("form").submit();
     }
-    
     // Return false to tell jQuery UI that we've filled in the value already.
     return false;
   }
@@ -202,9 +218,9 @@
     var term = this.term;
     var first = ("group" in item)  ? 'first' : '';
     var innerHTML = '<div class="ui-autocomplete-fields ' + first + '">';
+    var regex = new RegExp('(' + $.trim(term) + ')', 'gi');
     if (item.fields) {
       $.each(item.fields, function(key, value) {
-        var regex = new RegExp('(' + $.trim(term) + ')', 'gi');
         var output = value;
         if (value.indexOf('src=') == -1 && value.indexOf('href=') == -1) {
           output = value.replace(regex, "<span class='ui-autocomplete-field-term'>$1</span>");
@@ -212,7 +228,8 @@
         innerHTML += ('<div class="ui-autocomplete-field-' + key + '">' + output + '</div>');
       });
     } else {
-      innerHTML += ('<div class="ui-autocomplete-field">' + item.label + '</div>');
+      var output = item.label.replace(regex, "<span class='ui-autocomplete-field-term'>$1</span>");
+      innerHTML += ('<div class="ui-autocomplete-field">' + output + '</div>');
     }
     innerHTML += '</div>';
 
@@ -224,9 +241,9 @@
     var elem =  $("<li class=ui-menu-item-" + first + "></li>" )
     .append("<a>" + innerHTML + "</a>");   
     if (item.value == '') {
-    	elem = $("<li class='ui-state-disabled ui-menu-item-" + first + " ui-menu-item'>" + item.label + "</li>" );
+    	elem = $("<li class='ui-state-disabled ui-menu-item-" + first + " ui-menu-item'>" + item.label + "</li>");
     }
-	elem.data("item.autocomplete", item).appendTo(ul);
+    elem.data("item.autocomplete", item).appendTo(ul);
     return elem;
   }
     
@@ -238,7 +255,22 @@
     var ul = this.menu.element;
     ul.outerWidth(Math.max(ul.width("").outerWidth() + 5, this.options.position.of == null ? this.element.outerWidth() : this.options.position.of.outerWidth()));
   }
-        
+  
+  /**
+   * This methods replaces needle by replacement in stash.
+   */
+  function replaceInObject(stash, needle, replacement) {
+    var regex = new RegExp(needle,"g");
+//    var input = replacement ? replacement.replace(/[!"$%&'()*+,.\/:;<=>?@\[\]\^`{|}~]/g,"\\$&") : "";
+    var input = Drupal.checkPlain(replacement);
+    $.each(stash, function(index, value) {
+      if ($.type(value) === "string") {
+        stash[index] = value.replace(regex, input);
+      }
+    });
+    return stash;
+  }
+  
   /**
    * Attaches the autocomplete behavior to all required fields.
    */
