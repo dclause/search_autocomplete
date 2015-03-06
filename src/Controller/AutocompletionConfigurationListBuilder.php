@@ -70,7 +70,9 @@ class AutocompletionConfigurationListBuilder extends ConfigEntityListBuilder imp
         $this->t('Operations'),
       ),
     );
-    $entities = $this->load();
+
+    // Retrieve existing none hidden configurations.
+    $entities = $this->storage->loadByProperties(array('hidden' => FALSE));
 
     // Build blocks first for each region.
     $configs = array();

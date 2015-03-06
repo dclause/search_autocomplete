@@ -64,11 +64,11 @@ class AutocompletionConfigurationAddForm extends AutocompletionConfigurationForm
 
     // Selector.
     $form['selector'] = array(
-      '#type' => 'textfield',
-      '#title' => $this->t('ID selector this configuration should apply to'),
-      '#description' => 'Enter a valid query selector for this configuration. This should be an ID or a class targeting an input field.',
-      '#default_value' => $this->entity->getSelector(),
-      '#required' => TRUE,
+      '#type'           => 'textfield',
+      '#title'          => $this->t('ID selector this configuration should apply to'),
+      '#description'    => 'Enter a valid query selector for this configuration. This should be an ID or a class targeting an input field.',
+      '#default_value'  => $this->entity->getSelector(),
+      '#required'       => TRUE,
     );
 
     // Return the form.
@@ -93,6 +93,7 @@ class AutocompletionConfigurationAddForm extends AutocompletionConfigurationForm
     $this->entity->setNoResultValue($this->t('[search-phrase]'));
     $this->entity->setSource('nodes_autocomplete_callback::nodes_callback');
     $this->entity->setTheme('basic-blue.css');
+    $this->entity->setHidden(FALSE);
     $this->entity->save();
 
     // Redirect to edit form once entity is added.

@@ -198,6 +198,14 @@ class AutocompletionConfiguration extends ConfigEntityBase implements Autocomple
    */
   protected $theme;
 
+  /**
+   * Define if users can edit this configuration. If not, the configuration
+   * will not display in GUI.
+   *
+   * @var string
+   */
+  protected $hidden;
+
 
   /**
    * {@inheritdoc}
@@ -308,6 +316,13 @@ class AutocompletionConfiguration extends ConfigEntityBase implements Autocomple
     return $this->theme;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getHidden() {
+    return $this->hidden;
+  }
+
   /** ----------------------------- *
    *  ---------  SETTERS  --------- */
 
@@ -408,4 +423,12 @@ class AutocompletionConfiguration extends ConfigEntityBase implements Autocomple
   public function setTheme($theme) {
     $this->theme = $theme;
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setHidden($hidden) {
+    $this->hidden = $hidden;
+  }
+
 }
