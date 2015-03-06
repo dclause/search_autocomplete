@@ -62,6 +62,9 @@ search_autocomplete.autocompletion_configuration.*:
     theme:
       type: string
       label: 'Name of the CSS filename.'
+    hidden:
+      type: boolean
+      label: 'Define if users can see/edit this configuration.'
       
 search_autocomplete.settings:
   type: mapping

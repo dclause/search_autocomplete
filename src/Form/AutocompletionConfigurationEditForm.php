@@ -222,20 +222,23 @@ class AutocompletionConfigurationEditForm extends AutocompletionConfigurationFor
 
     // ------------------------------------------------------------------.
     // ADVANCED - Advanced options.
-    $form['search_autocomplete_advanced'] = array(
-      '#type'             => 'details',
-      '#title'            => t('ADVANCED - Advanced options'),
-      '#collapsible'      => TRUE,
-      '#collapsed'        => TRUE,
-    );
-    $form['search_autocomplete_advanced']['selector'] = array(
-      '#type'             => 'textfield',
-      '#title'            => t('ID selector for this form'),
-      '#description'      => t('Please change only if you know what you do, read <a href="http://drupal-addict.com/nos-projets/search-autocomplete">documentation</a> first.'),
-      '#default_value'    => $this->entity->getSelector(),
-      '#maxlength'        => 255,
-      '#size'             => 35,
-    );
+    if ($this->entity->getSelector()) {
+      $form['search_autocomplete_advanced'] = array(
+        '#type'             => 'details',
+        '#title'            => t('ADVANCED - Advanced options'),
+        '#collapsible'      => TRUE,
+        '#collapsed'        => TRUE,
+      );
+      $form['search_autocomplete_advanced']['selector'] = array(
+        '#type'             => 'textfield',
+        '#title'            => t('ID selector for this form'),
+        '#description'      => t('Please change only if you know what you do, read <a href="http://drupal-addict.com/nos-projets/search-autocomplete">documentation</a> first.'),
+        '#default_value'    => $this->entity->getSelector(),
+        '#maxlength'        => 255,
+        '#size'             => 35,
+        '#required'         => TRUE,
+      );
+    }
 
     // Return the form.
     return $form;

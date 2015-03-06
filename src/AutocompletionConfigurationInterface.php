@@ -119,6 +119,14 @@ interface AutocompletionConfigurationInterface extends ConfigEntityInterface {
    */
   public function getTheme();
 
+  /**
+   * Returns whether the configuration is hidden to users or not.
+   *
+   * @return boolean
+   *   TRUE if the configuration is hidden, false otherwise.
+   */
+  public function getHidden();
+
   /* -----------------------------
    * ---------  SETTERS  ---------
    */
@@ -220,4 +228,14 @@ interface AutocompletionConfigurationInterface extends ConfigEntityInterface {
    *   The CSS filename for the theme.
    */
   public function setTheme($theme);
+
+  /**
+   * Sets whether the configuration is hidden to users or not.
+   * Hidden configurations cannot be created from GUI.
+   *
+   * @param boolean $hidden
+   *   TRUE if the configuration is hidden, false otherwise.
+   */
+  public function setHidden($hidden);
+
 }

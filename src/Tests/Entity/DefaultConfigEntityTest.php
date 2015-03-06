@@ -49,7 +49,7 @@ class DefaultConfigEntityTest extends WebTestBase {
     $config = array(
       'id'                => 'search_block',
       'label'             => 'Search Block',
-      'selector'          => 'form[action="/search/node"] input[type="search"]',
+      'selector'          => '',
       'status'            => TRUE,
       'minChar'           => 3,
       'maxSuggestions'    => 10,
@@ -63,6 +63,7 @@ class DefaultConfigEntityTest extends WebTestBase {
       'moreResultsLink'   => '',
       'source'            => 'nodes_autocomplete_callback::nodes_callback',
       'theme'             => 'basic-blue.css',
+      'hidden'            => FALSE
     );
 
     // ----------------------------------------------------------------------
@@ -86,6 +87,7 @@ class DefaultConfigEntityTest extends WebTestBase {
     $this->assertEqual($entity->getMoreResultsLink(), $config['moreResultsLink']);
     $this->assertEqual($entity->getSource(), $config['source']);
     $this->assertEqual($entity->getTheme(), $config['theme']);
+    $this->assertEqual($entity->getHidden(), $config['hidden']);
   }
 
 }

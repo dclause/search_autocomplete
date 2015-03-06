@@ -28,13 +28,11 @@ class AutocompletionConfigurationAccessControlHandler extends EntityAccessContro
    * {@inheritdoc}
    */
   public function checkAccess(EntityInterface $entity, $operation, $langcode, AccountInterface $account) {
-    // The $opereration parameter tells you what sort of operation access is
-    // being checked for.
     if ($operation == 'view') {
       return TRUE;
+    } else if ($entity->getHidden()) {
+      return FALSE;
     }
-    // Other than the view operation, we're going to be insanely lax about
-    // access. Don't try this at home!
     return parent::checkAccess($entity, $operation, $langcode, $account);
   }
 
