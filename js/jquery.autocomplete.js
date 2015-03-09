@@ -118,9 +118,12 @@
      */
     function sourceCallbackHandler(data) {
       
+      // Cache the results.
+      autocomplete.cache[elementId][term] = data;
+      
       // Reduce number to limit.
       if (key) data.slice(0, autocomplete.options.forms[key].maxSuggestions);
-      
+
       // Add no_result or moore_results depending on the situation.
       // @todo: find a better way eventually ?
       if (key) {
@@ -132,9 +135,6 @@
           data.push(noResult);
         }
       }
-      
-      // Cache the results.
-      autocomplete.cache[elementId][term] = data;
 
       // Send the new string array of terms to the jQuery UI list.
       showSuggestions(data);
@@ -228,7 +228,10 @@
         innerHTML += ('<div class="ui-autocomplete-field-' + key + '">' + output + '</div>');
       });
     } else {
-      var output = item.label.replace(regex, "<span class='ui-autocomplete-field-term'>$1</span>");
+      var output = item.label;
+      if (item.group && item.group.group_id != 'more_results' && item.group.group_id != 'no_results') {
+        output = item.label.replace(regex, "<span class='ui-autocomplete-field-term'>$1</span>");
+      }
       innerHTML += ('<div class="ui-autocomplete-field">' + output + '</div>');
     }
     innerHTML += '</div>';
@@ -261,14 +264,16 @@
    */
   function replaceInObject(stash, needle, replacement) {
     var regex = new RegExp(needle,"g");
-//    var input = replacement ? replacement.replace(/[!"$%&'()*+,.\/:;<=>?@\[\]\^`{|}~]/g,"\\$&") : "";
     var input = Drupal.checkPlain(replacement);
+    var result = [];
     $.each(stash, function(index, value) {
       if ($.type(value) === "string") {
-        stash[index] = value.replace(regex, input);
+        result[index] = value.replace(regex, "<span class='ui-autocomplete-field-term'>" + input + "</span>");
+      } else {
+        result[index] = value;
       }
     });
-    return stash;
+    return result;
   }
   
   /**
