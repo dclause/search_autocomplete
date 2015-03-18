@@ -193,7 +193,7 @@
       terms.push(ui.item.value);
     }
     event.target.value = terms.join(', ');
-    var key = $(event.target).attr('data-id');
+    var key = $(event.target).data('key');
     
     // Add our own handling on submission if needed
     if (key && autocomplete.options.forms[key].autoRedirect == 1 && ui.item.link) {
