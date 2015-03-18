@@ -139,7 +139,7 @@ class AutocompletionCallback extends PathPluginBase {
    * {@inheritdoc}
    */
   protected function getType() {
-    return 'data';
+    return 'callback';
   }
 
   /**
@@ -192,7 +192,8 @@ class AutocompletionCallback extends PathPluginBase {
     $options = parent::defineOptions();
 
     // Set the default style plugin to 'json'.
-    $options['style']['contains']['type']['default'] = 'serializer';
+    $options['style']['contains']['type']['default'] = 'callback_serializer';
+    $options['row']['contains']['type']['default'] = 'callback_fields';
     $options['defaults']['default']['style'] = FALSE;
     $options['defaults']['default']['row'] = FALSE;
 

@@ -89,7 +89,7 @@ class BasicCRUDConfigEntityTest extends WebTestBase {
       'moreResultsLabel'  => t('View all results for [search-phrase].'),
       'moreResultsValue'  => '[search-phrase]',
       'moreResultsLink'   => '',
-      'source'            => 'nodes_autocomplete_callback::nodes_callback',
+      'source'            => 'autocompletion_callbacks::nodes_autocompletion_callback',
       'theme'             => 'basic-blue.css',
     );
 

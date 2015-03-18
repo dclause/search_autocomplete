@@ -104,13 +104,13 @@ function attach_configuration_to_element(&$element, $config_id) {
       // Retrieve the display URL.
       $display = $view->getDisplay();
       $source = '/' . $display->getPath();
-    }
 
-    // Build filters
-    $filters = $view->getHandlers('filter');
-    foreach ($filters as $filter) {
-      if (isset($filter['exposed']) && $filter['exposed']) {
-        $exposed_filters[] = $filter['field'];
+      // Build filters
+      $filters = $view->getHandlers('filter');
+      foreach ($filters as $filter) {
+        if (isset($filter['exposed']) && $filter['exposed']) {
+          $exposed_filters[] = $filter['field'];
+        }
       }
     }
   }
