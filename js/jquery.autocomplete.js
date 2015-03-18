@@ -335,7 +335,7 @@
       minLength: 1,
       // Custom options, used by Drupal.autocomplete.
       firstCharacterBlacklist: '',
-      forms: drupalSettings.search_autocomplete
+      forms: drupalSettings.search_autocomplete ? drupalSettings.search_autocomplete : []
     },
     ajax: {
       dataType: 'json'
