@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\search_autocomplete\Plugin\views\style\Serializer.
+ * Contains \Drupal\search_autocomplete\Plugin\views\style\CallbackSerializer.
  *
  * Inspired by rest core module.
  * Sponsored by: www.drupal-addict.com
@@ -25,13 +25,13 @@ use Drupal\Component\Utility\String;
  * @ingroup views_style_plugins
  *
  * @ViewsStyle(
- *   id = "serializer",
- *   title = @Translation("Serializer"),
- *   help = @Translation("Serializes views row data using the Serializer component."),
+ *   id = "callback_serializer",
+ *   title = @Translation("Callback Serializer"),
+ *   help = @Translation("Serializes views row data using the callback serializer component."),
  *   display_types = {"callback"}
  * )
  */
-class Serializer extends StylePluginBase {
+class CallbackSerializer extends StylePluginBase {
 
   /**
    * Overrides \Drupal\views\Plugin\views\style\StylePluginBase::$usesRowPlugin.

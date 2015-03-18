@@ -22,7 +22,7 @@ use Drupal\views\Plugin\views\row\RowPluginBase;
  * @ingroup views_row_plugins
  *
  * @ViewsRow(
- *   id = "callback_field",
+ *   id = "callback_fields",
  *   title = @Translation("Fields"),
  *   help = @Translation("Use fields as row data."),
  *   display_types = {"callback"}

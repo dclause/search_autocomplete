@@ -30,7 +30,8 @@ class AutocompletionConfigurationAccessControlHandler extends EntityAccessContro
   public function checkAccess(EntityInterface $entity, $operation, $langcode, AccountInterface $account) {
     if ($operation == 'view') {
       return TRUE;
-    } else if ($entity->getHidden()) {
+    }
+    elseif ($entity->getHidden()) {
       return FALSE;
     }
     return parent::checkAccess($entity, $operation, $langcode, $account);
