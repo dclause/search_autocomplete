@@ -4,7 +4,6 @@
  * @file
  * Contains \Drupal\search_autocomplete\Plugin\views\row\DataFieldRow.
  *
- * Inspired by rest core module.
  * Sponsored by: www.drupal-addict.com
  */
 

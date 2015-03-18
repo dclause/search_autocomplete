@@ -4,7 +4,6 @@
  * @file
  * Contains \Drupal\search_autocomplete\Plugin\views\display\AutocompletionCallback.
  *
- * Inspired by rest core module.
  * Sponsored by: www.drupal-addict.com
  */
 
@@ -270,5 +269,4 @@ class AutocompletionCallback extends PathPluginBase {
   public function preview() {
     return $this->view->render();
   }
-
 }
