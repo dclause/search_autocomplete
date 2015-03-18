@@ -4,7 +4,6 @@
  * @file
  * Contains \Drupal\search_autocomplete\Plugin\views\style\CallbackSerializer.
  *
- * Inspired by rest core module.
  * Sponsored by: www.drupal-addict.com
  */
 
