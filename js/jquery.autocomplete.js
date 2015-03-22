@@ -104,7 +104,7 @@
 		                  event.preventDefault();
 		              }
 		            },
-		            appendTo: $(Drupal.settings.search_autocomplete[key].selector).parent(),
+		            appendTo: $(Drupal.settings.search_autocomplete[key].selector).parent()
              }).autocomplete("widget").attr("id", "ui-theme-" + Drupal.settings.search_autocomplete[key].theme);
         	});
           $(Drupal.settings.search_autocomplete[key].selector).trigger('mouseover');
