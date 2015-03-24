@@ -55,7 +55,7 @@
       if (Drupal.settings.search_autocomplete) {
         $.each(Drupal.settings.search_autocomplete, function(key, value) {
           $(Drupal.settings.search_autocomplete[key].selector).bind("mouseover", function() {
-             $(Drupal.settings.search_autocomplete[key].selector).addClass('ui-autocomplete-processed ui-theme-' + Drupal.settings.search_autocomplete[key].theme).autocomplete({
+             $(Drupal.settings.search_autocomplete[key].selector).addClass('ui-autocomplete-processed').attr('data-sa-theme', Drupal.settings.search_autocomplete[key].theme).autocomplete({
             	 	minLength: Drupal.settings.search_autocomplete[key].minChars,
             	 	source: function(request, response) {
 		              // External URL:
@@ -105,7 +105,7 @@
 		              }
 		            },
 		            appendTo: $(Drupal.settings.search_autocomplete[key].selector).parent()
-             }).autocomplete("widget").attr("id", "ui-theme-" + Drupal.settings.search_autocomplete[key].theme);
+             }).autocomplete("widget").attr("data-sa-theme", Drupal.settings.search_autocomplete[key].theme);
         	});
           $(Drupal.settings.search_autocomplete[key].selector).trigger('mouseover');
        });
