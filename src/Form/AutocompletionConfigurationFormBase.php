@@ -94,13 +94,19 @@ class AutocompletionConfigurationFormBase extends EntityForm {
     // annotation on our AutocompletionConfiguration class.
     $autocompletion_configuration = $this->entity;
 
+    // Get default label from URL if available.
+    $label = '';
+    if (isset($_REQUEST['label'])) {
+      $label = urldecode($_REQUEST['label']);
+    }
+
     // Label.
     $form['label'] = array(
       '#type' => 'textfield',
       '#title' => $this->t('Human readable name'),
       '#maxlength' => 255,
       '#description'    => 'Please enter a label for this autocompletion configuration.',
-      '#default_value' => $autocompletion_configuration->label(),
+      '#default_value' => $label ? $label : $autocompletion_configuration->label(),
       '#required' => TRUE,
     );
 

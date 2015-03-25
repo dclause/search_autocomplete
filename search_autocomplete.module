@@ -22,7 +22,7 @@ use Drupal\Core\Utility\UnroutedUrlAssembler;
  * @todo remove when issue #2442025 is fixed.
  */
 function search_autocomplete_install() {
-  drupal_set_message(t('To finish install of Search Autocomplete, you may need to %clear_caches.', array('%clear_caches' => \Drupal::l(t('Clear all caches'), new Url('system.performance_settings')))));
+  drupal_set_message(t('To finish install of Search Autocomplete, you must %clear_caches.', array('%clear_caches' => \Drupal::l(t('Clear all caches'), new Url('system.performance_settings')))));
 }
 
 /**
@@ -173,7 +173,6 @@ function search_autocomplete_library_info_build() {
 
   // Create a new library for all themes.
   foreach ($files as $file) {
-
     $libraries["theme.$file->filename"] = [
       'css' => [
         'base' => [
@@ -181,8 +180,8 @@ function search_autocomplete_library_info_build() {
         ],
       ],
     ];
-
   }
+
   return $libraries;
 }
 
@@ -214,6 +213,11 @@ function search_autocomplete_page_attachments(array &$attachments) {
 
   // Load module settings.
   $module_settings = \Drupal::config('search_autocomplete.settings');
+
+  // If admin helper set, inlcude it.
+  if ($module_settings->get('admin_helper')) {
+    $attachments['#attached']['library'][] = 'search_autocomplete/search_autocomplete.admin.helper';
+  }
 
   // Load all configurations with selectors
   $autocomplete_configuration_entities = \Drupal::entityQuery('autocompletion_configuration')
