@@ -25,7 +25,7 @@ class SettingsTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('search_autocomplete');
+  public static $modules = array('node', 'search_autocomplete');
 
   /**
    * {@inheritdoc}
