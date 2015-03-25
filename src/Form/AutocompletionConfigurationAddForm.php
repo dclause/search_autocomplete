@@ -62,13 +62,18 @@ class AutocompletionConfigurationAddForm extends AutocompletionConfigurationForm
     // Get anything we need from the base class.
     $form = parent::buildForm($form, $form_state);
 
+    // Get default selector from URL if available.
+    $selector = '';
+    if (isset($_REQUEST['selector'])) {
+      $selector = urldecode($_REQUEST['selector']);
+    }
+
     // Selector.
     $form['selector'] = array(
       '#type'           => 'textfield',
       '#title'          => $this->t('ID selector this configuration should apply to'),
       '#description'    => 'Enter a valid query selector for this configuration. This should be an ID or a class targeting an input field.',
-      '#default_value'  => $this->entity->getSelector(),
-      '#required'       => TRUE,
+      '#default_value'  => $selector ? $selector : $this->entity->getSelector(),
     );
 
     // Return the form.
