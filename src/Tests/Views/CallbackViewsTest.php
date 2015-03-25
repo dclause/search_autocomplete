@@ -100,8 +100,7 @@ class CallbackViewsTest extends ViewTestBase {
     $actual_json = $this->drupalGet("callback/nodes");
 
     // Check the view result using serializer service.
-    $serializer = $this->container->get('serializer');
-    $expected_string = $serializer->serialize($expected, 'json');
+    $expected_string = json_encode($expected);
     $this->assertIdentical($actual_json, $expected_string);
 
     // Log out user.

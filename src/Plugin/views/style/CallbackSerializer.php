@@ -15,7 +15,6 @@ use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\views\style\StylePluginBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\Serializer\SerializerInterface;
 use Drupal\Component\Utility\String;
 
 /**
@@ -26,7 +25,7 @@ use Drupal\Component\Utility\String;
  * @ViewsStyle(
  *   id = "callback_serializer",
  *   title = @Translation("Callback Serializer"),
- *   help = @Translation("Serializes views row data using the callback serializer component."),
+ *   help = @Translation("Serializes views row data using json_encode."),
  *   display_types = {"callback"}
  * )
  */
@@ -43,13 +42,6 @@ class CallbackSerializer extends StylePluginBase {
   protected $usesGrouping = TRUE;
 
   /**
-   * The serializer which serializes the views result.
-   *
-   * @var \Symfony\Component\Serializer\Serializer
-   */
-  protected $serializer;
-
-  /**
    * Stores the content types defined. This is used for machine to human name
    * conversion of content types.
    *
@@ -64,21 +56,16 @@ class CallbackSerializer extends StylePluginBase {
     return new static(
       $configuration,
       $plugin_id,
-      $plugin_definition,
-      $container->get('serializer'),
-      $container->getParameter('serializer.formats')
+      $plugin_definition
     );
   }
 
   /**
    * Constructs a Plugin object.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, SerializerInterface $serializer, array $serializer_formats) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-
     $this->definition = $plugin_definition + $configuration;
-    $this->serializer = $serializer;
-    $this->formats = $serializer_formats;
     $this->types = NodeType::loadMultiple();
   }
 
@@ -134,7 +121,7 @@ class CallbackSerializer extends StylePluginBase {
         TRUE
     );
 
-    return $this->serializer->serialize($groups, 'json');
+    return json_encode($groups);
   }
 
   /**
