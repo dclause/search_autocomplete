@@ -16,3 +16,10 @@
 .js input.form-autocomplete {
   border: 1px solid #ccc;
 }
+
+/*
+ * Targeting this style example :
+ */
+ul[data-sa-theme="CUSTOM_THEME_NAME"] {
+  min-width: 350px;
+}

@@ -303,7 +303,7 @@
           ._renderItem = autocomplete.options.renderItem;
         // Add theme id to suggestion list.
         if ($autocomplete.data('key')) {
-          $autocomplete.autocomplete("widget").attr("id", "ui-theme-" + autocomplete.options.forms[$autocomplete.data('key')].theme);
+          $autocomplete.autocomplete("widget").attr("data-sa-theme", autocomplete.options.forms[$autocomplete.data('key')].theme);
         }
       }
     },

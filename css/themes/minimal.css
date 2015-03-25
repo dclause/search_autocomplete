@@ -15,6 +15,6 @@
 }
 
 /* Suggestion menu style */
-#ui-theme-basic-blue {
+ul[data-sa-theme="minimal"] {
   min-width: 350px;
 }
