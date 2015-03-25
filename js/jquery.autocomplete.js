@@ -285,27 +285,35 @@
       var $autocomplete = $(context).find('input.form-autocomplete');
       // Act also on registered fields
       $.each(autocomplete.options.forms, function(key, value) {
-    	var elem = $(context).find(autocomplete.options.forms[key].selector).data("key", key).attr("class", "form-autocomplete").attr('data-id', key);
-	  	$autocomplete = $.merge($autocomplete, elem);
-      });
-      // Run only once on found elements
-      $autocomplete.once('autocomplete');
-      // If present: autocomplete those fields
-      if ($autocomplete.length) {
-        // Allow options to be overriden per instance.
-        var blacklist = $autocomplete.attr('data-autocomplete-first-character-blacklist');
-        $.extend(autocomplete.options, {
-          firstCharacterBlacklist: (blacklist) ? blacklist : ''
+      	var elem = $(context).find(autocomplete.options.forms[key].selector).data("key", key).attr("class", "form-autocomplete").attr('data-id', key);
+  	  	$autocomplete = $.merge($autocomplete, elem);
+      
+  	  	$.each($autocomplete, function(key, value) {
+  	  	  value = $(value);
+  	  	  
+          // Run only once on found elements
+  	  	  value.once('autocomplete');
+
+          // If present: autocomplete those fields
+          if (value.length) {
+            // Allow options to be overriden per instance.
+            var blacklist = value.attr('data-autocomplete-first-character-blacklist');
+            $.extend(autocomplete.options, {
+              firstCharacterBlacklist: (blacklist) ? blacklist : ''
+            });
+            
+            
+            // Use jQuery UI Autocomplete on the textfield.
+            value.autocomplete(autocomplete.options)
+              .data("ui-autocomplete")
+              ._renderItem = autocomplete.options.renderItem;
+            // Add theme id to suggestion list.
+            if (value.data("key")) {
+              value.autocomplete("widget").attr("data-sa-theme", autocomplete.options.forms[value.data("key")].theme);
+            }
+          }
         });
-        // Use jQuery UI Autocomplete on the textfield.
-        $autocomplete.autocomplete(autocomplete.options)
-          .data("ui-autocomplete")
-          ._renderItem = autocomplete.options.renderItem;
-        // Add theme id to suggestion list.
-        if ($autocomplete.data('key')) {
-          $autocomplete.autocomplete("widget").attr("data-sa-theme", autocomplete.options.forms[$autocomplete.data('key')].theme);
-        }
-      }
+      });
     },
     detach: function (context, settings, trigger) {
       if (trigger === 'unload') {
