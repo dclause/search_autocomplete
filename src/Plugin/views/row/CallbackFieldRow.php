@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\search_autocomplete\Plugin\views\row\DataFieldRow.
+ * Contains \Drupal\search_autocomplete\Plugin\views\row\CallbackFieldRow.
  *
  * Sponsored by: www.drupal-addict.com
  */
@@ -27,7 +27,7 @@ use Drupal\views\Plugin\views\row\RowPluginBase;
  *   display_types = {"callback"}
  * )
  */
-class DataFieldRow extends RowPluginBase {
+class CallbackFieldRow extends RowPluginBase {
 
   /**
    * Overrides \Drupal\views\Plugin\views\row\RowPluginBase::$usesFields.
@@ -120,7 +120,7 @@ class DataFieldRow extends RowPluginBase {
 
   /**
    * Form element validation handler for
-   * \Drupal\search_autocomplete\Plugin\views\row\DataFieldRow::buildOptionsForm().
+   * \Drupal\search_autocomplete\Plugin\views\row\CallbackFieldRow::buildOptionsForm().
    */
   public function validateAliasName($element, FormStateInterface $form_state) {
     if (preg_match('@[^A-Za-z0-9_-]+@', $element['#value'])) {
