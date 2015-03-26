@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Test case for testing the Config Entity Example module.
+ * Test case for testing the default configuration creation.
  *
  * Sponsored by: www.drupal-addict.com
  */
@@ -63,7 +63,7 @@ class DefaultConfigEntityTest extends WebTestBase {
       'moreResultsLink'   => '',
       'source'            => 'autocompletion_callbacks::nodes_autocompletion_callback',
       'theme'             => 'basic-blue.css',
-      'hidden'            => FALSE
+      'hidden'            => FALSE,
     );
 
     // ----------------------------------------------------------------------

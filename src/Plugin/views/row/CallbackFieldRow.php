@@ -119,8 +119,7 @@ class CallbackFieldRow extends RowPluginBase {
   }
 
   /**
-   * Form element validation handler for
-   * \Drupal\search_autocomplete\Plugin\views\row\CallbackFieldRow::buildOptionsForm().
+   * Form element validation handler for CallbackFieldRow::buildOptionsForm().
    */
   public function validateAliasName($element, FormStateInterface $form_state) {
     if (preg_match('@[^A-Za-z0-9_-]+@', $element['#value'])) {
@@ -129,7 +128,8 @@ class CallbackFieldRow extends RowPluginBase {
   }
 
   /**
-   * Overrides \Drupal\views\Plugin\views\row\RowPluginBase::validateOptionsForm().
+   * Overrides
+   * \Drupal\views\Plugin\views\row\RowPluginBase::validateOptionsForm().
    */
   public function validateOptionsForm(&$form, FormStateInterface $form_state) {
     // Collect an array of aliases to validate.

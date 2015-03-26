@@ -2,7 +2,6 @@
 
 /**
  * @file
- * Contains Drupal\search_autocomplete\Form\AutocompletionConfigurationEditForm.
  *
  * Sponsored by: www.drupal-addict.com
  */
@@ -76,7 +75,7 @@ class AutocompletionConfigurationEditForm extends AutocompletionConfigurationFor
       '#type'           => 'details',
       '#title'          => t('HOW - How to display Search Autocomplete suggestions?'),
       '#collapsible'    => TRUE,
-      '#collapsed'      => TRUE,
+      '#open'           => FALSE,
     );
     // Minimum characters to set autocompletion on.
     $form['search_autocomplete_how']['minChar'] = array(
@@ -191,7 +190,7 @@ class AutocompletionConfigurationEditForm extends AutocompletionConfigurationFor
       '#title'          => t('WHAT - What to display in Search Autocomplete suggestions?'),
       '#description'    => t('Choose which data should be added to autocompletion suggestions.'),
       '#collapsible'    => TRUE,
-      '#collapsed'      => FALSE,
+      '#open'           => TRUE,
     );
     $source = $this->entity->getSource();
     $form['search_autocomplete_what']['source'] = array(
@@ -222,23 +221,20 @@ class AutocompletionConfigurationEditForm extends AutocompletionConfigurationFor
 
     // ------------------------------------------------------------------.
     // ADVANCED - Advanced options.
-    if ($this->entity->getSelector()) {
-      $form['search_autocomplete_advanced'] = array(
-        '#type'             => 'details',
-        '#title'            => t('ADVANCED - Advanced options'),
-        '#collapsible'      => TRUE,
-        '#collapsed'        => TRUE,
-      );
-      $form['search_autocomplete_advanced']['selector'] = array(
-        '#type'             => 'textfield',
-        '#title'            => t('ID selector for this form'),
-        '#description'      => t('Please change only if you know what you do, read <a href="http://drupal-addict.com/nos-projets/search-autocomplete">documentation</a> first.'),
-        '#default_value'    => $this->entity->getSelector(),
-        '#maxlength'        => 255,
-        '#size'             => 35,
-        '#required'         => TRUE,
-      );
-    }
+    $form['search_autocomplete_advanced'] = array(
+      '#type'             => 'details',
+      '#title'            => t('ADVANCED - Advanced options'),
+      '#collapsible'      => TRUE,
+      '#collapsed'        => TRUE,
+    );
+    $form['search_autocomplete_advanced']['selector'] = array(
+      '#type'             => 'textfield',
+      '#title'            => t('ID selector for this form'),
+      '#description'      => t('Please change only if you know what you do, read <a href="http://drupal-addict.com/nos-projets/search-autocomplete">documentation</a> first.'),
+      '#default_value'    => $this->entity->getSelector(),
+      '#maxlength'        => 255,
+      '#size'             => 35,
+    );
 
     // Return the form.
     return $form;

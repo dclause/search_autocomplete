@@ -2,7 +2,6 @@
 
 /**
  * @file
- * Contains Drupal\search_autocomplete\Form\AutocompletionConfigurationDeleteForm.
  *
  * Sponsored by: www.drupal-addict.com
  */
