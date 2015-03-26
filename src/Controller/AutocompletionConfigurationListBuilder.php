@@ -1,7 +1,6 @@
 <?php
 /**
  * @file
- * Contains Drupal\search_autocomplete\Controller\AutocompletionConfigurationListBuilder.
  *
  * Sponsored by: www.drupal-addict.com
  */

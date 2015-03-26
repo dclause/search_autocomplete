@@ -2,7 +2,6 @@
 
 /**
  * @file
- * Contains Drupal\search_autocomplete\Form\AutocompletionConfigurationFormBase.
  *
  * Sponsored by: www.drupal-addict.com
  */
@@ -169,11 +168,13 @@ class AutocompletionConfigurationFormBase extends EntityForm {
       )
     );
 
-    // If other configurations have the same selector, notify it.
-    if ($entities != NULL) {
-      if (count($entities) == 1 && $entities[$this->entity->id()]->getSelector() == $this->entity->getSelector()) {
+    // If other configurations have the same selector (not null)...
+    if ($entities != NULL && $form_state->getValue('selector')) {
+      // Exclude that same entity (case of update).
+      if (count($entities) == 1 && isset($entities[$this->entity->id()])) {
         return;
       }
+      // Otherwise notify the error.
       else {
         $form_state->setErrorByName('selector', $this->t('The selector ID must be unique.'));
       }
