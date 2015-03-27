@@ -120,12 +120,20 @@ interface AutocompletionConfigurationInterface extends ConfigEntityInterface {
   public function getTheme();
 
   /**
-   * Returns whether the configuration is hidden to users or not.
+   * Returns whether the configuration is editable by authorized users.
    *
    * @return boolean
-   *   TRUE if the configuration is hidden, false otherwise.
+   *   TRUE if the configuration is editable, FALSE otherwise.
    */
-  public function getHidden();
+  public function getEditable();
+
+  /**
+   * Returns whether the configuration is deletable by authorized users.
+   *
+   * @return boolean
+   *   TRUE if the configuration is deletable, FALSE otherwise.
+   */
+  public function getDeletable();
 
   /* -----------------------------
    * ---------  SETTERS  ---------
@@ -230,12 +238,21 @@ interface AutocompletionConfigurationInterface extends ConfigEntityInterface {
   public function setTheme($theme);
 
   /**
-   * Sets whether the configuration is hidden to users or not.
-   * Hidden configurations cannot be created from GUI.
+   * Sets whether the configuration is editable by authorized users.
+   * None editable configurations cannot be created from GUI.
    *
-   * @param boolean $hidden
-   *   TRUE if the configuration is hidden, false otherwise.
+   * @param boolean $editable
+   *   TRUE if the configuration is $editable, FALSE otherwise.
    */
-  public function setHidden($hidden);
+  public function setEditable($editable);
+
+  /**
+   * Sets whether the configuration is deletable by authorized users.
+   * None deletable configurations cannot be created from GUI.
+   *
+   * @param boolean $deletable
+   *   TRUE if the configuration is $deletable, FALSE otherwise.
+   */
+  public function setDeletable($deletable);
 
 }

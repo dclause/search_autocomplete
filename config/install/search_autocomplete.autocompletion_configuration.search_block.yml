@@ -22,4 +22,5 @@ moreResultsValue: '[search-phrase]'
 moreResultsLink: ''
 source: 'autocompletion_callbacks::nodes_autocompletion_callback'
 theme: basic-blue.css
-hidden: FALSE
+editable: TRUE
+deletable: FALSE

@@ -18,7 +18,7 @@ use Drupal\simpletest\WebTestBase;
  *
  * @ingroup seach_auocomplete
  */
-class DefaultConfigEntityTest extends WebTestBase {
+class DefaultConfigTest extends WebTestBase {
 
   /**
    * Modules to enable.
@@ -63,7 +63,8 @@ class DefaultConfigEntityTest extends WebTestBase {
       'moreResultsLink'   => '',
       'source'            => 'autocompletion_callbacks::nodes_autocompletion_callback',
       'theme'             => 'basic-blue.css',
-      'hidden'            => FALSE,
+      'editable'          => TRUE,
+      'deletable'         => FALSE,
     );
 
     // ----------------------------------------------------------------------
@@ -87,7 +88,8 @@ class DefaultConfigEntityTest extends WebTestBase {
     $this->assertEqual($entity->getMoreResultsLink(), $config['moreResultsLink']);
     $this->assertEqual($entity->getSource(), $config['source']);
     $this->assertEqual($entity->getTheme(), $config['theme']);
-    $this->assertEqual($entity->getHidden(), $config['hidden']);
+    $this->assertEqual($entity->getEditable(), $config['editable']);
+    $this->assertEqual($entity->getDeletable(), $config['deletable']);
   }
 
 }

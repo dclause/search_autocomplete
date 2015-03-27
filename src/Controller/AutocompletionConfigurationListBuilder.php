@@ -70,12 +70,16 @@ class AutocompletionConfigurationListBuilder extends ConfigEntityListBuilder imp
       ),
     );
 
-    // Retrieve existing none hidden configurations.
-    $entities = $this->storage->loadByProperties(array('hidden' => FALSE));
+    // Retrieve existing configurations.
+    $entity_ids = $this->getEntityIds();
+    $entities = $this->storage->loadMultiple($entity_ids);
 
     // Build blocks first for each region.
     $configs = array();
     foreach ($entities as $entity_id => $entity) {
+      $editable = $entity->getEditable() ? 'editable' : '';
+      $deletable = $entity->getEditable() ? 'deletable' : '';
+      $form['configs'][$entity_id]['#attributes'] = array('id' => array($entity_id), 'class' => array($editable, $deletable));
       $form['configs'][$entity_id]['label'] = array(
         '#markup' => String::checkPlain($entity->label()),
       );

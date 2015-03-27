@@ -18,7 +18,7 @@ use Drupal\simpletest\WebTestBase;
  *
  * @ingroup seach_auocomplete
  */
-class BasicCRUDConfigEntityTest extends WebTestBase {
+class BasicCRUDConfigTest extends WebTestBase {
 
   /**
    * Modules to enable.
@@ -77,7 +77,7 @@ class BasicCRUDConfigEntityTest extends WebTestBase {
     // Build a configuration data.
     $config_name = 'testing_config';
     $config = array(
-      'label'             => 'Unit testing configuration.',
+      'label'             => 'Unit testing configuration',
       'selector'          => '#test-key',
       'minChar'           => 3,
       'maxSuggestions'    => 10,
@@ -189,7 +189,7 @@ class BasicCRUDConfigEntityTest extends WebTestBase {
     // Build a configuration data.
     $config_name = 'testing_config';
     $config = array(
-      'label'             => 'Unit testing configuration.',
+      'label'             => 'Unit testing configuration',
       'selector'          => '',
       'minChar'           => 3,
       'maxSuggestions'    => 10,
@@ -252,6 +252,7 @@ class BasicCRUDConfigEntityTest extends WebTestBase {
     // ----------------------------------------------------------------------
     // 4) Verify that user is redirected to listing page.
     $this->assertUrl('/admin/config/search/search_autocomplete');
+    $this->assertRaw("<td>Unit testing configuration</td>");
 
     // ----------------------------------------------------------------------
     // 5) Verify that we can edit the configuration through admin UI.
@@ -271,6 +272,12 @@ class BasicCRUDConfigEntityTest extends WebTestBase {
     $this->assertFieldByName('source', $config['source']);
     $this->assertOptionSelected('edit-theme', $config['theme']);
 
+    // ----------------------------------------------------------------------
+    // 6) Verify that we can delete the configuration.
+    $this->drupalGet("/admin/config/search/search_autocomplete/manage/" . $config_name . "/delete");
+    $this->assertText('This action cannot be undone.');
+    $this->drupalPostForm(NULL, array(), 'Delete this configuration');
+    $this->assertRaw('The autocompletion configuration <em class="placeholder">' . $config['label'] . '</em> is deleted.');
+    $this->assertNoRaw("<td>Unit testing configuration</td>");
   }
-
 }
