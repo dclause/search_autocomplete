@@ -18,7 +18,7 @@ use Drupal\simpletest\WebTestBase;
  *
  * @ingroup seach_auocomplete
  */
-class UnicityConfigEntityTest extends WebTestBase {
+class UnicityConfigTest extends WebTestBase {
 
   /**
    * Modules to enable.

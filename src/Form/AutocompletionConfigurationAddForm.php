@@ -97,7 +97,8 @@ class AutocompletionConfigurationAddForm extends AutocompletionConfigurationForm
     $this->entity->setNoResultValue($this->t('[search-phrase]'));
     $this->entity->setSource('autocompletion_callbacks::nodes_autocompletion_callback');
     $this->entity->setTheme('basic-blue.css');
-    $this->entity->setHidden(FALSE);
+    $this->entity->setEditable(TRUE);
+    $this->entity->setDeletable(TRUE);
     $this->entity->save();
 
     // Redirect to edit form once entity is added.

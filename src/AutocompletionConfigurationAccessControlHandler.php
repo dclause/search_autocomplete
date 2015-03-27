@@ -11,6 +11,7 @@ namespace Drupal\search_autocomplete;
 use Drupal\Core\Entity\EntityAccessControlHandler;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Access\AccessResult;
 
 /**
  * Defines an access controller for the autocompletion_configuration entity.
@@ -27,11 +28,11 @@ class AutocompletionConfigurationAccessControlHandler extends EntityAccessContro
    * {@inheritdoc}
    */
   public function checkAccess(EntityInterface $entity, $operation, $langcode, AccountInterface $account) {
-    if ($operation == 'view') {
-      return TRUE;
+    if ($operation == 'update' && !$entity->getEditable()) {
+      return AccessResult::forbidden()->cacheUntilEntityChanges($entity);
     }
-    elseif ($entity->getHidden()) {
-      return FALSE;
+    if ($operation == 'delete' && !$entity->getDeletable()) {
+      return AccessResult::forbidden()->cacheUntilEntityChanges($entity);
     }
     return parent::checkAccess($entity, $operation, $langcode, $account);
   }

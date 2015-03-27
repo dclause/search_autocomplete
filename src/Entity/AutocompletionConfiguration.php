@@ -67,7 +67,8 @@ use Drupal\search_autocomplete\SuggestionGroup;
  *     "selector" = "selector"
  *   },
  *   links = {
- *     "edit-form" = "/examples/search_autocomplete/manage/{autocompletion_configuration}",
+ *     "edit-form" =
+ *       "/examples/search_autocomplete/manage/{autocompletion_configuration}",
  *     "delete-form" = "/examples/search_autocomplete/manage/{autocompletion_configuration}/delete"
  *   }
  * )
@@ -199,12 +200,18 @@ class AutocompletionConfiguration extends ConfigEntityBase implements Autocomple
   protected $theme;
 
   /**
-   * Define if users can edit this configuration. If not, the configuration
-   * will not display in GUI.
+   * Define if users can edit this configuration.
    *
    * @var string
    */
-  protected $hidden;
+  protected $editable;
+
+  /**
+   * Define if users can delete this configuration.
+   *
+   * @var string
+   */
+  protected $deletable;
 
 
   /**
@@ -319,8 +326,15 @@ class AutocompletionConfiguration extends ConfigEntityBase implements Autocomple
   /**
    * {@inheritdoc}
    */
-  public function getHidden() {
-    return $this->hidden;
+  public function getEditable() {
+    return $this->editable;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getDeletable() {
+    return $this->deletable;
   }
 
   /** ----------------------------- *
@@ -427,8 +441,15 @@ class AutocompletionConfiguration extends ConfigEntityBase implements Autocomple
   /**
    * {@inheritdoc}
    */
-  public function setHidden($hidden) {
-    $this->hidden = $hidden;
+  public function setEditable($editable) {
+    $this->editable = $editable;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setDeletable($deletable) {
+    $this->deletable = $deletable;
   }
 
 }

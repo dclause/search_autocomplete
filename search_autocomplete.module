@@ -246,5 +246,15 @@ function search_autocomplete_form_alter(&$form, \Drupal\Core\Form\FormStateInter
   if ($form_id == 'search_block_form') {
     $form['keys']['#autocomplete_configuration'] = 'search_block';
   }
+  else if ($form_id == 'search_form') {
+    if (strpos($form['#action'], 'search/users')) {
+      $form['basic']['keys']['#autocomplete_configuration'] = 'search_form_users';
+    } else {
+      $form['basic']['keys']['#autocomplete_configuration'] = 'search_form_content';
+    }
+  }
+  else {
+    drupal_set_message($form_id);
+  }
   return $form;
 }

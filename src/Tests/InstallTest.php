@@ -39,6 +39,18 @@ class InstallTest extends WebTestBase {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  protected function setUp() {
+    parent::setUp();
+
+    // Make default entity deletable for testing purpose.
+    $config = \Drupal::entityManager()->getStorage('autocompletion_configuration')->load('search_block');
+    $config->setDeletable(TRUE);
+    $config->save();
+  }
+
+  /**
    * Check that Search Autocomplete module installs properly.
    *
    * 1) Verify that anonymous users can't access admin paths.
@@ -86,7 +98,7 @@ class InstallTest extends WebTestBase {
     }
 
     /* ----------------------------------------------------------------------
-     * 3) Verify that admin userscan access admin paths.
+     * 3) Verify that admin users can access admin paths.
      */
 
     // Create a user who can administer search autocomplete.
@@ -95,7 +107,7 @@ class InstallTest extends WebTestBase {
     // Forbidden paths aren't forbidden any more.
     foreach ($admin_paths as $unforbidden) {
       $this->drupalGet($unforbidden);
-      $this->assertResponse(200, "Access granted to admin user for path: $unforbidden");
+      $this->assertResponse(200, "Access not granted to admin user for path: $unforbidden");
     }
 
     /* ----------------------------------------------------------------------

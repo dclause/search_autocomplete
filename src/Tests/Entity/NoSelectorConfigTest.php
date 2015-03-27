@@ -18,7 +18,7 @@ use Drupal\simpletest\WebTestBase;
  *
  * @ingroup seach_auocomplete
  */
-class SpecialCasesConfigEntityTest extends WebTestBase {
+class NoSelectorConfigTest extends WebTestBase {
 
   /**
    * Modules to enable.
