@@ -3,6 +3,7 @@ status: true
 dependencies:
   module:
     - node
+    - search
     - search_autocomplete
     - user
 id: autocompletion_callbacks
@@ -438,7 +439,7 @@ display:
             use_operator: false
             operator: title_op
             identifier: title
-            required: false
+            required: true
             remember: false
             multiple: false
             remember_roles:
@@ -494,10 +495,9 @@ display:
       display_extenders: {  }
     cache_metadata:
       contexts:
-        - node_view_grants
-        - user
-        - cache.context.url
-        - language
+        - languages
+        - url
+        - 'user.node_grants:view'
       cacheable: false
   nodes_autocompletion_callback:
     display_plugin: autocompletion_callback
@@ -534,8 +534,117 @@ display:
               alias: created
     cache_metadata:
       contexts:
-        - node_view_grants
-        - user
-        - cache.context.url
-        - language
+        - languages
+        - url
+        - 'user.node_grants:view'
+      cacheable: false
+  words_autocompletion_callback:
+    display_plugin: autocompletion_callback
+    id: words_autocompletion_callback
+    display_title: 'Words Autocompletion Callback'
+    position: 1
+    display_options:
+      display_extenders: {  }
+      display_description: ''
+      path: callback/words
+      style:
+        type: callback_serializer
+        options:
+          grouping:
+            -
+              field: type
+          input_label: title
+          input_link: path
+      row:
+        type: callback_fields
+        options:
+          field_options:
+            title:
+              alias: ''
+            type:
+              alias: ''
+            path:
+              alias: ''
+            created:
+              alias: ''
+            name:
+              alias: ''
+            nothing:
+              alias: created
+      filters:
+        status:
+          value: true
+          table: node_field_data
+          field: status
+          plugin_id: boolean
+          entity_type: node
+          entity_field: status
+          id: status
+          expose:
+            operator: ''
+          group: 1
+        keys:
+          id: keys
+          table: node_search_index
+          field: keys
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: required
+          value: ''
+          group: 1
+          exposed: true
+          expose:
+            operator_id: keys_op
+            label: 'Search Keywords'
+            description: ''
+            use_operator: false
+            operator: keys_op
+            identifier: search
+            required: true
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              administrator: '0'
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          plugin_id: search_keywords
+      defaults:
+        filters: false
+        filter_groups: false
+        sorts: false
+      filter_groups:
+        operator: AND
+        groups:
+          1: AND
+      sorts:
+        score:
+          id: score
+          table: node_search_index
+          field: score
+          relationship: none
+          group_type: group
+          admin_label: ''
+          order: DESC
+          exposed: false
+          expose:
+            label: ''
+          plugin_id: search_score
+    cache_metadata:
+      contexts:
+        - languages
+        - url
+        - 'user.node_grants:view'
       cacheable: false
