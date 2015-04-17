@@ -108,8 +108,8 @@ function attach_configuration_to_element(&$element, $config_id) {
       // Build filters
       $filters = $view->getHandlers('filter');
       foreach ($filters as $filter) {
-        if (isset($filter['exposed']) && $filter['exposed']) {
-          $exposed_filters[] = $filter['field'];
+        if ($filter['exposed'] && isset($filter['expose'])) {
+          $exposed_filters[] = $filter['expose']['identifier'];
         }
       }
     }
@@ -247,14 +247,11 @@ function search_autocomplete_form_alter(&$form, \Drupal\Core\Form\FormStateInter
     $form['keys']['#autocomplete_configuration'] = 'search_block';
   }
   else if ($form_id == 'search_form') {
-    if (strpos($form['#action'], 'search/users')) {
+    if (strpos($form['#action'], 'search/user')) {
       $form['basic']['keys']['#autocomplete_configuration'] = 'search_form_users';
     } else {
       $form['basic']['keys']['#autocomplete_configuration'] = 'search_form_content';
     }
-  }
-  else {
-    drupal_set_message($form_id);
   }
   return $form;
 }
