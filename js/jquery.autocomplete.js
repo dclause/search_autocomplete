@@ -55,9 +55,10 @@
       if (Drupal.settings.search_autocomplete) {
         $.each(Drupal.settings.search_autocomplete, function(key, value) {
           $(Drupal.settings.search_autocomplete[key].selector).bind("mouseover", function() {
-             $(Drupal.settings.search_autocomplete[key].selector).addClass('ui-autocomplete-processed').attr('data-sa-theme', Drupal.settings.search_autocomplete[key].theme).autocomplete({
+             $(Drupal.settings.search_autocomplete[key].selector).addClass('form-autocomplete ui-autocomplete-processed').attr('data-sa-theme', Drupal.settings.search_autocomplete[key].theme).autocomplete({
             	 	minLength: Drupal.settings.search_autocomplete[key].minChars,
             	 	source: function(request, response) {
+                 $(Drupal.settings.search_autocomplete[key].selector).addClass('throbbing');
 		              // External URL:
 		              if (Drupal.settings.search_autocomplete[key].type == 'external') {
 		                $.getJSON(Drupal.settings.search_autocomplete[key].datas, { q: encodeURIComponent(request.term) }, function (results) {
@@ -90,6 +91,7 @@
 		            open: function(event, ui) {
 		              $(".ui-autocomplete li.ui-menu-item:odd").addClass("ui-menu-item-odd");
 		              $(".ui-autocomplete li.ui-menu-item:even").addClass("ui-menu-item-even");
+		              $(Drupal.settings.search_autocomplete[key].selector).removeClass('throbbing');
 		            },
 		            select: function(event, ui) {
 		              if (Drupal.settings.search_autocomplete[key].auto_redirect == 1 && ui.item.link) {

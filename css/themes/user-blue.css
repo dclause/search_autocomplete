@@ -17,16 +17,6 @@ input[data-sa-theme="user-blue"].ui-autocomplete {
 * html input[data-sa-theme="user-blue"].ui-autocomplete {
   width: 1px; /* without this, the menu expands to 100% in IE6 */
 }
-input[data-sa-theme="user-blue"].ui-autocomplete-input {
-  background-image: url("images/throbber.gif");
-  background-position: 100% 4px;
-  background-repeat: no-repeat;
-}
-input[data-sa-theme="user-blue"].ui-autocomplete-loading {
-  background-image: url("images/throbber.gif");
-  background-position: 100% -16px;
-  background-repeat: no-repeat;
-}
 
 input[data-sa-theme="user-blue"].ui-widget-content {
   background: none;
