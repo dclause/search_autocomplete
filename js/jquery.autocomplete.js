@@ -8,17 +8,26 @@
 
 (function ($) {
 
+  function strip(html)
+  {
+   var tmp = document.createElement("DIV");
+   tmp.innerHTML = html;
+   return tmp.textContent || tmp.innerText || "";
+  }
+
   // Autocomplete
   $.ui.autocomplete.prototype._renderItem = function (ul, item) {
     var term = this.term;
     var first = ("group" in item)  ? 'first' : '';
     var innerHTML = '<div class="ui-autocomplete-fields ' + first + '">';
+    item.value = strip(item.value);
+    item.label = Drupal.checkPlain(item.label);
     if (item.fields) {
       $.each(item.fields, function(key, value) {
         var regex = new RegExp('(' + $.trim(term) + ')', 'gi');
-        var output = value;
+        var output = Drupal.checkPlain(value);
         if (value.indexOf('src=') == -1 && value.indexOf('href=') == -1) {
-          output = value.replace(regex, "<span class='ui-autocomplete-field-term'>$1</span>");
+          output = output.replace(regex, "<span class='ui-autocomplete-field-term'>$1</span>");
         }
         innerHTML += ('<div class="ui-autocomplete-field-' + key + '">' + output + '</div>');
       });
@@ -39,7 +48,7 @@
     if (item.value == '') {
     	elem = $("<li class='ui-state-disabled ui-menu-item-" + first + " ui-menu-item'>" + item.label + "</li>" );
     }
-	elem.data("item.autocomplete", item).appendTo(ul);
+    elem.data("item.autocomplete", item).appendTo(ul);
     
     Drupal.attachBehaviors(elem);
     return elem;
