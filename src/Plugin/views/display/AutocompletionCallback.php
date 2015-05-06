@@ -16,7 +16,6 @@ use Drupal\views\Plugin\views\display\PathPluginBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RouteCollection;
-use Drupal\Component\Utility\String;
 
 /**
  * The plugin that handles Data response callbacks for REST resources.
