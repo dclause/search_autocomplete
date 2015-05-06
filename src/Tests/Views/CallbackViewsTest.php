@@ -13,7 +13,7 @@ namespace Drupal\search_autocomplete\Tests\Views;
 use Drupal\views\Tests\ViewTestBase;
 use Drupal\views\Views;
 use Drupal\node\Entity\Node;
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 
 /**
  * Test callback view configurations.
@@ -141,7 +141,7 @@ class CallbackViewsTest extends ViewTestBase {
       );
       $node = entity_create('node', $settings);
       $status = $node->save();
-      $this->assertEqual($status, SAVED_NEW, String::format('Created node %title.', array('%title' => $node->label())));
+      $this->assertEqual($status, SAVED_NEW, SafeMarkup::format('Created node %title.', array('%title' => $node->label())));
 
       $result = array(
         'value' => $type->id() . ' ' . $i,

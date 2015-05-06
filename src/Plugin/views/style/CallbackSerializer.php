@@ -15,7 +15,7 @@ use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\views\style\StylePluginBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 
 /**
  * The style plugin for serialized output formats.
@@ -89,7 +89,7 @@ class CallbackSerializer extends StylePluginBase {
     $form['input_label'] = array(
       '#title'          => t('Input Label'),
       '#type'           => 'select',
-      '#description'    => String::checkPlain($input_label_descr),
+      '#description'    => SafeMarkup::checkPlain($input_label_descr),
       '#default_value'  => $this->options['input_label'],
       '#disabled'       => empty($field_labels),
       '#required'       => TRUE,
@@ -101,7 +101,7 @@ class CallbackSerializer extends StylePluginBase {
     $form['input_link'] = array(
       '#title'          => t('Input Link'),
       '#type'           => 'select',
-      '#description'    => String::checkPlain($input_link_descr),
+      '#description'    => SafeMarkup::checkPlain($input_link_descr),
       '#default_value'  => $this->options['input_link'],
       '#disabled'       => empty($field_labels),
       '#required'       => TRUE,
@@ -204,9 +204,9 @@ class CallbackSerializer extends StylePluginBase {
    * This methods returns the render value of a field, plus, in the case of
    * content types, return the human name instead of machine name.
    *
-   * @param String $index
+   * @param string $index
    *   The index of the field to render.
-   * @param String $field_type
+   * @param string $field_type
    *   The field type to be rendered.
    *
    * @return string|null
