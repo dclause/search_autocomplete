@@ -26,7 +26,7 @@ use Drupal\Component\Utility\SafeMarkup;
  *   id = "callback_serializer",
  *   title = @Translation("Callback Serializer"),
  *   help = @Translation("Serializes views row data using json_encode."),
- *   display_types = {"callback"}
+ *   display_types = {"autocompletion_callback"}
  * )
  */
 class CallbackSerializer extends StylePluginBase {

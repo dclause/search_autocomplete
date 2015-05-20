@@ -108,7 +108,7 @@ function attach_configuration_to_element(&$element, $config_id) {
       // Build filters
       $filters = $view->getHandlers('filter');
       foreach ($filters as $filter) {
-        if ($filter['exposed'] && isset($filter['expose'])) {
+        if (isset($filter['exposed']) && $filter['exposed'] && isset($filter['expose'])) {
           $exposed_filters[] = $filter['expose']['identifier'];
         }
       }

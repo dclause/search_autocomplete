@@ -71,15 +71,23 @@ class CallbackViewsTest extends ViewTestBase {
   }
 
   /**
-   * Basic checks : default view is inserted.
+   * Basic checks : default views are inserted.
    */
   public function testDefaultView() {
-    $view = Views::getView('autocompletion_callbacks');
-
-    // Find the view in the view list page.
+    // Find the views in the view list page.
     $this->drupalGet("admin/structure/views");
-    $this->assertRaw(t('Autocompletion Callbacks'));
-    $this->assertRaw(t('autocompletion_callbacks'));
+
+    // Nodes callback view
+    $this->assertRaw(t('Nodes Autocompletion Callbacks'));
+    $this->assertRaw(t('autocompletion_callbacks_nodes'));
+
+    // Users callback view
+    $this->assertRaw(t('Users Autocompletion Callbacks'));
+    $this->assertRaw(t('autocompletion_callbacks_users'));
+
+    // Words callback view
+    $this->assertRaw(t('Words Autocompletion Callbacks'));
+    $this->assertRaw(t('autocompletion_callbacks_words'));
   }
 
   /**

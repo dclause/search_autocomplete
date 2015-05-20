@@ -24,7 +24,7 @@ use Drupal\views\Plugin\views\row\RowPluginBase;
  *   id = "callback_fields",
  *   title = @Translation("Fields"),
  *   help = @Translation("Use fields as row data."),
- *   display_types = {"callback"}
+ *   display_types = {"autocompletion_callback"}
  * )
  */
 class CallbackFieldRow extends RowPluginBase {
