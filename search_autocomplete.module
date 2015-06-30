@@ -90,6 +90,9 @@ function attach_configuration_to_element(&$element, $config_id) {
   // Load the configuration.
   $config = \Drupal::entityManager()->getStorage('autocompletion_configuration')->load($config_id);
 
+  // No need to continue if the $config is empty.
+  if ($config == null)  return;
+
   $source = $config->getSource();
   $exposed_filters = array();
 
@@ -252,6 +255,8 @@ function search_autocomplete_form_alter(&$form, \Drupal\Core\Form\FormStateInter
     } else {
       $form['basic']['keys']['#autocomplete_configuration'] = 'search_form_content';
     }
+  } else if ($form_id == 'path_admin_add') {
+    $form['source']['#autocomplete_configuration'] = 'path_admin_add';
   }
   return $form;
 }

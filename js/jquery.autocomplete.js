@@ -150,7 +150,7 @@
     else {
       var data = {};
       var path = '';
-      if (key) {
+      if (key && autocomplete.options.forms[key]) {
         path = autocomplete.options.forms[key].source;
         $.each(autocomplete.options.forms[key].filters, function(key, value) {
          data[value] = term;
