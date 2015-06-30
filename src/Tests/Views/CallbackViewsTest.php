@@ -29,7 +29,7 @@ class CallbackViewsTest extends ViewTestBase {
    *
    * @var array
    */
-  public static $modules = array('node', 'views_ui', 'search_autocomplete');
+  public static $modules = array('search', 'image', 'user', 'node', 'views_ui', 'search_autocomplete');
 
   /**
    * The admin user
@@ -77,15 +77,15 @@ class CallbackViewsTest extends ViewTestBase {
     // Find the views in the view list page.
     $this->drupalGet("admin/structure/views");
 
-    // Nodes callback view
+    // Nodes callback view.
     $this->assertRaw(t('Nodes Autocompletion Callbacks'));
     $this->assertRaw(t('autocompletion_callbacks_nodes'));
 
-    // Users callback view
+    // Users callback view.
     $this->assertRaw(t('Users Autocompletion Callbacks'));
     $this->assertRaw(t('autocompletion_callbacks_users'));
 
-    // Words callback view
+    // Words callback view.
     $this->assertRaw(t('Words Autocompletion Callbacks'));
     $this->assertRaw(t('autocompletion_callbacks_words'));
   }

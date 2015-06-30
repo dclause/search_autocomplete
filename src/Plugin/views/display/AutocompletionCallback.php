@@ -8,9 +8,13 @@
 
 namespace Drupal\search_autocomplete\Plugin\views\display;
 
+use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Core\Cache\CacheableMetadata;
+use Drupal\Core\Cache\CacheableResponse;
 use Drupal\Core\State\StateInterface;
 use Drupal\Core\Routing\RouteProviderInterface;
 use Drupal\Core\ContentNegotiation;
+use Drupal\views\Plugin\views\display\ResponseDisplayPluginInterface;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\display\PathPluginBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -32,7 +36,7 @@ use Symfony\Component\Routing\RouteCollection;
  *   autocompletion_callback_display = TRUE
  * )
  */
-class AutocompletionCallback extends PathPluginBase {
+class AutocompletionCallback extends PathPluginBase implements ResponseDisplayPluginInterface {
 
   /**
    * Overrides \Drupal\views\Plugin\views\display\DisplayPluginBase::$usesAJAX.
@@ -65,7 +69,7 @@ class AutocompletionCallback extends PathPluginBase {
    *
    * @var string
    */
-  protected $contentType = 'json';
+  protected $contentType = 'application/json';
 
   /**
    * The mime type for the response.
@@ -95,6 +99,26 @@ class AutocompletionCallback extends PathPluginBase {
   /**
    * {@inheritdoc}
    */
+  public static function buildResponse($view_id, $display_id, array $args = []) {
+    $build = static::buildBasicRenderable($view_id, $display_id, $args);
+
+    // @var \Drupal\Core\Render\RendererInterface $renderer.
+    $renderer = \Drupal::service('renderer');
+
+    $output = $renderer->renderRoot($build);
+
+    $response = new CacheableResponse($output, 200);
+    $cache_metadata = CacheableMetadata::createFromRenderArray($build);
+    $response->addCacheableDependency($cache_metadata);
+
+    $response->headers->set('Content-type', 'application/json');
+
+    return $response;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     return new static(
       $configuration,
@@ -112,13 +136,7 @@ class AutocompletionCallback extends PathPluginBase {
     parent::initDisplay($view, $display, $options);
 
     $request_content_type = $this->view->getRequest()->getRequestFormat();
-    // Only use the requested content type if it's not 'html'. If it is then
-    // default to 'json' to aid debugging.
-    // @todo Remove the need for this when we have better content negotiation.
-    if ($request_content_type != 'html') {
-      $this->setContentType($request_content_type);
-    }
-
+    $this->setContentType($request_content_type);
     $this->setMimeType($this->view->getRequest()->getMimeType($this->contentType));
   }
 
@@ -227,8 +245,7 @@ class AutocompletionCallback extends PathPluginBase {
   public function execute() {
     parent::execute();
 
-    $output = $this->view->render();
-    return new Response(drupal_render_root($output), 200, array('Content-type' => $this->getMimeType()));
+    return $this->view->render();
   }
 
   /**
@@ -238,6 +255,9 @@ class AutocompletionCallback extends PathPluginBase {
     $build = array();
     $build['#markup'] = $this->view->style_plugin->render();
 
+    $this->view->element['#content_type'] = $this->getMimeType();
+    $this->view->element['#cache_properties'][] = '#content_type';
+
     // Wrap the output in a pre tag if this is for a live preview.
     // Also little trick added to preview a formatted json for easier debug.
     if (!empty($this->view->live_preview)) {
@@ -246,6 +266,21 @@ class AutocompletionCallback extends PathPluginBase {
       $build['#markup'] = json_encode($dump, JSON_PRETTY_PRINT);
       $build['#suffix'] = '</pre>';
     }
+    elseif ($this->view->getRequest()->getFormat($this->view->element['#content_type']) !== 'html') {
+      // This display plugin is primarily for returning non-HTML formats.
+      // However, we still invoke the renderer to collect cacheability metadata.
+      // Because the renderer is designed for HTML rendering, it filters
+      // #markup for XSS unless it is already known to be safe, but that filter
+      // only works for HTML. Therefore, we mark the contents as safe to bypass
+      // the filter. So long as we are returning this in a non-HTML response
+      // (checked above), this is safe, because an XSS attack only works when
+      // executed by an HTML agent.
+      // @todo Decide how to support non-HTML in the render API in
+      //   https://www.drupal.org/node/2501313.
+      $build['#markup'] = SafeMarkup::set($build['#markup']);
+    }
+
+    parent::applyDisplayCachablityMetadata($build);
     return $build;
   }
 

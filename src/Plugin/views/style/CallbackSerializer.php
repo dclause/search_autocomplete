@@ -138,6 +138,9 @@ class CallbackSerializer extends StylePluginBase {
       $this->view->rowPlugin->setRowOptions($this->options);
 
       // Render the row according to our custom needs.
+      if (!isset($row->row_index) || $row->row_index == NULL) {
+        $row->row_index = $index;
+      }
       $rendered_row = $this->view->rowPlugin->render($row);
 
       // Case when it takes grouping.

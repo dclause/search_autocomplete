@@ -49,6 +49,13 @@ class CallbackFieldRow extends RowPluginBase {
    */
   protected $types = array();
 
+  /**
+   * Stores an array of options to determine if the raw field output is used.
+   *
+   * @var array
+   */
+  protected $rawOutputOptions = array();
+
   protected $rowOptions = array();
 
   /**
@@ -62,8 +69,9 @@ class CallbackFieldRow extends RowPluginBase {
       // Prepare a trimmed version of replacement aliases.
       $aliases = static::extractFromOptionsArray('alias', $options);
       $this->replacementAliases = array_filter(array_map('trim', $aliases));
+      // Prepare an array of raw output field options.
+      $this->rawOutputOptions = static::extractFromOptionsArray('raw_output', $options);
     }
-
     $this->types = NodeType::loadMultiple();
   }
 
@@ -151,8 +159,18 @@ class CallbackFieldRow extends RowPluginBase {
     // Render all fields.
     foreach ($this->view->field as $id => $field) {
 
-      // Render the value.
-      $value = $field->advancedRender($row);
+      // If this is not unknown and the raw output option has been set, just get
+      // the raw value.
+      if (($field->field_alias != 'unknown') && !empty($this->rawOutputOptions[$id])) {
+        $value = $field->sanitizeValue($field->getValue($row), 'xss_admin');
+      }
+      // Otherwise, pass this through the field advancedRender() method.
+      else {
+        if (!isset($this->view->row_index) || $this->view->row_index == null) {
+          $this->view->row_index = $row->row_index;
+        }
+        $value = $field->advancedRender($row);
+      }
 
       // Convert content type machine names to human names.
       if ($id == 'type' && isset($this->types[$value])) {
