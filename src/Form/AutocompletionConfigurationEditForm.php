@@ -296,10 +296,11 @@ class AutocompletionConfigurationEditForm extends AutocompletionConfigurationFor
     // Add the view as a suggestion if meeting user_input
     $options = array();
     foreach ($displays as $data) {
-      list($view, $display_id) = $data;
-      $display = $view->storage->get('display');
+      list($view_id, $display_id) = $data;
+      $view = Views::getView($view_id);
+      $display = $view->getDisplay();
       $suggestion_value = $view->storage->get('id') . '::' . $display_id;
-      $suggestion_label = $view->storage->get('label') . '::' . $display[$display_id]['display_title'];
+      $suggestion_label = $view->storage->get('label') . '::' . $display->display['display_title'];
       if (stristr($suggestion_label, $request->query->get('q')) !== FALSE) {
         $matches[] = array('value' => $suggestion_value, 'label' => $suggestion_label);
       }

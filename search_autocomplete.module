@@ -255,8 +255,6 @@ function search_autocomplete_form_alter(&$form, \Drupal\Core\Form\FormStateInter
     } else {
       $form['basic']['keys']['#autocomplete_configuration'] = 'search_form_content';
     }
-  } else if ($form_id == 'path_admin_add') {
-    $form['source']['#autocomplete_configuration'] = 'path_admin_add';
   }
   return $form;
 }
