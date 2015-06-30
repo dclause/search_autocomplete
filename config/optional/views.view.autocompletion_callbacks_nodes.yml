@@ -6,7 +6,7 @@ dependencies:
     - search_autocomplete
     - user
 id: autocompletion_callbacks_nodes
-label: 'Autocompletion Callbacks Nodes'
+label: 'Nodes Autocompletion Callbacks'
 module: views
 description: 'This vew is used to store default nodes autocompletion callbacks for Search Autocomplete module.'
 tag: ''
