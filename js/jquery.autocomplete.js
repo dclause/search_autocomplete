@@ -1,7 +1,7 @@
 /**
  * @file
  * SEARCH AUTOCOMPLETE javascript mechanism.
- * 
+ *
  * Sponsored by:
  * www.axiomcafe.fr
  */
@@ -114,8 +114,10 @@
 		              }
 		            },
 		            focus: function (event, ui) {
-		              if (ui.item.group.group_id == 'no_results' || ui.item.group.group_id == 'all_results') {
-		                  event.preventDefault();
+		              if (typeof ui.item.group != 'undefined') {
+  		              if (ui.item.group.group_id == 'no_results' || ui.item.group.group_id == 'all_results') {
+  		                  event.preventDefault();
+  		              }
 		              }
 		            },
 		            appendTo: $(Drupal.settings.search_autocomplete[key].selector).parent()
