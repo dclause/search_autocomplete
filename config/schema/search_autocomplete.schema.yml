@@ -8,7 +8,7 @@
 # https://drupal.org/node/1905070
 
 search_autocomplete.autocompletion_configuration.*:
-  type: mapping
+  type: config_object
   label: 'Autocompletion Configuration'
   mapping:
     id:
@@ -70,7 +70,7 @@ search_autocomplete.autocompletion_configuration.*:
       label: 'Define if users can delete this configuration.'
       
 search_autocomplete.settings:
-  type: mapping
+  type: config_object
   label: 'Search Autocomplete module settings'
   mapping:
     admin_helper:
