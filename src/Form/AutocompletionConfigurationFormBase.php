@@ -158,8 +158,8 @@ class AutocompletionConfigurationFormBase extends EntityForm {
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   An associative array containing the current state of the form.
    */
-  public function validate(array $form, FormStateInterface $form_state) {
-    parent::validate($form, $form_state);
+  public function validateForm(array &$form, FormStateInterface $form_state) {
+    parent::validateForm($form, $form_state);
 
     // Retrieve all configurations with same selector.
     $entities = $this->entityStorage->loadByProperties(
