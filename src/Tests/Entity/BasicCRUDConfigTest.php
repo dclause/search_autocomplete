@@ -25,8 +25,12 @@ class BasicCRUDConfigTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('node', 'search_autocomplete');
+  public static $modules = array('block', 'node', 'search_autocomplete');
 
+  /**
+   * Stores a user admin.
+   * @var \Drupal\user\Entity\User
+   */
   public $adminUser;
 
   /**
@@ -45,8 +49,12 @@ class BasicCRUDConfigTest extends WebTestBase {
    */
   protected function setUp() {
     parent::setUp();
+    // Create admin user.
     $this->adminUser = $this->drupalCreateUser(array('administer search autocomplete'));
+    // Log user as admin.
     $this->drupalLogin($this->adminUser);
+    // Place the local_actions_block in content.
+    $this->drupalPlaceBlock('local_actions_block', array('region' => 'content'));
   }
 
 
@@ -71,7 +79,7 @@ class BasicCRUDConfigTest extends WebTestBase {
     // a new configuration.
     $this->drupalGet('/admin/config/search/search_autocomplete');
 
-    // Click Add new button.
+    // Check that action link is now there and click 'Add new' button.
     $this->clickLink('Add new Autocompletion Configuration');
 
     // Build a configuration data.
