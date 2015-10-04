@@ -9,7 +9,6 @@
 
 namespace Drupal\search_autocomplete\Plugin\views\row;
 
-use Drupal\node\Entity\NodeType;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
@@ -42,14 +41,6 @@ class CallbackFieldRow extends RowPluginBase {
   protected $replacementAliases = array();
 
   /**
-   * Stores the content types defined. This is used for machine to human name
-   * conversion of content types.
-   *
-   * @var array
-   */
-  protected $types = array();
-
-  /**
    * Stores an array of options to determine if the raw field output is used.
    *
    * @var array
@@ -72,7 +63,6 @@ class CallbackFieldRow extends RowPluginBase {
       // Prepare an array of raw output field options.
       $this->rawOutputOptions = static::extractFromOptionsArray('raw_output', $options);
     }
-    $this->types = NodeType::loadMultiple();
   }
 
   /**
@@ -170,11 +160,6 @@ class CallbackFieldRow extends RowPluginBase {
           $this->view->row_index = $row->row_index;
         }
         $value = $field->advancedRender($row);
-      }
-
-      // Convert content type machine names to human names.
-      if ($id == 'type' && isset($this->types[$value])) {
-        $value = $this->types[$value]->get('name');
       }
 
       // Add input link.

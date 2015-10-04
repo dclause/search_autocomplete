@@ -9,7 +9,6 @@
 
 namespace Drupal\search_autocomplete\Plugin\views\style;
 
-use Drupal\node\Entity\NodeType;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
@@ -42,14 +41,6 @@ class CallbackSerializer extends StylePluginBase {
   protected $usesGrouping = TRUE;
 
   /**
-   * Stores the content types defined. This is used for machine to human name
-   * conversion of content types.
-   *
-   * @var array
-   */
-  protected $types = array();
-
-  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
@@ -66,7 +57,6 @@ class CallbackSerializer extends StylePluginBase {
   public function __construct(array $configuration, $plugin_id, $plugin_definition) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->definition = $plugin_definition + $configuration;
-    $this->types = NodeType::loadMultiple();
   }
 
   /**
@@ -159,7 +149,7 @@ class CallbackSerializer extends StylePluginBase {
             // Extract group_id and transform it to machine name.
             $group_id = strtolower(str_replace(' ', '-', $this->getField($index, $group_field_name)));
             // Extract group displayed value.
-            $group_name = $this->renderField($index, $group_field_name) . 's';
+            $group_name = $this->getField($index, $group_field_name) . 's';
           }
 
           // Create the group if it does not exist yet.
@@ -201,27 +191,5 @@ class CallbackSerializer extends StylePluginBase {
       $return = array_merge($return, $group['rows']);
     }
     return $return;
-  }
-
-  /**
-   * This methods returns the render value of a field, plus, in the case of
-   * content types, return the human name instead of machine name.
-   *
-   * @param string $index
-   *   The index of the field to render.
-   * @param string $field_type
-   *   The field type to be rendered.
-   *
-   * @return string|null
-   *   The output of the field (with content type converted as a human name if
-   *   applicable), or NULL if it was empty.
-   */
-  protected function renderField($index, $field_type) {
-    $value = $this->getField($index, $field_type);
-    // Convert content type machine names to human names.
-    if ($field_type == 'type' && isset($this->types[$value])) {
-      $value = $this->types[$value]->get('name');
-    }
-    return $value;
   }
 }
