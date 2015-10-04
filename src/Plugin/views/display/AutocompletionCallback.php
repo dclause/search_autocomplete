@@ -11,6 +11,8 @@ namespace Drupal\search_autocomplete\Plugin\views\display;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Cache\CacheableResponse;
+use Drupal\Core\Render\RenderContext;
+use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\State\StateInterface;
 use Drupal\Core\Routing\RouteProviderInterface;
 use Drupal\Core\ContentNegotiation;
@@ -79,6 +81,13 @@ class AutocompletionCallback extends PathPluginBase implements ResponseDisplayPl
   protected $mimeType;
 
   /**
+   * The renderer.
+   *
+   * @var \Drupal\Core\Render\RendererInterface
+   */
+  protected $renderer;
+
+  /**
    * Constructs a Drupal\rest\Plugin\ResourceBase object.
    *
    * @param array $configuration
@@ -91,9 +100,27 @@ class AutocompletionCallback extends PathPluginBase implements ResponseDisplayPl
    *   The route provider
    * @param \Drupal\Core\State\StateInterface $state
    *   The state key value store.
+   * @param \Drupal\Core\Render\RendererInterface $renderer
+   *   The renderer.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, RouteProviderInterface $route_provider, StateInterface $state) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, RouteProviderInterface $route_provider, StateInterface $state, RendererInterface $renderer) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $route_provider, $state);
+
+    $this->renderer = $renderer;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    return new static(
+        $configuration,
+        $plugin_id,
+        $plugin_definition,
+        $container->get('router.route_provider'),
+        $container->get('state'),
+        $container->get('renderer')
+    );
   }
 
   /**
@@ -114,19 +141,6 @@ class AutocompletionCallback extends PathPluginBase implements ResponseDisplayPl
     $response->headers->set('Content-type', 'application/json');
 
     return $response;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('router.route_provider'),
-      $container->get('state')
-    );
   }
 
   /**
@@ -253,7 +267,10 @@ class AutocompletionCallback extends PathPluginBase implements ResponseDisplayPl
    */
   public function render() {
     $build = array();
-    $build['#markup'] = $this->view->style_plugin->render();
+
+    $build['#markup'] = $this->renderer->executeInRenderContext(new RenderContext(), function() {
+      return $this->view->style_plugin->render();
+    });
 
     $this->view->element['#content_type'] = $this->getMimeType();
     $this->view->element['#cache_properties'][] = '#content_type';
