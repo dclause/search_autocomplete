@@ -143,7 +143,7 @@ class AutocompletionCallback extends PathPluginBase implements ResponseDisplayPl
   /**
    * {@inheritdoc}
    */
-  protected function getType() {
+  public function getType() {
     return 'callback';
   }
 
