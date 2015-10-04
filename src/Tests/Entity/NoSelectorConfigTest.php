@@ -78,7 +78,7 @@ class NoSelectorConfigTest extends WebTestBase {
       'moreResultsLabel'  => t('View all results for [search-phrase].'),
       'moreResultsValue'  => '[search-phrase]',
       'moreResultsLink'   => '',
-      'source'            => 'autocompletion_callbacks::nodes_autocompletion_callback',
+      'source'            => 'autocompletion_callbacks_nodes::nodes_autocompletion_callback',
       'theme'             => 'basic-blue.css',
     );
 
