@@ -16,16 +16,6 @@ use Drupal\Core\Utility\UnroutedUrlAssembler;
  */
 
 /**
- * Implements hook_install().
- *
- * Display a notice to user for cache rebuild after install.
- * @todo remove when issue #2442025 is fixed.
- */
-function search_autocomplete_install() {
-  drupal_set_message(t('To finish install of Search Autocomplete, you must %clear_caches.', array('%clear_caches' => \Drupal::l(t('Clear all caches'), new Url('system.performance_settings')))));
-}
-
-/**
  * Implements hook_element_info_alter().
  *
  * The purpose of this is to include our own settings in formAPI for
