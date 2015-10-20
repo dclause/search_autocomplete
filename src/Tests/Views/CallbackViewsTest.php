@@ -23,6 +23,8 @@ use Drupal\Component\Utility\SafeMarkup;
  * @ingroup seach_auocomplete
  */
 class CallbackViewsTest extends ViewTestBase {
+  // Temporary fix suggested here: https://www.drupal.org/node/2391795
+  protected $strictConfigSchema = FALSE;
 
   /**
    * Modules to enable.
