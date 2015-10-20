@@ -128,9 +128,9 @@ display:
           element_wrapper_class: ''
           element_default_classes: true
           empty: ''
-          hide_empty: false
-          empty_zero: false
-          hide_alter_empty: true
+          hide_empty: true
+          empty_zero: true
+          hide_alter_empty: false
           click_sort_column: target_id
           type: image
           settings:
@@ -397,8 +397,12 @@ display:
         - 'languages:language_content'
         - 'languages:language_interface'
         - url
-        - 'url.query_args.pagers:0'
+        - url.query_args
+        - user.permissions
       cacheable: false
+      max-age: -1
+      tags:
+        - 'config:field.storage.user.user_picture'
   users_autocompletion_callback:
     display_plugin: autocompletion_callback
     id: users_autocompletion_callback
@@ -421,4 +425,8 @@ display:
         - 'languages:language_content'
         - 'languages:language_interface'
         - url
+        - user.permissions
       cacheable: false
+      max-age: -1
+      tags:
+        - 'config:field.storage.user.user_picture'
