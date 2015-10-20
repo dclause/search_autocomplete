@@ -27,14 +27,13 @@ class AutocompletionConfigurationAccessControlHandler extends EntityAccessContro
   /**
    * {@inheritdoc}
    */
-  public function checkAccess(EntityInterface $entity, $operation, $langcode, AccountInterface $account) {
+  public function checkAccess(EntityInterface $entity, $operation, AccountInterface $account) {
     if ($operation == 'update' && !$entity->getEditable()) {
       return AccessResult::forbidden()->cacheUntilEntityChanges($entity);
     }
     if ($operation == 'delete' && !$entity->getDeletable()) {
       return AccessResult::forbidden()->cacheUntilEntityChanges($entity);
     }
-    return parent::checkAccess($entity, $operation, $langcode, $account);
+    return parent::checkAccess($entity, $operation, $account);
   }
-
 }
