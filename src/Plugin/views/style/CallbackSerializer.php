@@ -136,8 +136,8 @@ class CallbackSerializer extends StylePluginBase {
       // Case when it takes grouping.
       if ($groupings) {
 
-        // Iterate through configured grouping field.
-        // Currently only one level of grouping allowed.
+        // Iterate through configured grouping field. Currently only one level
+        // of grouping allowed.
         foreach ($groupings as $info) {
 
           $group_field_name = $info['field'];

@@ -233,7 +233,12 @@ function search_autocomplete_page_attachments(array &$attachments) {
   $attachments['#attached']['library'][] = 'core/drupal.autocomplete';
 }
 
-
+/**
+ * Implements hook_form_alter().
+ *
+ * Adds autocomplete_configurations to formAPI for search block and search page.
+ * This is an example on how to use configurations from code.
+ */
 function search_autocomplete_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
   // Autocomplete the default search block.
   if ($form_id == 'search_block_form') {
