@@ -29,10 +29,10 @@ class AutocompletionConfigurationAccessControlHandler extends EntityAccessContro
    */
   public function checkAccess(EntityInterface $entity, $operation, AccountInterface $account) {
     if ($operation == 'update' && !$entity->getEditable()) {
-      return AccessResult::forbidden()->cacheUntilEntityChanges($entity);
+      return AccessResult::forbidden()->addCacheableDependency($entity);
     }
     if ($operation == 'delete' && !$entity->getDeletable()) {
-      return AccessResult::forbidden()->cacheUntilEntityChanges($entity);
+      return AccessResult::forbidden()->addCacheableDependency($entity);
     }
     return parent::checkAccess($entity, $operation, $account);
   }
