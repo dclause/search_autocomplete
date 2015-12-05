@@ -9,6 +9,7 @@
 
 namespace Drupal\search_autocomplete\Plugin\views\style;
 
+use Drupal\Component\Utility\Html;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
@@ -147,7 +148,7 @@ class CallbackSerializer extends StylePluginBase {
           // Extract group data if available.
           if (isset($this->view->field[$group_field_name])) {
             // Extract group_id and transform it to machine name.
-            $group_id = strtolower(str_replace(' ', '-', $this->getField($index, $group_field_name)));
+            $group_id = strtolower(Html::cleanCssIdentifier($this->getField($index, $group_field_name)));
             // Extract group displayed value.
             $group_name = $this->getField($index, $group_field_name) . 's';
           }

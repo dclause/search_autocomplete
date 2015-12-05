@@ -10,6 +10,9 @@
 
 namespace Drupal\search_autocomplete\Tests\Views;
 
+use Drupal\Component\Render\FormattableMarkup;
+use Drupal\Component\Utility\Html;
+use Drupal\node\Entity\NodeType;
 use Drupal\views\Tests\ViewTestBase;
 use Drupal\views\Views;
 use Drupal\node\Entity\Node;
@@ -25,6 +28,16 @@ use Drupal\Component\Utility\SafeMarkup;
 class CallbackViewsTest extends ViewTestBase {
   // Temporary fix suggested here: https://www.drupal.org/node/2391795
   protected $strictConfigSchema = FALSE;
+
+  /**
+   * The profile to install as a basis for testing.
+   *
+   * Using the standard profile to test user picture config provided by the
+   * standard profile.
+   *
+   * @var string
+   */
+  protected $profile = 'standard';
 
   /**
    * Modules to enable.
@@ -133,7 +146,8 @@ class CallbackViewsTest extends ViewTestBase {
    *   the array of node results as it should be in the view result.
    */
   protected function createNodes($number, $type, &$expected) {
-    $type = $this->drupalCreateContentType(['type' => $type, 'name' => $type]);
+    //$type = $this->drupalCreateContentType(['type' => $type, 'name' => $type]);
+    $type = NodeType::load($type);
     for ($i = 1; $i < $number; $i++) {
       $settings = array(
         'body'      => array(array(
@@ -149,22 +163,22 @@ class CallbackViewsTest extends ViewTestBase {
         'sticky'  => rand(0, 1) == 1,
         'uid'       => \Drupal::currentUser()->id(),
       );
-      $node = entity_create('node', $settings);
+      $node = Node::create($settings);
       $status = $node->save();
-      $this->assertEqual($status, SAVED_NEW, SafeMarkup::format('Created node %title.', array('%title' => $node->label())));
+      $this->assertEqual($status, SAVED_NEW, new FormattableMarkup('Created node %title.', array('%title' => $node->label())));
 
       $result = array(
         'value' => $type->id() . ' ' . $i,
         'fields'  => array(
           'title'   => $type->id() . ' ' . $i,
-          'created' => 'by ' . $this->adminUser->getUsername() . ' | Thu, 11/29/1973 - 21:33',
+          'nothing' => 'by ' . $this->adminUser->getUsername() . ' | Fri, 11/30/1973 - 08:33',
         ),
         'link'  => $node->url('canonical', array('absolute' => TRUE)),
       );
       if ($i == 1) {
         $result += array(
           'group' => array(
-            'group_id' => $type->id(),
+            'group_id' => strtolower(Html::cleanCssIdentifier($type->label())),
             'group_name' => $type->label() . "s",
           ),
         );
