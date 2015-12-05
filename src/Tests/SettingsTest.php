@@ -83,5 +83,4 @@ class SettingsTest extends WebTestBase {
     $this->assertNoFieldChecked('edit-configs-search-block-enabled', 'Default config search_block is disabled.');
     $this->assertFieldChecked('edit-admin-helper', 'Admin helper tool is activated.');
   }
-
 }

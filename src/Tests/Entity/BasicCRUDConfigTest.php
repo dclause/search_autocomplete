@@ -91,10 +91,10 @@ class BasicCRUDConfigTest extends WebTestBase {
       'maxSuggestions'    => '10',
       'autoSubmit'        => TRUE,
       'autoRedirect'      => TRUE,
-      'noResultLabel'     => $this->t('No results found for [search-phrase]. Click to perform full search.'),
+      'noResultLabel'     => 'No results found for [search-phrase]. Click to perform full search.',
       'noResultValue'     => '[search-phrase]',
       'noResultLink'      => '',
-      'moreResultsLabel'  => $this->t('View all results for [search-phrase].'),
+      'moreResultsLabel'  => 'View all results for [search-phrase].',
       'moreResultsValue'  => '[search-phrase]',
       'moreResultsLink'   => '',
       'source'            => 'autocompletion_callbacks_nodes::nodes_autocompletion_callback',
@@ -203,10 +203,10 @@ class BasicCRUDConfigTest extends WebTestBase {
       'maxSuggestions'    => 10,
       'autoSubmit'        => TRUE,
       'autoRedirect'      => TRUE,
-      'noResultLabel'     => t('No results found for [search-phrase]. Click to perform full search.'),
+      'noResultLabel'     => 'No results found for [search-phrase]. Click to perform full search.',
       'noResultValue'     => '[search-phrase]',
       'noResultLink'      => '',
-      'moreResultsLabel'  => t('View all results for [search-phrase].'),
+      'moreResultsLabel'  => 'View all results for [search-phrase].',
       'moreResultsValue'  => '[search-phrase]',
       'moreResultsLink'   => '',
       'source'            => 'autocompletion_callbacks_nodes::nodes_autocompletion_callback',
@@ -284,7 +284,7 @@ class BasicCRUDConfigTest extends WebTestBase {
     // 6) Verify that we can delete the configuration.
     $this->drupalGet("/admin/config/search/search_autocomplete/manage/" . $config_name . "/delete");
     $this->assertText('This action cannot be undone.');
-    $this->drupalPostForm(NULL, array(), 'Delete this configuration');
+    $this->drupalPostForm(NULL, array(), t('Delete this configuration'));
     $this->assertRaw('The autocompletion configuration <em class="placeholder">' . $config['label'] . '</em> is deleted.');
     $this->assertNoRaw("<td>Unit testing configuration</td>");
   }
