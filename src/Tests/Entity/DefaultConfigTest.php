@@ -9,6 +9,7 @@
 
 namespace Drupal\search_autocomplete\Tests\Entity;
 
+use Drupal\search_autocomplete\Entity\AutocompletionConfiguration;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -55,10 +56,10 @@ class DefaultConfigTest extends WebTestBase {
       'maxSuggestions'    => 10,
       'autoSubmit'        => TRUE,
       'autoRedirect'      => TRUE,
-      'noResultLabel'     => t('No results found for [search-phrase]. Click to perform full search.'),
+      'noResultLabel'     => 'No results found for [search-phrase]. Click to perform full search.',
       'noResultValue'     => '[search-phrase]',
       'noResultLink'      => '',
-      'moreResultsLabel'  => t('View all results for [search-phrase].'),
+      'moreResultsLabel'  => 'View all results for [search-phrase].',
       'moreResultsValue'  => '[search-phrase]',
       'moreResultsLink'   => '',
       'source'            => 'autocompletion_callbacks_nodes::nodes_autocompletion_callback',
@@ -69,7 +70,7 @@ class DefaultConfigTest extends WebTestBase {
 
     // ----------------------------------------------------------------------
     // 1) Verify that the search_block default config is properly added.
-    $entity = entity_load('autocompletion_configuration', $config['id']);
+    $entity = AutocompletionConfiguration::load($config['id']);
     $this->assertNotNull($entity, 'Default configuration search_block created during installation process.');
 
     $this->assertEqual($entity->id(), $config['id']);

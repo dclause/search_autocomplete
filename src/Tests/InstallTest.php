@@ -9,6 +9,7 @@
 
 namespace Drupal\search_autocomplete\Tests;
 
+use Drupal\search_autocomplete\Entity\AutocompletionConfiguration;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -45,7 +46,7 @@ class InstallTest extends WebTestBase {
     parent::setUp();
 
     // Make default entity deletable for testing purpose.
-    $config = \Drupal::entityManager()->getStorage('autocompletion_configuration')->load('search_block');
+    $config = AutocompletionConfiguration::load('search_block');
     $config->setDeletable(TRUE);
     $config->save();
   }
@@ -122,5 +123,4 @@ class InstallTest extends WebTestBase {
     $this->drupalGet('/admin/config');
     $this->assertLinkByHref("admin/config/search/search_autocomplete");
   }
-
 }

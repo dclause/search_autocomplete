@@ -9,6 +9,7 @@
 
 namespace Drupal\search_autocomplete\Tests\Entity;
 
+use Drupal\search_autocomplete\Entity\AutocompletionConfiguration;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -57,7 +58,7 @@ class EditableDeletableConfigTest extends WebTestBase {
 
     // Get config setup.
     $config_id = 'search_block';
-    $config = \Drupal::entityManager()->getStorage('autocompletion_configuration')->load($config_id);
+    $config = AutocompletionConfiguration::load($config_id);
 
     // Verify that editable configuration can be edited on GUI.
     $this->drupalGet('/admin/config/search/search_autocomplete');
@@ -69,7 +70,7 @@ class EditableDeletableConfigTest extends WebTestBase {
     $this->assertResponse(200, "Editable configuration can be edited from GUI");
 
     // Remove editability for this configuration.
-    $config = \Drupal::entityManager()->getStorage('autocompletion_configuration')->load('search_block');
+    $config = AutocompletionConfiguration::load('search_block');
     $config->setEditable(FALSE);
     $config->save();
 
@@ -90,7 +91,7 @@ class EditableDeletableConfigTest extends WebTestBase {
 
     // Get config setup.
     $config_id = 'search_block';
-    $config = \Drupal::entityManager()->getStorage('autocompletion_configuration')->load($config_id);
+    $config = AutocompletionConfiguration::load($config_id);
 
     // Verify that default configuration search_block cannot be edited on GUI.
     $this->drupalGet('/admin/config/search/search_autocomplete');
