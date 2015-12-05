@@ -30,16 +30,6 @@ class CallbackViewsTest extends ViewTestBase {
   protected $strictConfigSchema = FALSE;
 
   /**
-   * The profile to install as a basis for testing.
-   *
-   * Using the standard profile to test user picture config provided by the
-   * standard profile.
-   *
-   * @var string
-   */
-  protected $profile = 'standard';
-
-  /**
    * Modules to enable.
    *
    * @var array
@@ -96,10 +86,6 @@ class CallbackViewsTest extends ViewTestBase {
     $this->assertRaw(t('Nodes Autocompletion Callbacks'));
     $this->assertRaw(t('autocompletion_callbacks_nodes'));
 
-    // Users callback view.
-    $this->assertRaw(t('Users Autocompletion Callbacks'));
-    $this->assertRaw(t('autocompletion_callbacks_users'));
-
     // Words callback view.
     $this->assertRaw(t('Words Autocompletion Callbacks'));
     $this->assertRaw(t('autocompletion_callbacks_words'));
@@ -119,15 +105,15 @@ class CallbackViewsTest extends ViewTestBase {
     $this->createNodes(5, "article", $expected);
     $this->createNodes(5, "page", $expected);
 
-    // Get the view page.
+    // Log out user.
+    $this->drupalLogout();
+
+    // Get the view page as anonymous user.
     $actual_json = $this->drupalGet("callback/nodes");
 
     // Check the view result using serializer service.
     $expected_string = json_encode($expected);
     $this->assertIdentical($actual_json, $expected_string);
-
-    // Log out user.
-    $this->drupalLogout();
 
     // Re-test as anonymous user.
     $actual_json = $this->drupalGet("callback/nodes");
@@ -146,14 +132,13 @@ class CallbackViewsTest extends ViewTestBase {
    *   the array of node results as it should be in the view result.
    */
   protected function createNodes($number, $type, &$expected) {
-    //$type = $this->drupalCreateContentType(['type' => $type, 'name' => $type]);
-    $type = NodeType::load($type);
+    $type = $this->drupalCreateContentType(['type' => $type, 'name' => $type]);
     for ($i = 1; $i < $number; $i++) {
       $settings = array(
         'body'      => array(array(
           'value' => $this->randomMachineName(32),
           'format' => filter_default_format(),
-          ),
+        ),
         ),
         'type'    => $type->id(),
         'created' => 123456789,
@@ -171,7 +156,7 @@ class CallbackViewsTest extends ViewTestBase {
         'value' => $type->id() . ' ' . $i,
         'fields'  => array(
           'title'   => $type->id() . ' ' . $i,
-          'nothing' => 'by ' . $this->adminUser->getUsername() . ' | Fri, 11/30/1973 - 08:33',
+          'created' => 'by ' . $this->adminUser->getUsername() . ' | Thu, 11/29/1973 - 21:33',
         ),
         'link'  => $node->url('canonical', array('absolute' => TRUE)),
       );
