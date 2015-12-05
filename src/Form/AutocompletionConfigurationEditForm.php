@@ -79,7 +79,7 @@ class AutocompletionConfigurationEditForm extends AutocompletionConfigurationFor
     );
     // Minimum characters to set autocompletion on.
     $form['search_autocomplete_how']['minChar'] = array(
-      '#type'           => 'textfield',
+      '#type'           => 'number',
       '#title'          => t('Minimum keyword size that uncouple autocomplete search'),
       '#description'    => t('Please enter the minimum number of character a user must input before autocompletion starts.'),
       '#default_value'  => $this->entity->getMinChar(),
@@ -88,7 +88,7 @@ class AutocompletionConfigurationEditForm extends AutocompletionConfigurationFor
     );
     // Number of suggestions to display.
     $form['search_autocomplete_how']['maxSuggestions'] = array(
-      '#type'           => 'textfield',
+      '#type'           => 'number',
       '#title'          => t('Limit of the autocomplete search result'),
       '#description'    => t('Please enter the maximum number of suggestion to display.'),
       '#default_value'  => $this->entity->getMaxSuggestions(),

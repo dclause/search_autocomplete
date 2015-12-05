@@ -93,8 +93,10 @@ class AutocompletionConfigurationAddForm extends AutocompletionConfigurationForm
     $this->entity->setAutoRedirect(TRUE);
     $this->entity->setMoreResultsLabel($this->t('View all results for [search-phrase].'));
     $this->entity->setMoreResultsValue($this->t('[search-phrase]'));
+    $this->entity->setMoreResultsLink('');
     $this->entity->setNoResultLabel($this->t('No results found for [search-phrase]. Click to perform full search.'));
     $this->entity->setNoResultValue($this->t('[search-phrase]'));
+    $this->entity->setNoResultLink('');
     $this->entity->setSource('autocompletion_callbacks_nodes::nodes_autocompletion_callback');
     $this->entity->setTheme('basic-blue.css');
     $this->entity->setEditable(TRUE);
