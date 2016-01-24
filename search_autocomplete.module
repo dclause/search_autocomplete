@@ -78,7 +78,7 @@ function process_search_autocomplete(&$element) {
 function attach_configuration_to_element(&$element, $config_id) {
 
   // Load the configuration.
-  $config = \Drupal::entityManager()->getStorage('autocompletion_configuration')->load($config_id);
+  $config = \Drupal::entityTypeManager()->getStorage('autocompletion_configuration')->load($config_id);
 
   // No need to continue if the $config is empty.
   if ($config == null)  return;
@@ -207,8 +207,8 @@ function search_autocomplete_page_attachments(array &$attachments) {
   // Load module settings.
   $module_settings = \Drupal::config('search_autocomplete.settings');
 
-  // If admin helper set, inlcude it.
-  if ($module_settings->get('admin_helper')) {
+  // Check if user have authorization to use admin tools and if enabled.
+  if (\Drupal::currentUser()->hasPermission('administer Search Autocomplete') && $module_settings->get('admin_helper')) {
     $attachments['#attached']['library'][] = 'search_autocomplete/search_autocomplete.admin.helper';
   }
 
