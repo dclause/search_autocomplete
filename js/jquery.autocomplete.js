@@ -8,6 +8,12 @@
 
 (function ($) {
 
+  // Escape characters in pattern before creating regexp.
+  function escapeRegExp(str) {
+    str = $.trim(str);
+    return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+  }
+
   function strip(html)
   {
    var tmp = document.createElement("DIV");
@@ -24,7 +30,7 @@
     item.label = Drupal.checkPlain(item.label);
     if (item.fields) {
       $.each(item.fields, function(key, value) {
-        var regex = new RegExp('(' + $.trim(term) + ')', 'gi');
+        var regex = new RegExp('(' + escapeRegExp(term) + ')', 'gi');
         var output = Drupal.checkPlain(value);
         if (value.indexOf('src=') == -1 && value.indexOf('href=') == -1) {
           output = output.replace(regex, "<span class='ui-autocomplete-field-term'>$1</span>");
