@@ -268,7 +268,7 @@
     var result = [];
     $.each(stash, function(index, value) {
       if ($.type(value) === "string") {
-        result[index] = value.replace(regex, "<span class='ui-autocomplete-field-term'>" + input + "</span>");
+        result[index] = value.replace(regex, input);
       } else {
         result[index] = value;
       }
