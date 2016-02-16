@@ -8,6 +8,15 @@
 
 (function ($) {
 
+  //Escape characters in html terms.
+  function escapeHtml(text) {
+    return text
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+  
   // Escape characters in pattern before creating regexp.
   function escapeRegExp(str) {
     str = $.trim(str);
@@ -23,7 +32,7 @@
 
   // Autocomplete
   $.ui.autocomplete.prototype._renderItem = function (ul, item) {
-    var term = this.term;
+    var term = escapeHtml(this.term);
     var first = ("group" in item)  ? 'first' : '';
     var innerHTML = '<div class="ui-autocomplete-fields ' + first + '">';
     item.value = strip(item.value);

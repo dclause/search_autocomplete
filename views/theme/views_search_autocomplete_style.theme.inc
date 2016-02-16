@@ -122,18 +122,15 @@ function template_preprocess_views_search_autocomplete_style(&$vars) {
 
     // Check case between $no_results and $all_results
     if (empty($vars["rows"])) {
-      // No results case
-      $no_result_json = str_replace('[search-phrase]', $view->autocompletion_data['user_input'], $view->autocompletion_data['no_results']);
-      $suggestion = json_decode($no_result_json);
-      $group_id = 'no_results';
+      // No results case.
+      $suggestion = json_decode($view->autocompletion_data['no_results']);
     }
     else {
-      // All results case
-      $all_results_json = str_replace('[search-phrase]', $view->autocompletion_data['user_input'], $view->autocompletion_data['all_results']);
-      $suggestion = json_decode($all_results_json);
+      // All results case.
+      $suggestion = json_decode($view->autocompletion_data['all_results']);
     }
     if (!empty($suggestion->label)) {
-      $suggestion->fields['label'] = $suggestion->label;
+      $suggestion->fields['label'] = html_entity_decode(stripslashes(str_replace('[search-phrase]', $view->autocompletion_data['user_input'], $suggestion->label)));
     }
     $vars["rows"][] = $suggestion;
   }
