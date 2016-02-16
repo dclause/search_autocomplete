@@ -12,6 +12,12 @@
 
   var autocomplete;
 
+  // Escape characters in pattern before creating regexp.
+  function escapeRegExp(str) {
+    str = $.trim(str);
+    return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+  }
+
   /**
    * Helper splitting terms from the autocomplete value.
    *
@@ -218,7 +224,7 @@
     var term = this.term;
     var first = ("group" in item)  ? 'first' : '';
     var innerHTML = '<div class="ui-autocomplete-fields ' + first + '">';
-    var regex = new RegExp('(' + $.trim(term) + ')', 'gi');
+    var regex = new RegExp('(' + escapeRegExp(term) + ')', 'gi');
     if (item.fields) {
       $.each(item.fields, function(key, value) {
         var output = value;
