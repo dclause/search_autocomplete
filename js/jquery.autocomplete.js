@@ -1,9 +1,6 @@
 /**
  * @file
  * SEARCH AUTOCOMPLETE javascript mechanism for D8.
- * 
- * Sponsored by:
- * www.drupal-addict.com
  */
 
 (function ($, Drupal, drupalSettings) {

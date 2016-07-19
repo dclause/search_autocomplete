@@ -1,8 +1,7 @@
 /**
  * @file
  * SEARCH AUTOCOMPLETE javascript helper tool.
- * 
- * Sponsored by: www.drupal-addict.com
+ *
  * Used to help providing autocompletion on any input field.
  */
 

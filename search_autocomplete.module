@@ -8,7 +8,6 @@ use Drupal\views\Views;
  * @file
  * Provides autocompletion in any field from GUI.
  *
- * Sponsored by: www.drupal-addict.com
  * The Search Autocomplete module provides autocompletion configurations
  * to help autocompleting any fields.
  */
