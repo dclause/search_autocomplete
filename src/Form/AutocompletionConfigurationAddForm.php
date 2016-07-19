@@ -104,7 +104,7 @@ class AutocompletionConfigurationAddForm extends AutocompletionConfigurationForm
     $this->entity->save();
 
     // Redirect to edit form once entity is added.
-    $form_state->setRedirectUrl($this->entity->urlInfo('edit-form'));
+    $form_state->setRedirectUrl($this->entity->toUrl('edit-form'));
   }
 
 }

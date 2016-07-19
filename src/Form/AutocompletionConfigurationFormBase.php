@@ -11,6 +11,7 @@ namespace Drupal\search_autocomplete\Form;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Link;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -205,20 +206,17 @@ class AutocompletionConfigurationFormBase extends EntityForm {
     $status = $autocompletion_configuration->save();
 
     // Grab the URL of the new entity. We'll use it in the message.
-    $url = $autocompletion_configuration->urlInfo();
-
-    // Create an edit link.
-    $edit_link = $this->l(t('Edit'), $url);
+    $url = $autocompletion_configuration->toUrl();
 
     if ($status == SAVED_UPDATED) {
       // If we edited an existing entity...
       drupal_set_message($this->t('Autocompletion Configuration %label has been updated.', array('%label' => $autocompletion_configuration->label())));
-      $this->logger('search_autocomplete')->notice('Autocompletion Configuration %label has been updated.', ['%label' => $autocompletion_configuration->label(), 'link' => $edit_link]);
+      $this->logger('search_autocomplete')->notice('Autocompletion Configuration %label has been updated.', ['%label' => $autocompletion_configuration->label()]);
     }
     else {
       // If we created a new entity...
       drupal_set_message($this->t('Autocompletion Configuration %label has been added.', array('%label' => $autocompletion_configuration->label())));
-      $this->logger('search_autocomplete')->notice('Autocompletion Configuration %label has been added.', ['%label' => $autocompletion_configuration->label(), 'link' => $edit_link]);
+      $this->logger('search_autocomplete')->notice('Autocompletion Configuration %label has been added.', ['%label' => $autocompletion_configuration->label()]);
     }
 
     // Redirect the user back to the listing route after the save operation.

@@ -12,11 +12,8 @@ namespace Drupal\search_autocomplete\Tests\Views;
 
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\Html;
-use Drupal\node\Entity\NodeType;
-use Drupal\views\Tests\ViewTestBase;
-use Drupal\views\Views;
 use Drupal\node\Entity\Node;
-use Drupal\Component\Utility\SafeMarkup;
+use Drupal\views\Tests\ViewTestBase;
 
 /**
  * Test callback view configurations.
@@ -158,7 +155,7 @@ class CallbackViewsTest extends ViewTestBase {
           'title'   => $type->id() . ' ' . $i,
           'created' => 'by ' . $this->adminUser->getUsername() . ' | Thu, 11/29/1973 - 21:33',
         ),
-        'link'  => $node->url('canonical', array('absolute' => TRUE)),
+        'link'  => $node->toUrl('canonical', array('absolute' => TRUE))->toString(),
       );
       if ($i == 1) {
         $result += array(

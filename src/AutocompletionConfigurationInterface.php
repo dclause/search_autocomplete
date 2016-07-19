@@ -10,8 +10,6 @@
 namespace Drupal\search_autocomplete;
 
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
-use Doctrine\Common\Annotations\Annotation\Enum;
-use Drupal\migrate\Plugin\migrate\process\Callback;
 
 /**
  * Provides an interface defining an autocompletion configuration entity.

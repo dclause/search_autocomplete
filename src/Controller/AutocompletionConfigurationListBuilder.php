@@ -7,11 +7,10 @@
 
 namespace Drupal\search_autocomplete\Controller;
 
+use Drupal\Component\Render\HtmlEscapedText;
 use Drupal\Core\Config\Entity\ConfigEntityListBuilder;
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Component\Utility\SafeMarkup;
 
 /**
  * Provides a listing of autocompletion_configuration entities.
@@ -81,14 +80,14 @@ class AutocompletionConfigurationListBuilder extends ConfigEntityListBuilder imp
       $deletable = $entity->getEditable() ? 'deletable' : '';
       $form['configs'][$entity_id]['#attributes'] = array('id' => array($entity_id), 'class' => array($editable, $deletable));
       $form['configs'][$entity_id]['label'] = array(
-        '#markup' => SafeMarkup::checkPlain($entity->label()),
+        '#markup' => new HtmlEscapedText($entity->label()),
       );
       $form['configs'][$entity_id]['enabled'] = array(
         '#type' => 'checkbox',
         '#default_value' => $entity->getStatus(),
       );
       $form['configs'][$entity_id]['selector'] = array(
-        '#markup' => SafeMarkup::checkPlain($entity->getSelector()),
+        '#markup' => new HtmlEscapedText($entity->getSelector()),
       );
       $form['configs'][$entity_id]['operations'] = $this->buildOperations($entity);
     }

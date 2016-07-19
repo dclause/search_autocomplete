@@ -9,8 +9,8 @@
 namespace Drupal\search_autocomplete\Form;
 
 use Drupal\Core\Entity\EntityConfirmFormBase;
-use Drupal\Core\Url;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 
 /**
  * Class AutocompletionConfigurationDeleteForm.

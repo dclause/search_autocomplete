@@ -9,13 +9,11 @@
 
 namespace Drupal\search_autocomplete\Plugin\views\style;
 
+use Drupal\Component\Render\HtmlEscapedText;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\views\ViewExecutable;
-use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\views\style\StylePluginBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\Component\Utility\SafeMarkup;
 
 /**
  * The style plugin for serialized output formats.
@@ -80,7 +78,7 @@ class CallbackSerializer extends StylePluginBase {
     $form['input_label'] = array(
       '#title'          => t('Input Label'),
       '#type'           => 'select',
-      '#description'    => SafeMarkup::checkPlain($input_label_descr),
+      '#description'    => new HtmlEscapedText($input_label_descr),
       '#default_value'  => $this->options['input_label'],
       '#disabled'       => empty($field_labels),
       '#required'       => TRUE,
@@ -92,7 +90,7 @@ class CallbackSerializer extends StylePluginBase {
     $form['input_link'] = array(
       '#title'          => t('Input Link'),
       '#type'           => 'select',
-      '#description'    => SafeMarkup::checkPlain($input_link_descr),
+      '#description'    => new HtmlEscapedText($input_link_descr),
       '#default_value'  => $this->options['input_link'],
       '#disabled'       => empty($field_labels),
       '#required'       => TRUE,

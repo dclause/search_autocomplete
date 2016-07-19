@@ -8,20 +8,18 @@
 
 namespace Drupal\search_autocomplete\Plugin\views\display;
 
-use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Render\MarkupTrait;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Cache\CacheableResponse;
+use Drupal\Core\ContentNegotiation;
 use Drupal\Core\Render\RenderContext;
 use Drupal\Core\Render\RendererInterface;
-use Drupal\Core\State\StateInterface;
 use Drupal\Core\Routing\RouteProviderInterface;
-use Drupal\Core\ContentNegotiation;
+use Drupal\Core\State\StateInterface;
+use Drupal\views\Plugin\views\display\PathPluginBase;
 use Drupal\views\Plugin\views\display\ResponseDisplayPluginInterface;
 use Drupal\views\ViewExecutable;
-use Drupal\views\Plugin\views\display\PathPluginBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\RouteCollection;
 
 /**
  * The plugin that handles Data response callbacks for REST resources.
@@ -294,7 +292,7 @@ class AutocompletionCallback extends PathPluginBase implements ResponseDisplayPl
       // executed by an HTML agent.
       // @todo Decide how to support non-HTML in the render API in
       //   https://www.drupal.org/node/2501313.
-      $build['#markup'] = SafeMarkup::set($build['#markup']);
+      $build['#markup'] = MarkupTrait::create($build['#markup']);
     }
 
     parent::applyDisplayCachablityMetadata($build);

@@ -8,16 +8,12 @@
 
 namespace Drupal\search_autocomplete\Form;
 
+use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\search_autocomplete\Suggestion;
+use Drupal\views\Views;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Drupal\Core\Entity\Element\EntityAutocomplete;
-use Drupal\Core\Url;
-use Drupal\Component\Utility\UrlHelper;
-use Drupal\Component\Utility\Tags;
-use Drupal\Component\Utility\Unicode;
-use Drupal\views\Views;
 
 /**
  * Class AutocompletionConfigurationEditForm
