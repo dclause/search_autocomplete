@@ -1,12 +1,5 @@
 <?php
 
-/**
- * @file
- * Test case checking editable / deletable configurations.
- *
- * Sponsored by: www.drupal-addict.com
- */
-
 namespace Drupal\search_autocomplete\Tests\Entity;
 
 use Drupal\search_autocomplete\Entity\AutocompletionConfiguration;

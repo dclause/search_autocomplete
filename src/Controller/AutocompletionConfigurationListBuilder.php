@@ -1,9 +1,4 @@
 <?php
-/**
- * @file
- *
- * Sponsored by: www.drupal-addict.com
- */
 
 namespace Drupal\search_autocomplete\Controller;
 

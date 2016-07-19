@@ -1,12 +1,5 @@
 <?php
 
-/**
- * @file
- * Test case for testing the creation of configurations with no selector.
- *
- * Sponsored by: www.drupal-addict.com
- */
-
 namespace Drupal\search_autocomplete\Tests\Entity;
 
 use Drupal\simpletest\WebTestBase;

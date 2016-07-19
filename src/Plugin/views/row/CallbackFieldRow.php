@@ -1,12 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\search_autocomplete\Plugin\views\row\CallbackFieldRow.
- *
- * Sponsored by: www.drupal-addict.com
- */
-
 namespace Drupal\search_autocomplete\Plugin\views\row;
 
 use Drupal\Core\Form\FormStateInterface;

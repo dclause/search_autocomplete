@@ -1,11 +1,5 @@
 <?php
 
-/**
- * @file
- *
- * Sponsored by: www.drupal-addict.com
- */
-
 namespace Drupal\search_autocomplete\Form;
 
 use Drupal\Core\Entity\EntityConfirmFormBase;

@@ -1,11 +1,5 @@
 <?php
 
-/**
- * @file
- *
- * Sponsored by: www.drupal-addict.com
- */
-
 namespace Drupal\search_autocomplete\Plugin\views\display;
 
 use Drupal\Component\Render\MarkupTrait;

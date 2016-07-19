@@ -1,13 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\search_autocomplete\Tests\Views\CallbackViewsTest.
- * Test case for testing the Autocompletion Callback view.
- *
- * Sponsored by: www.drupal-addict.com
- */
-
 namespace Drupal\search_autocomplete\Tests\Views;
 
 use Drupal\Component\Render\FormattableMarkup;

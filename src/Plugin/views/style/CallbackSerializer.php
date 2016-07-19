@@ -1,12 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\search_autocomplete\Plugin\views\style\CallbackSerializer.
- *
- * Sponsored by: www.drupal-addict.com
- */
-
 namespace Drupal\search_autocomplete\Plugin\views\style;
 
 use Drupal\Component\Render\HtmlEscapedText;
