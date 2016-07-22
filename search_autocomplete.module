@@ -177,12 +177,9 @@ function search_autocomplete_library_info_build() {
 
 /**
  * Implements hook_library_info_alter().
- *
- * @param unknown $libraries
- * @param unknown $module
  */
-function search_autocomplete_library_info_alter(array &$libraries, $module) {
-  if ($module === 'core' && isset($libraries['drupal.autocomplete'])) {
+function search_autocomplete_library_info_alter(array &$libraries, $extension) {
+  if ($extension == 'core' && isset($libraries['drupal.autocomplete'])) {
     $libraries['drupal.autocomplete']['js'] = array(
       '/' . drupal_get_path('module', 'search_autocomplete') . '/js/jquery.autocomplete.js' => array(),
     );
