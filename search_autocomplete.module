@@ -239,7 +239,7 @@ function search_autocomplete_form_alter(&$form, \Drupal\Core\Form\FormStateInter
     $form['keys']['#autocomplete_configuration'] = 'search_block';
   }
   else if ($form_id == 'search_form') {
-    if (strpos($form['#action'], 'search/user')) {
+    if (\Drupal::routeMatch()->getRouteName() == 'search.view_user_search') {
       $form['basic']['keys']['#autocomplete_configuration'] = 'search_form_users';
     } else {
       $form['basic']['keys']['#autocomplete_configuration'] = 'search_form_content';
