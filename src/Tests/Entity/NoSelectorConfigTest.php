@@ -87,7 +87,7 @@ class NoSelectorConfigTest extends WebTestBase {
         'id' => $config_name,
         'selector' => $config['selector'],
       ),
-      t('Create Autocompletion Configuration')
+      'Create Autocompletion Configuration'
     );
 
     // ----------------------------------------------------------------------

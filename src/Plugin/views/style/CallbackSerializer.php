@@ -67,9 +67,9 @@ class CallbackSerializer extends StylePluginBase {
     $field_labels = $this->displayHandler->getFieldLabels(TRUE);
 
     // Build the input field option.
-    $input_label_descr = (empty($field_labels) ? '<b>' . t('Warning') . ': </b> ' . t('Requires at least one field in the view.') . '<br/>' : '') . t('Select the autocompletion input value. If the autocompletion settings are set to auto-submit, this value will be submitted as the suggestion is selected.');
+    $input_label_descr = (empty($field_labels) ? '<b>' . $this->t('Warning') . ': </b> ' . $this->t('Requires at least one field in the view.') . '<br/>' : '') . $this->t('Select the autocompletion input value. If the autocompletion settings are set to auto-submit, this value will be submitted as the suggestion is selected.');
     $form['input_label'] = array(
-      '#title'          => t('Input Label'),
+      '#title'          => $this->t('Input Label'),
       '#type'           => 'select',
       '#description'    => new HtmlEscapedText($input_label_descr),
       '#default_value'  => $this->options['input_label'],
@@ -79,9 +79,9 @@ class CallbackSerializer extends StylePluginBase {
     );
 
     // Build the link field option.
-    $input_link_descr = (empty($field_labels) ? '<b>' . t('Warning') . ': </b> ' . t('Requires at least one field in the view.') . '<br/>' : '') . t('Select the autocompletion input link. If the autocompletion settings are set to auto-redirect, this link is where the user will be redirected as the suggestion is selected.');
+    $input_link_descr = (empty($field_labels) ? '<b>' . $this->t('Warning') . ': </b> ' . $this->t('Requires at least one field in the view.') . '<br/>' : '') . $this->t('Select the autocompletion input link. If the autocompletion settings are set to auto-redirect, this link is where the user will be redirected as the suggestion is selected.');
     $form['input_link'] = array(
-      '#title'          => t('Input Link'),
+      '#title'          => $this->t('Input Link'),
       '#type'           => 'select',
       '#description'    => new HtmlEscapedText($input_link_descr),
       '#default_value'  => $this->options['input_link'],

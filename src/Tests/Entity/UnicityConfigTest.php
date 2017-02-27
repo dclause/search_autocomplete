@@ -68,7 +68,7 @@ class UnicityConfigTest extends WebTestBase {
         'id' => $config_name,
         'selector' => $config['selector'],
       ),
-      t('Create Autocompletion Configuration')
+      'Create Autocompletion Configuration'
     );
 
     // ----------------------------------------------------------------------
@@ -91,7 +91,7 @@ class UnicityConfigTest extends WebTestBase {
         'id' => $config_name,
         'selector' => $config['selector'],
       ),
-      t('Create Autocompletion Configuration')
+      'Create Autocompletion Configuration'
     );
     $this->assertRaw(t('The machine-readable name is already in use. It must be unique.'));
   }
@@ -121,7 +121,7 @@ class UnicityConfigTest extends WebTestBase {
         'id' => $config_name,
         'selector' => $config['selector'],
       ),
-        t('Create Autocompletion Configuration')
+        'Create Autocompletion Configuration'
     );
 
     // ----------------------------------------------------------------------
@@ -144,9 +144,9 @@ class UnicityConfigTest extends WebTestBase {
         'id' => $config_name,
         'selector' => $config['selector'],
       ),
-      t('Create Autocompletion Configuration')
+      'Create Autocompletion Configuration'
     );
-    $this->assertRaw(t('The selector ID must be unique.'));
+    $this->assertRaw('The selector ID must be unique.');
   }
 
 }

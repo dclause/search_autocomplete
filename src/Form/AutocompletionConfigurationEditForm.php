@@ -35,7 +35,7 @@ class AutocompletionConfigurationEditForm extends AutocompletionConfigurationFor
    */
   public function actions(array $form, FormStateInterface $form_state) {
     $actions = parent::actions($form, $form_state);
-    $actions['submit']['#value'] = t('Update');
+    $actions['submit']['#value'] = $this->t('Update');
     return $actions;
   }
 
@@ -63,15 +63,15 @@ class AutocompletionConfigurationEditForm extends AutocompletionConfigurationFor
     // HOW - How to display Search Autocomplete suggestions.
     $form['search_autocomplete_how'] = array(
       '#type'           => 'details',
-      '#title'          => t('HOW - How to display Search Autocomplete suggestions?'),
+      '#title'          => $this->t('HOW - How to display Search Autocomplete suggestions?'),
       '#collapsible'    => TRUE,
       '#open'           => FALSE,
     );
     // Minimum characters to set autocompletion on.
     $form['search_autocomplete_how']['minChar'] = array(
       '#type'           => 'number',
-      '#title'          => t('Minimum keyword size that uncouple autocomplete search'),
-      '#description'    => t('Please enter the minimum number of character a user must input before autocompletion starts.'),
+      '#title'          => $this->t('Minimum keyword size that uncouple autocomplete search'),
+      '#description'    => $this->t('Please enter the minimum number of character a user must input before autocompletion starts.'),
       '#default_value'  => $this->entity->getMinChar(),
       '#maxlength'      => 2,
       '#required'       => TRUE,
@@ -79,8 +79,8 @@ class AutocompletionConfigurationEditForm extends AutocompletionConfigurationFor
     // Number of suggestions to display.
     $form['search_autocomplete_how']['maxSuggestions'] = array(
       '#type'           => 'number',
-      '#title'          => t('Limit of the autocomplete search result'),
-      '#description'    => t('Please enter the maximum number of suggestion to display.'),
+      '#title'          => $this->t('Limit of the autocomplete search result'),
+      '#description'    => $this->t('Please enter the maximum number of suggestion to display.'),
       '#default_value'  => $this->entity->getMaxSuggestions(),
       '#maxlength'      => 2,
       '#required'       => TRUE,
@@ -89,15 +89,15 @@ class AutocompletionConfigurationEditForm extends AutocompletionConfigurationFor
     // Check if form should be auto submitted.
     $form['search_autocomplete_how']['autoSubmit'] = array(
       '#type'           => 'checkbox',
-      '#title'          => t('Auto Submit'),
-      '#description'    => t('If enabled, the form will be submitted automatically as soon as your user choose a suggestion in the popup list.'),
+      '#title'          => $this->t('Auto Submit'),
+      '#description'    => $this->t('If enabled, the form will be submitted automatically as soon as your user choose a suggestion in the popup list.'),
       '#default_value'  => $this->entity->getAutoSubmit(),
     );
     // Check if form should be auto redirected.
     $form['search_autocomplete_how']['autoRedirect'] = array(
       '#type'           => 'checkbox',
-      '#title'          => t('Auto Redirect'),
-      '#description'    => t('If enabled, the user will be directly routed to the suggestion he chooses instead of performing form validation process. Only works if "link" attribute is existing and if "Auto Submit" is enabled.'),
+      '#title'          => $this->t('Auto Redirect'),
+      '#description'    => $this->t('If enabled, the user will be directly routed to the suggestion he chooses instead of performing form validation process. Only works if "link" attribute is existing and if "Auto Submit" is enabled.'),
       '#default_value'  => $this->entity->getAutoRedirect(),
     );
 
@@ -105,15 +105,15 @@ class AutocompletionConfigurationEditForm extends AutocompletionConfigurationFor
     // "View all results" custom configurations.
     $form['search_autocomplete_how']['moreResultsSuggestion'] = array(
       '#type'           => 'details',
-      '#title'          => t('Custom behaviour when some suggestions are available'),
+      '#title'          => $this->t('Custom behaviour when some suggestions are available'),
       '#collapsible'    => TRUE,
       '#collapsed'      => TRUE,
     );
     // Check if form should be auto submitted.
     $form['search_autocomplete_how']['moreResultsSuggestion']['moreResultsLabel'] = array(
       '#type'           => 'textfield',
-      '#title'          => t('Custom "view all results" message label'),
-      '#description'    => t('This message is going to be displayed at the end of suggestion list when suggestions are found.') . $this->t('Leave empty to disable this functionality.') . '<br/>' . $this->t('You can use HTML tags as well as the token [search-phrase] to replace user input.'),
+      '#title'          => $this->t('Custom "view all results" message label'),
+      '#description'    => $this->t('This message is going to be displayed at the end of suggestion list when suggestions are found.') . $this->t('Leave empty to disable this functionality.') . '<br/>' . $this->t('You can use HTML tags as well as the token [search-phrase] to replace user input.'),
       '#default_value'  => $this->t($this->entity->getMoreResultsLabel()),
       '#maxlength'      => 255,
       '#required'       => FALSE,
@@ -121,8 +121,8 @@ class AutocompletionConfigurationEditForm extends AutocompletionConfigurationFor
     // Check if form should be auto submitted.
     $form['search_autocomplete_how']['moreResultsSuggestion']['moreResultsValue'] = array(
       '#type'           => 'textfield',
-      '#title'          => t('Custom "view all results" message value'),
-      '#description'    => t('If a label is filled above, this is the value that will be picked when the message is selected.') . $this->t('Leave empty if you don\'t want the message to be selectable.') . '<br/>' . $this->t('You can use the token [search-phrase] to replace user input.'),
+      '#title'          => $this->t('Custom "view all results" message value'),
+      '#description'    => $this->t('If a label is filled above, this is the value that will be picked when the message is selected.') . $this->t('Leave empty if you don\'t want the message to be selectable.') . '<br/>' . $this->t('You can use the token [search-phrase] to replace user input.'),
       '#default_value'  => $this->t($this->entity->getMoreResultsValue()),
       '#maxlength'      => 255,
       '#required'       => FALSE,
@@ -130,8 +130,8 @@ class AutocompletionConfigurationEditForm extends AutocompletionConfigurationFor
     // Check if form should be auto submitted.
     $form['search_autocomplete_how']['moreResultsSuggestion']['moreResultsLink'] = array(
       '#type'           => 'textfield',
-      '#title'          => t('Custom "view all results" URL redirection'),
-      '#description'    => t('If "Auto redirect" is checked and a label is given for this configuration, the user will be redirected to this URL when the message is selected. Leave empty if you rather like a standard Drupal search to be performed on the "value" given above.'),
+      '#title'          => $this->t('Custom "view all results" URL redirection'),
+      '#description'    => $this->t('If "Auto redirect" is checked and a label is given for this configuration, the user will be redirected to this URL when the message is selected. Leave empty if you rather like a standard Drupal search to be performed on the "value" given above.'),
       '#default_value'  => $this->t($this->entity->getMoreResultsLink()),
       '#maxlength'      => 255,
       '#required'       => FALSE,
@@ -141,15 +141,15 @@ class AutocompletionConfigurationEditForm extends AutocompletionConfigurationFor
     // "No resuls" custom configurations.
     $form['search_autocomplete_how']['noResultSuggestion'] = array(
       '#type'           => 'details',
-      '#title'          => t('Custom behaviour when no suggestions are found'),
+      '#title'          => $this->t('Custom behaviour when no suggestions are found'),
       '#collapsible'    => TRUE,
       '#collapsed'      => TRUE,
     );
     // Check if form should be auto submitted.
     $form['search_autocomplete_how']['noResultSuggestion']['noResultLabel'] = array(
       '#type'           => 'textfield',
-      '#title'          => t('Custom "no result" message label'),
-      '#description'    => t('This message is going to be displayed when no suggestions can be found.') . $this->t('Leave empty to disable this functionality.') . '<br/>' . $this->t('You can use HTML tags as well as the token [search-phrase] to replace user input.'),
+      '#title'          => $this->t('Custom "no result" message label'),
+      '#description'    => $this->t('This message is going to be displayed when no suggestions can be found.') . $this->t('Leave empty to disable this functionality.') . '<br/>' . $this->t('You can use HTML tags as well as the token [search-phrase] to replace user input.'),
       '#default_value'  => $this->t($this->entity->getNoResultLabel()),
       '#maxlength'      => 255,
       '#required'       => FALSE,
@@ -157,8 +157,8 @@ class AutocompletionConfigurationEditForm extends AutocompletionConfigurationFor
     // Check if form should be auto submitted.
     $form['search_autocomplete_how']['noResultSuggestion']['noResultValue'] = array(
       '#type'           => 'textfield',
-      '#title'          => t('Custom "no result" message value'),
-      '#description'    => t('If a label is filled above, this is the value that will be picked when the message is selected.') . $this->t('Leave empty if you don\'t want the message to be selectable.') . '<br/>' . $this->t('You can use the token [search-phrase] to replace user input.'),
+      '#title'          => $this->t('Custom "no result" message value'),
+      '#description'    => $this->t('If a label is filled above, this is the value that will be picked when the message is selected.') . $this->t('Leave empty if you don\'t want the message to be selectable.') . '<br/>' . $this->t('You can use the token [search-phrase] to replace user input.'),
       '#default_value'  => $this->t($this->entity->getNoResultValue()),
       '#maxlength'      => 255,
       '#required'       => FALSE,
@@ -166,8 +166,8 @@ class AutocompletionConfigurationEditForm extends AutocompletionConfigurationFor
     // Check if form should be auto submitted.
     $form['search_autocomplete_how']['noResultSuggestion']['noResultLink'] = array(
       '#type'           => 'textfield',
-      '#title'          => t('Custom "no result" URL redirection'),
-      '#description'    => t('If "Auto redirect" is checked and a label is given for this configuration, the user will be redirected to this URL when the message is selected. Leave empty if you rather like a standard Drupal search to be performed on the "value" given above.'),
+      '#title'          => $this->t('Custom "no result" URL redirection'),
+      '#description'    => $this->t('If "Auto redirect" is checked and a label is given for this configuration, the user will be redirected to this URL when the message is selected. Leave empty if you rather like a standard Drupal search to be performed on the "value" given above.'),
       '#default_value'  => $this->t($this->entity->getNoResultLink()),
       '#maxlength'      => 255,
       '#required'       => FALSE,
@@ -177,8 +177,8 @@ class AutocompletionConfigurationEditForm extends AutocompletionConfigurationFor
     // WHAT - What to display in Search Autocomplete suggestions.
     $form['search_autocomplete_what'] = array(
       '#type'           => 'details',
-      '#title'          => t('WHAT - What to display in Search Autocomplete suggestions?'),
-      '#description'    => t('Choose which data should be added to autocompletion suggestions.'),
+      '#title'          => $this->t('WHAT - What to display in Search Autocomplete suggestions?'),
+      '#description'    => $this->t('Choose which data should be added to autocompletion suggestions.'),
       '#collapsible'    => TRUE,
       '#open'           => TRUE,
     );
@@ -186,7 +186,7 @@ class AutocompletionConfigurationEditForm extends AutocompletionConfigurationFor
     $form['search_autocomplete_what']['source'] = array(
       '#type'                     => 'textfield',
       '#autocomplete_route_name' => 'search_autocomplete.view_autocomplete',
-      '#description'              => t('Enter the URL of your callback for suggestions.') . '<br/>' . $this->t('You can enter an internal path such as %node-xx or an external URL such as %url. You can also use autocompletion to target a specific View display.', array('%node-xx' => '/node/xx', '%url' => 'http://example.com')),
+      '#description'              => $this->t('Enter the URL of your callback for suggestions.') . '<br/>' . $this->t('You can enter an internal path such as %node-xx or an external URL such as %url. You can also use autocompletion to target a specific View display.', array('%node-xx' => '/node/xx', '%url' => 'http://example.com')),
       '#element_validate'         => array(array($this, 'validateUriElement')),
       '#default_value'            => $this->entity->getSource(),
       '#size'                     => 80,
@@ -203,24 +203,24 @@ class AutocompletionConfigurationEditForm extends AutocompletionConfigurationFor
     }
     $form['search_autocomplete_what']['theme'] = array(
       '#type'           => 'select',
-      '#title'          => t('Select a theme for your suggestions'),
+      '#title'          => $this->t('Select a theme for your suggestions'),
       '#options'        => $themes,
       '#default_value'  => $this->entity->getTheme(),
-      '#description'    => t('Choose the theme to use for autocompletion dropdown popup. Read <a href="http://drupal-addict.com/nos-projets/search-autocomplete">documentation</a> to learn how to make your own.'),
+      '#description'    => $this->t('Choose the theme to use for autocompletion dropdown popup. Read <a href="http://drupal-addict.com/nos-projets/search-autocomplete">documentation</a> to learn how to make your own.'),
     );
 
     // ------------------------------------------------------------------.
     // ADVANCED - Advanced options.
     $form['search_autocomplete_advanced'] = array(
       '#type'             => 'details',
-      '#title'            => t('ADVANCED - Advanced options'),
+      '#title'            => $this->t('ADVANCED - Advanced options'),
       '#collapsible'      => TRUE,
       '#collapsed'        => TRUE,
     );
     $form['search_autocomplete_advanced']['selector'] = array(
       '#type'             => 'textfield',
-      '#title'            => t('ID selector for this form'),
-      '#description'      => t('Please change only if you know what you do, read <a href="http://drupal-addict.com/nos-projets/search-autocomplete">documentation</a> first.'),
+      '#title'            => $this->t('ID selector for this form'),
+      '#description'      => $this->t('Please change only if you know what you do, read <a href="http://drupal-addict.com/nos-projets/search-autocomplete">documentation</a> first.'),
       '#default_value'    => $this->entity->getSelector(),
       '#maxlength'        => 255,
       '#size'             => 35,
@@ -263,7 +263,7 @@ class AutocompletionConfigurationEditForm extends AutocompletionConfigurationFor
     // of it, so send an error.
     else {
       if (!\Drupal::service('path.validator')->isValid($source)) {
-        $form_state->setErrorByName('source', t('The input source is not valid. Please enter a Drupal valid path, a View display (using completion) or a valid external URL.'));
+        $form_state->setErrorByName('source', $this->t('The input source is not valid. Please enter a Drupal valid path, a View display (using completion) or a valid external URL.'));
       }
     }
   }

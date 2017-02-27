@@ -101,7 +101,7 @@ class BasicCRUDConfigTest extends WebTestBase {
         'id' => $config_name,
         'selector' => $config['selector'],
       ),
-      t('Create Autocompletion Configuration')
+      'Create Autocompletion Configuration'
     );
 
     // ----------------------------------------------------------------------
@@ -135,7 +135,7 @@ class BasicCRUDConfigTest extends WebTestBase {
     $this->drupalPostForm(
       NULL,
       $config,
-      t('Update')
+      'Update'
     );
 
     // ----------------------------------------------------------------------
@@ -213,7 +213,7 @@ class BasicCRUDConfigTest extends WebTestBase {
         'id' => $config_name,
         'selector' => $config['selector'],
       ),
-      t('Create Autocompletion Configuration')
+      'Create Autocompletion Configuration'
     );
 
     // ----------------------------------------------------------------------
@@ -247,7 +247,7 @@ class BasicCRUDConfigTest extends WebTestBase {
     $this->drupalPostForm(
       NULL,
       $config,
-      t('Update')
+      'Update'
     );
 
     // ----------------------------------------------------------------------
@@ -277,7 +277,7 @@ class BasicCRUDConfigTest extends WebTestBase {
     // 6) Verify that we can delete the configuration.
     $this->drupalGet("/admin/config/search/search_autocomplete/manage/" . $config_name . "/delete");
     $this->assertText('This action cannot be undone.');
-    $this->drupalPostForm(NULL, array(), t('Delete this configuration'));
+    $this->drupalPostForm(NULL, array(), 'Delete this configuration');
     $this->assertRaw('The autocompletion configuration <em class="placeholder">' . $config['label'] . '</em> is deleted.');
     $this->assertNoRaw("<td>Unit testing configuration</td>");
   }

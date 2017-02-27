@@ -69,7 +69,7 @@ class SettingsTest extends WebTestBase {
       'configs[search_block][enabled]' => FALSE,
       'admin_helper' => TRUE,
     );
-    $this->drupalPostForm(NULL, $edit, t('Save changes'));
+    $this->drupalPostForm(NULL, $edit, 'Save changes');
 
     // 3) Check that all default configurations are desactivate,
     // and settings are toogled.

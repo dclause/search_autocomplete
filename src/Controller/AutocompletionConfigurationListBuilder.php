@@ -90,14 +90,14 @@ class AutocompletionConfigurationListBuilder extends ConfigEntityListBuilder imp
     // Use admin helper tool option settings.
     $form['admin_helper'] = array(
       '#type'           => 'checkbox',
-      '#title'          => t('Use autocompletion helper tool for Search Autocomplete administrators.'),
-      '#description'    => t('If enabled, user with "administer Search Autocomplete" permission will be able to use admin helper tool on input fields (recommended).'),
+      '#title'          => $this->t('Use autocompletion helper tool for Search Autocomplete administrators.'),
+      '#description'    => $this->t('If enabled, user with "administer Search Autocomplete" permission will be able to use admin helper tool on input fields (recommended).'),
       '#default_value'  => $settings->get('admin_helper'),
     );
 
     $form['actions']['submit'] = array(
       '#type' => 'submit',
-      '#value' => t('Save changes'),
+      '#value' => $this->t('Save changes'),
       '#button_type' => 'primary',
     );
 
