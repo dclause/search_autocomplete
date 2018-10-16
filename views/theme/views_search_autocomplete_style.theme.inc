@@ -77,7 +77,7 @@ function template_preprocess_views_search_autocomplete_style(&$vars) {
     foreach ($style_options['output_fields'] as $field_name) {
       // Add the field if the value is not null.
       if (array_key_exists($field_name, $row) && $row[$field_name] && $row[$field_name]->content) {
-        $object['fields'][$field_name] = htmlspecialchars_decode(trim($row[$field_name]->label . ' ' . $row[$field_name]->content), ENT_QUOTES);
+        $object['fields'][$field_name] = filter_xss(htmlspecialchars_decode(trim($row[$field_name]->label . ' ' . $row[$field_name]->content), ENT_QUOTES), array('a', 'em', 'strong', 'cite', 'blockquote', 'code', 'ul', 'ol', 'li', 'dl', 'dt', 'dd', 'img'));
       }
     }
 
