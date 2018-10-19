@@ -8,6 +8,10 @@
 
 (function ($) {
 
+  function sanitizeHTML(str) {
+    return $("<textarea/>").html(Drupal.checkPlain(str)).text();
+  }
+
   //Escape characters in html terms.
   function escapeHtml(text) {
     return text
@@ -23,24 +27,17 @@
     return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
   }
 
-  function strip(html)
-  {
-   var tmp = document.createElement("DIV");
-   tmp.innerHTML = html;
-   return tmp.textContent || tmp.innerText || "";
-  }
-
   // Autocomplete
   $.ui.autocomplete.prototype._renderItem = function (ul, item) {
     var term = escapeHtml(this.term);
     var first = ("group" in item)  ? 'first' : '';
     var innerHTML = '<div class="ui-autocomplete-fields ' + first + '">';
-    item.value = strip(item.value);
-    item.label = Drupal.checkPlain(item.label);
+    item.value = sanitizeHTML(item.value);
+    item.label = sanitizeHTML(item.label);
     if (item.fields) {
       $.each(item.fields, function(key, value) {
         var regex = new RegExp('(' + escapeRegExp(term) + ')', 'gi');
-        var output = Drupal.checkPlain(value);
+        var output = sanitizeHTML(value);
         if (value.indexOf('src=') == -1 && value.indexOf('href=') == -1) {
           output = output.replace(regex, "<span class='ui-autocomplete-field-term'>$1</span>");
           innerHTML += ('<div class="ui-autocomplete-field-' + key + '">' + output + '</div>');
