@@ -118,16 +118,16 @@ function template_preprocess_views_search_autocomplete_style(&$vars) {
   * Add $no_results and $all_results if needed.
   * ----------------  */
   if (!empty($view->autocompletion_data)) {
-    str_replace('[search-phrase]', $view->autocompletion_data['user_input'], $view->autocompletion_data['no_results']);
-
     // Check case between $no_results and $all_results
     if (empty($vars["rows"])) {
       // No results case.
-      $suggestion = json_decode($view->autocompletion_data['no_results']);
+      $no_results = str_replace('[search-phrase]', $view->autocompletion_data['user_input'], $view->autocompletion_data['no_results']);
+      $suggestion = json_decode($no_results);
     }
     else {
       // All results case.
-      $suggestion = json_decode($view->autocompletion_data['all_results']);
+      $no_results = str_replace('[search-phrase]', $view->autocompletion_data['user_input'], $view->autocompletion_data['all_results']);
+      $suggestion = json_decode($no_results);
     }
     if (!empty($suggestion->label)) {
       $suggestion->fields['label'] = html_entity_decode(stripslashes(str_replace('[search-phrase]', $view->autocompletion_data['user_input'], $suggestion->label)));
