@@ -57,7 +57,8 @@ function search_autocomplete_views_autocomplete($user_input = '') {
  */
 function search_autocomplete_autocomplete($fid) {
 
-  $user_input = filter_xss($_GET['term']);
+  $user_input = isset($_GET['term']) ? $_GET['term']: '';
+  $user_input = filter_xss($user_input);
 
   $result = db_select('search_autocomplete_forms', 'f')
   ->fields('f', array('data_view', 'no_results', 'all_results'))
