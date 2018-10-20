@@ -68,7 +68,7 @@ function template_preprocess_views_search_autocomplete_style(&$vars) {
     /* ----------------
      * Build the value...
      * ----------------  */
-    $object['value'] = trim($row[$style_options['input_label']]->content);
+    $object['value'] = filter_xss(htmlspecialchars_decode(trim($row[$style_options['input_label']]->content, ENT_QUOTES)));
 
     /* ----------------
      * Build the array of output fields...

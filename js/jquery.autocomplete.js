@@ -9,7 +9,7 @@
 (function ($) {
 
   function sanitizeHTML(str) {
-    return $("<textarea/>").html(Drupal.checkPlain(str)).text();
+    return $("<div>").html(str).text();
   }
 
   //Escape characters in html terms.
@@ -123,6 +123,7 @@
 		                  $(this).val(ui.item.value);
 		                  $(this).closest("form").submit();
 		              }
+                  $(this).val(sanitizeHTML(ui.item.value));
 		            },
 		            focus: function (event, ui) {
 		              if (typeof ui.item.group != 'undefined') {
