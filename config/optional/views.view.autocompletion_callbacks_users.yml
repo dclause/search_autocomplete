@@ -427,8 +427,7 @@ display:
         type: callback_serializer
         options:
           grouping:
-            -
-              field: roles
+            - field: roles
           input_label: name
           input_link: uid
     cache_metadata:

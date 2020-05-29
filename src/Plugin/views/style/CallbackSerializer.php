@@ -33,6 +33,14 @@ class CallbackSerializer extends StylePluginBase {
   protected $usesGrouping = TRUE;
 
   /**
+   * Constructs a Plugin object.
+   */
+  public function __construct(array $configuration, $plugin_id, $plugin_definition) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+    $this->definition = $plugin_definition + $configuration;
+  }
+
+  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
@@ -41,14 +49,6 @@ class CallbackSerializer extends StylePluginBase {
       $plugin_id,
       $plugin_definition
     );
-  }
-
-  /**
-   * Constructs a Plugin object.
-   */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->definition = $plugin_definition + $configuration;
   }
 
   /**
@@ -68,27 +68,27 @@ class CallbackSerializer extends StylePluginBase {
 
     // Build the input field option.
     $input_label_descr = (empty($field_labels) ? '<b>' . $this->t('Warning') . ': </b> ' . $this->t('Requires at least one field in the view.') . '<br/>' : '') . $this->t('Select the autocompletion input value. If the autocompletion settings are set to auto-submit, this value will be submitted as the suggestion is selected.');
-    $form['input_label'] = array(
-      '#title'          => $this->t('Input Label'),
-      '#type'           => 'select',
-      '#description'    => new HtmlEscapedText($input_label_descr),
-      '#default_value'  => $this->options['input_label'],
-      '#disabled'       => empty($field_labels),
-      '#required'       => TRUE,
-      '#options'        => $field_labels,
-    );
+    $form['input_label'] = [
+      '#title' => $this->t('Input Label'),
+      '#type' => 'select',
+      '#description' => new HtmlEscapedText($input_label_descr),
+      '#default_value' => $this->options['input_label'],
+      '#disabled' => empty($field_labels),
+      '#required' => TRUE,
+      '#options' => $field_labels,
+    ];
 
     // Build the link field option.
     $input_link_descr = (empty($field_labels) ? '<b>' . $this->t('Warning') . ': </b> ' . $this->t('Requires at least one field in the view.') . '<br/>' : '') . $this->t('Select the autocompletion input link. If the autocompletion settings are set to auto-redirect, this link is where the user will be redirected as the suggestion is selected.');
-    $form['input_link'] = array(
-      '#title'          => $this->t('Input Link'),
-      '#type'           => 'select',
-      '#description'    => new HtmlEscapedText($input_link_descr),
-      '#default_value'  => $this->options['input_link'],
-      '#disabled'       => empty($field_labels),
-      '#required'       => TRUE,
-      '#options'        => $field_labels,
-    );
+    $form['input_link'] = [
+      '#title' => $this->t('Input Link'),
+      '#type' => 'select',
+      '#description' => new HtmlEscapedText($input_link_descr),
+      '#default_value' => $this->options['input_link'],
+      '#disabled' => empty($field_labels),
+      '#required' => TRUE,
+      '#options' => $field_labels,
+    ];
   }
 
   /**
@@ -98,9 +98,9 @@ class CallbackSerializer extends StylePluginBase {
 
     // Group the rows according to the grouping instructions, if specified.
     $groups = $this->renderGrouping(
-        $this->view->result,
-        $this->options['grouping'],
-        TRUE
+      $this->view->result,
+      $this->options['grouping'],
+      TRUE
     );
 
     return json_encode($groups);
@@ -109,10 +109,10 @@ class CallbackSerializer extends StylePluginBase {
   /**
    * {@inheritdoc}
    */
-  public function renderGrouping($records, $groupings = array(), $group_rendered = NULL) {
+  public function renderGrouping($records, $groupings = [], $group_rendered = NULL) {
 
-    $rows = array();
-    $groups = array();
+    $rows = [];
+    $groups = [];
 
     // Iterate through all records for transformation.
     foreach ($records as $index => $row) {
@@ -148,7 +148,7 @@ class CallbackSerializer extends StylePluginBase {
           if (empty($groups[$group_id])) {
             $groups[$group_id]['group']['group_id'] = $group_id;
             $groups[$group_id]['group']['group_name'] = $group_name;
-            $groups[$group_id]['rows'] = array();
+            $groups[$group_id]['rows'] = [];
           }
 
           // Move the set reference into the row set of the group
@@ -160,7 +160,7 @@ class CallbackSerializer extends StylePluginBase {
         // Create the group if it does not exist yet.
         if (empty($groups[''])) {
           $groups['']['group'] = '';
-          $groups['']['rows'] = array();
+          $groups['']['rows'] = [];
         }
         $rows = &$groups['']['rows'];
       }
@@ -173,7 +173,7 @@ class CallbackSerializer extends StylePluginBase {
      * Build the result from previous array.
      * @todo: find a more straight forward way to make it.
      */
-    $return = array();
+    $return = [];
     foreach ($groups as $group_id => $group) {
       // Add group info on first row lign.
       if (isset($group['rows']) && isset($group['rows'][0])) {
@@ -184,4 +184,5 @@ class CallbackSerializer extends StylePluginBase {
     }
     return $return;
   }
+
 }

@@ -125,7 +125,9 @@
       autocomplete.cache[elementId][term] = data;
 
       // Reduce number to limit.
-      if (key) data.slice(0, autocomplete.options.forms[key].maxSuggestions);
+      if (key) {
+        data.slice(0, autocomplete.options.forms[key].maxSuggestions);
+      }
 
       // Add no_result or moore_results depending on the situation.
       // @todo: find a better way eventually ?
@@ -133,7 +135,8 @@
         if (data.length) {
           var moreResults = replaceInObject(autocomplete.options.forms[key].moreResults, '\\[search-phrase\\]', request.term);
           data.push(moreResults);
-        } else {
+        }
+        else {
           var noResult = replaceInObject(autocomplete.options.forms[key].noResult, '\\[search-phrase\\]', request.term);
           data.push(noResult);
         }
@@ -155,14 +158,18 @@
       var path = '';
       if (key && autocomplete.options.forms[key]) {
         path = autocomplete.options.forms[key].source;
-        $.each(autocomplete.options.forms[key].filters, function(key, value) {
-         data[value] = term;
+        $.each(autocomplete.options.forms[key].filters, function (key, value) {
+          data[value] = term;
         });
-      } else {
-    	path = this.element.attr('data-autocomplete-path');
-    	data.q = term;
       }
-      var options = $.extend({success: sourceCallbackHandler, data: data}, autocomplete.ajax);
+      else {
+        path = this.element.attr('data-autocomplete-path');
+        data.q = term;
+      }
+      var options = $.extend({
+        success: sourceCallbackHandler,
+        data: data
+      }, autocomplete.ajax);
       $.ajax(path, options);
     }
   }
@@ -200,8 +207,9 @@
 
     // Add our own handling on submission if needed
     if (key && autocomplete.options.forms[key].autoRedirect == 1 && ui.item.link) {
-    document.location.href = ui.item.link;
-    } else if (key && autocomplete.options.forms[key].autoSubmit == 1 && ui.item.value) {
+      document.location.href = ui.item.link;
+    }
+    else if (key && autocomplete.options.forms[key].autoSubmit == 1 && ui.item.value) {
       $(this).val(ui.item.value);
       $(this).closest("form").submit();
     }
@@ -219,12 +227,12 @@
    */
   function renderItem(ul, item) {
     var term = this.term;
-    var first = ("group" in item)  ? 'first' : '';
+    var first = ("group" in item) ? 'first' : '';
     var innerHTML = '<div class="ui-autocomplete-fields ' + first + '">';
     var regex = new RegExp('(' + escapeRegExp(term) + ')', 'gi');
     if (item.fields) {
       var helper = document.createElement("textarea");
-      $.each(item.fields, function(key, value) {
+      $.each(item.fields, function (key, value) {
         helper.innerHTML = value;
         value = helper.value;
         var output = value;
@@ -233,7 +241,8 @@
         }
         innerHTML += ('<div class="ui-autocomplete-field-' + key + '">' + output + '</div>');
       });
-    } else {
+    }
+    else {
       var output = item.label;
       if (item.group && item.group.group_id != 'more_results' && item.group.group_id != 'no_results') {
         output = item.label.replace(regex, "<span class='ui-autocomplete-field-term'>$1</span>");
@@ -243,14 +252,14 @@
     innerHTML += '</div>';
 
     if ("group" in item) {
-    	var groupId = typeof(item.group.group_id) !== 'undefined' ? item.group.group_id : '';
-    	var groupName = typeof(item.group.group_name) !== 'undefined' ? item.group.group_name : '';
+      var groupId = typeof (item.group.group_id) !== 'undefined' ? item.group.group_id : '';
+      var groupName = typeof (item.group.group_name) !== 'undefined' ? item.group.group_name : '';
       $('<div class="ui-autocomplete-field-group ui-state-disabled ' + groupId + '">' + groupName + '</div>').appendTo(ul);
     }
-    var elem =  $("<li class=ui-menu-item-" + first + "></li>" )
+    var elem = $("<li class=ui-menu-item-" + first + "></li>")
     .append("<a>" + innerHTML + "</a>");
     if (item.value == '') {
-    	elem = $("<li class='ui-state-disabled ui-menu-item-" + first + " ui-menu-item'>" + item.label + "</li>");
+      elem = $("<li class='ui-state-disabled ui-menu-item-" + first + " ui-menu-item'>" + item.label + "</li>");
     }
     elem.data("item.autocomplete", item).appendTo(ul);
     return elem;
@@ -269,13 +278,14 @@
    * This methods replaces needle by replacement in stash.
    */
   function replaceInObject(stash, needle, replacement) {
-    var regex = new RegExp(needle,"g");
+    var regex = new RegExp(needle, "g");
     var input = Drupal.checkPlain(replacement);
     var result = [];
-    $.each(stash, function(index, value) {
+    $.each(stash, function (index, value) {
       if ($.type(value) === "string") {
         result[index] = value.replace(regex, input);
-      } else {
+      }
+      else {
         result[index] = value;
       }
     });
@@ -290,18 +300,18 @@
       // Act on textfields with the "form-autocomplete" class.
       var $autocomplete = $(context).find('input.form-autocomplete');
       // Act also on registered fields
-      $.each(autocomplete.options.forms, function(key, value) {
-      	var elem = $(context).find(autocomplete.options.forms[key].selector).data("key", key).addClass('form-autocomplete').attr('data-id', key);
-  	  	$autocomplete = $.merge($autocomplete, elem);
+      $.each(autocomplete.options.forms, function (key, value) {
+        var elem = $(context).find(autocomplete.options.forms[key].selector).data("key", key).addClass('form-autocomplete').attr('data-id', key);
+        $autocomplete = $.merge($autocomplete, elem);
       });
 
-	  	$.each($autocomplete, function(key, value) {
-	  	  value = $(value);
+      $.each($autocomplete, function (key, value) {
+        value = $(value);
         // Retrieve the key for this element.
         var key = value.data("key");
 
         // Run only once on found elements
-	  	  value.once('autocomplete');
+        value.once('autocomplete');
 
         // If present: autocomplete those fields
         if (value.length) {
@@ -317,7 +327,7 @@
 
           // Use jQuery UI Autocomplete on the textfield.
           value.autocomplete(autocomplete.options)
-            .data("ui-autocomplete")
+          .data("ui-autocomplete")
             ._renderItem = autocomplete.options.renderItem;
           // Add theme id to suggestion list.
           if (value.data("key")) {
@@ -329,8 +339,8 @@
     detach: function (context, settings, trigger) {
       if (trigger === 'unload') {
         $(context).find('input.form-autocomplete')
-          .removeOnce('autocomplete')
-          .autocomplete('destroy');
+        .removeOnce('autocomplete')
+        .autocomplete('destroy');
       }
     }
   };
@@ -344,7 +354,7 @@
     splitValues: autocompleteSplitValues,
     extractLastTerm: extractLastTerm,
     // jQuery UI autocomplete options.
-    options : {
+    options: {
       source: sourceData,
       focus: focusHandler,
       search: searchHandler,
