@@ -156,12 +156,12 @@ class CallbackFieldRow extends RowPluginBase {
       }
 
       // Add input link.
-      if ($this->rowOptions['input_link'] == $id) {
+      if (isset($this->rowOptions['input_link']) && $this->rowOptions['input_link'] == $id) {
         $output['link'] = $value;
       }
 
       // Add value link.
-      if ($this->rowOptions['input_label'] == $id) {
+      if (isset($this->rowOptions['input_label']) && $this->rowOptions['input_label'] == $id) {
         $output['value'] = $value;
       }
 
