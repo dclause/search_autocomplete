@@ -93,7 +93,7 @@
     if (!(elementId in autocomplete.cache)) {
       autocomplete.cache[elementId] = {};
     }
-    
+
     // Retrieve the key for this element.
     var key = this.element.data("key");
 
@@ -120,10 +120,10 @@
      * @param {Object} data
      */
     function sourceCallbackHandler(data) {
-      
+
       // Cache the results.
       autocomplete.cache[elementId][term] = data;
-      
+
       // Reduce number to limit.
       if (key) data.slice(0, autocomplete.options.forms[key].maxSuggestions);
 
@@ -197,7 +197,7 @@
     }
     event.target.value = terms.join(', ');
     var key = $(event.target).data('key');
-    
+
     // Add our own handling on submission if needed
     if (key && autocomplete.options.forms[key].autoRedirect == 1 && ui.item.link) {
     document.location.href = ui.item.link;
@@ -216,7 +216,7 @@
    * @param {Object} item
    *
    * @return {Object}
-   */   
+   */
   function renderItem(ul, item) {
     var term = this.term;
     var first = ("group" in item)  ? 'first' : '';
@@ -248,14 +248,14 @@
       $('<div class="ui-autocomplete-field-group ui-state-disabled ' + groupId + '">' + groupName + '</div>').appendTo(ul);
     }
     var elem =  $("<li class=ui-menu-item-" + first + "></li>" )
-    .append("<a>" + innerHTML + "</a>");   
+    .append("<a>" + innerHTML + "</a>");
     if (item.value == '') {
     	elem = $("<li class='ui-state-disabled ui-menu-item-" + first + " ui-menu-item'>" + item.label + "</li>");
     }
     elem.data("item.autocomplete", item).appendTo(ul);
     return elem;
   }
-    
+
   /**
    * This methods resize the suggestion panel property.
    * Not used currently.
@@ -264,7 +264,7 @@
     var ul = this.menu.element;
     ul.outerWidth(Math.max(ul.width("").outerWidth() + 5, this.options.position.of == null ? this.element.outerWidth() : this.options.position.of.outerWidth()));
   }
-  
+
   /**
    * This methods replaces needle by replacement in stash.
    */
@@ -281,7 +281,7 @@
     });
     return result;
   }
-  
+
   /**
    * Attaches the autocomplete behavior to all required fields.
    */
@@ -294,12 +294,12 @@
       	var elem = $(context).find(autocomplete.options.forms[key].selector).data("key", key).addClass('form-autocomplete').attr('data-id', key);
   	  	$autocomplete = $.merge($autocomplete, elem);
       });
-      
+
 	  	$.each($autocomplete, function(key, value) {
 	  	  value = $(value);
         // Retrieve the key for this element.
         var key = value.data("key");
-	  	  
+
         // Run only once on found elements
 	  	  value.once('autocomplete');
 
@@ -307,12 +307,14 @@
         if (value.length) {
           // Allow options to be overriden per instance.
           var blacklist = value.attr('data-autocomplete-first-character-blacklist');
+          // Append the autocomplete results to the form.
+          var formId = '#' + $(this).closest('form').attr('id');
           $.extend(autocomplete.options, {
             firstCharacterBlacklist: (blacklist) ? blacklist : '',
-            minLength: (typeof key !== 'undefined') ? autocomplete.options.forms[key].minChars : autocomplete.options.minLength
+            minLength: (typeof key !== 'undefined') ? autocomplete.options.forms[key].minChars : autocomplete.options.minLength,
+            appendTo: (formId) ? formId : 'body',
           });
-          
-          
+
           // Use jQuery UI Autocomplete on the textfield.
           value.autocomplete(autocomplete.options)
             .data("ui-autocomplete")
