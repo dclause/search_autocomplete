@@ -13,6 +13,7 @@ use Drupal\Core\Routing\RouteProviderInterface;
 use Drupal\Core\State\StateInterface;
 use Drupal\views\Plugin\views\display\PathPluginBase;
 use Drupal\views\Plugin\views\display\ResponseDisplayPluginInterface;
+use Drupal\views\Render\ViewsRenderPipelineMarkup;
 use Drupal\views\ViewExecutable;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -144,8 +145,7 @@ class AutocompletionCallback extends PathPluginBase implements ResponseDisplayPl
 
     $request_content_type = $this->view->getRequest()->getRequestFormat();
     $this->setContentType($request_content_type);
-    $this->setMimeType($this->view->getRequest()
-      ->getMimeType($this->contentType));
+    $this->setMimeType($this->view->getRequest()->getMimeType($this->contentType));
   }
 
   /**
@@ -245,7 +245,7 @@ class AutocompletionCallback extends PathPluginBase implements ResponseDisplayPl
       // executed by an HTML agent.
       // @todo Decide how to support non-HTML in the render API in
       //   https://www.drupal.org/node/2501313.
-      $build['#markup'] = MarkupTrait::create($build['#markup']);
+      $build['#markup'] = ViewsRenderPipelineMarkup::create($build['#markup']);
     }
 
     parent::applyDisplayCachablityMetadata($build);
