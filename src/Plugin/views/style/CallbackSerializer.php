@@ -4,6 +4,7 @@ namespace Drupal\search_autocomplete\Plugin\views\style;
 
 use Drupal\Component\Render\HtmlEscapedText;
 use Drupal\Component\Utility\Html;
+use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\Plugin\views\style\StylePluginBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -103,7 +104,8 @@ class CallbackSerializer extends StylePluginBase {
       TRUE
     );
 
-    return json_encode($groups);
+    $response = new AjaxResponse($groups);
+    return $response->getContent();
   }
 
   /**
