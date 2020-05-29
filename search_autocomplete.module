@@ -135,6 +135,7 @@ function attach_configuration_to_element(&$element, $config_id) {
       ],
       'label' => $config->getNoResultLabel(),
       'value' => $config->getNoResultValue(),
+      'link' => $config->getNoResultLink(),
     ],
     'moreResults' => [
       'group' => [
@@ -142,6 +143,7 @@ function attach_configuration_to_element(&$element, $config_id) {
       ],
       'label' => $config->getMoreResultsLabel(),
       'value' => $config->getMoreResultsValue(),
+      'link' => $config->getMoreResultsLink(),
     ],
   ];
   $element['#attached']['drupalSettings']['search_autocomplete'][$config->id()] = $settings;

@@ -130,7 +130,6 @@
       }
 
       // Add no_result or more_results depending on the situation.
-      // @todo: find a better way eventually ?
       if (key) {
         if (data.length) {
           var moreResults = replaceInObject(autocomplete.options.forms[key].moreResults, '\\[search-phrase\\]', request.term);

@@ -132,7 +132,7 @@ class AutocompletionConfigurationEditForm extends AutocompletionConfigurationFor
     $form['search_autocomplete_how']['moreResultsSuggestion']['moreResultsLink'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Custom "view all results" URL redirection'),
-      '#description' => $this->t('If "Auto redirect" is checked and a label is given for this configuration, the user will be redirected to this URL when the message is selected. Leave empty if you rather like a standard Drupal search to be performed on the "value" given above.'),
+      '#description' => $this->t('If "Auto redirect" is checked and an URL is given for this configuration, the user will be redirected to this URL when the message is clicked. Leave empty if you rather like a standard Drupal behavior.'),
       '#default_value' => $this->t($this->entity->getMoreResultsLink()),
       '#maxlength' => 255,
       '#required' => FALSE,
@@ -168,7 +168,7 @@ class AutocompletionConfigurationEditForm extends AutocompletionConfigurationFor
     $form['search_autocomplete_how']['noResultSuggestion']['noResultLink'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Custom "no result" URL redirection'),
-      '#description' => $this->t('If "Auto redirect" is checked and a label is given for this configuration, the user will be redirected to this URL when the message is selected. Leave empty if you rather like a standard Drupal search to be performed on the "value" given above.'),
+      '#description' => $this->t('If "Auto redirect" is checked and an URL is given for this configuration, the user will be redirected to this URL when the message is clicked. Leave empty if you rather like a standard Drupal behavior.'),
       '#default_value' => $this->t($this->entity->getNoResultLink()),
       '#maxlength' => 255,
       '#required' => FALSE,
