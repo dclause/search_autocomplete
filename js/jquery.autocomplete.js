@@ -223,7 +223,10 @@
     var innerHTML = '<div class="ui-autocomplete-fields ' + first + '">';
     var regex = new RegExp('(' + escapeRegExp(term) + ')', 'gi');
     if (item.fields) {
+      var helper = document.createElement("textarea");
       $.each(item.fields, function(key, value) {
+        helper.innerHTML = value;
+        value = helper.value;
         var output = value;
         if (value.indexOf('src=') == -1 && value.indexOf('href=') == -1) {
           output = value.replace(regex, "<span class='ui-autocomplete-field-term'>$1</span>");
