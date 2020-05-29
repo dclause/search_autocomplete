@@ -211,7 +211,17 @@
     }
     else if (key && autocomplete.options.forms[key].autoSubmit == 1 && ui.item.value) {
       $(this).val(ui.item.value);
-      $(this).closest("form").submit();
+      const form = $(this).closest("form");
+      const submit = $('[type="submit"]', form);
+      // If we find a submit input click on it rather then submit the form to
+      // trigger the attached click behavior such as AJAX refresh
+      // (case of an ajax view with expose filters for instance).
+      // @see #2820337
+      if (submit.length === 1) {
+        submit.click();
+      } else {
+        form.submit();
+      }
     }
     // Return false to tell jQuery UI that we've filled in the value already.
     return false;
