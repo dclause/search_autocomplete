@@ -161,7 +161,7 @@ function attach_configuration_to_element(&$element, $config_id) {
  * Since we can't add files through css in #attached anymore, this is a trick
  * defining as many libraries as the number of found CSS in the theme folder.
  *
- * @return array[]
+ * @return array
  *   An array of library definitions.
  */
 function search_autocomplete_library_info_build() {
