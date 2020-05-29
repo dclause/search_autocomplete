@@ -112,8 +112,11 @@ function attach_configuration_to_element(&$element, $config_id) {
 
   // In case of internal URL, convert it to absolute.
   if (!UrlHelper::isExternal($source)) {
-    $source = Url::fromUri('internal:' . $source, ['absolute' => FALSE])
-      ->toString();
+    $prefix = 'internal:';
+    if (strpos($source, '::') !== FALSE) {
+      $prefix .= '/';
+    }
+    $source = Url::fromUri($prefix . $source, ['absolute' => FALSE])->toString();
   }
 
   $settings = [
