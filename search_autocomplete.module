@@ -53,9 +53,6 @@ function search_autocomplete_element_info_alter(&$types) {
 function process_search_autocomplete(&$element) {
   if (!empty($element['#autocomplete_configuration'])) {
     attach_configuration_to_element($element, $element['#autocomplete_configuration']);
-    $element['#attributes']['class'][] = 'form-autocomplete';
-    $element['#attached']['library'][] = 'core/drupal.autocomplete';
-    $element['#attributes']['data-key'] = $element['#autocomplete_configuration'];
   }
   return $element;
 }
@@ -81,9 +78,13 @@ function attach_configuration_to_element(&$element, $config_id) {
     ->load($config_id);
 
   // No need to continue if the $config is empty.
-  if ($config == NULL) {
+  if ($config == NULL || !$config->getStatus()) {
     return;
   }
+
+  $element['#attributes']['class'][] = 'form-autocomplete';
+  $element['#attached']['library'][] = 'core/drupal.autocomplete';
+  $element['#attributes']['data-key'] = $element['#autocomplete_configuration'];
 
   $source = $config->getSource();
   $exposed_filters = [];
