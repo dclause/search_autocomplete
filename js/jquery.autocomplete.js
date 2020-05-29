@@ -291,7 +291,7 @@
       var $autocomplete = $(context).find('input.form-autocomplete');
       // Act also on registered fields
       $.each(autocomplete.options.forms, function(key, value) {
-      	var elem = $(context).find(autocomplete.options.forms[key].selector).data("key", key).attr("class", "form-autocomplete").attr('data-id', key);
+      	var elem = $(context).find(autocomplete.options.forms[key].selector).data("key", key).addClass('form-autocomplete').attr('data-id', key);
   	  	$autocomplete = $.merge($autocomplete, elem);
       });
       
