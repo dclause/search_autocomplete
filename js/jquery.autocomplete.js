@@ -294,6 +294,8 @@
       
 	  	$.each($autocomplete, function(key, value) {
 	  	  value = $(value);
+        // Retrieve the key for this element.
+        var key = value.data("key");
 	  	  
         // Run only once on found elements
 	  	  value.once('autocomplete');
@@ -303,7 +305,8 @@
           // Allow options to be overriden per instance.
           var blacklist = value.attr('data-autocomplete-first-character-blacklist');
           $.extend(autocomplete.options, {
-            firstCharacterBlacklist: (blacklist) ? blacklist : ''
+            firstCharacterBlacklist: (blacklist) ? blacklist : '',
+            minLength: (typeof key !== 'undefined') ? autocomplete.options.forms[key].minChars : autocomplete.options.minLength
           });
           
           
