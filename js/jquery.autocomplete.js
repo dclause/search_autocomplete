@@ -126,10 +126,10 @@
 
       // Reduce number to limit.
       if (key) {
-        data.slice(0, autocomplete.options.forms[key].maxSuggestions);
+        data = data.slice(0, autocomplete.options.forms[key].maxSuggestions);
       }
 
-      // Add no_result or moore_results depending on the situation.
+      // Add no_result or more_results depending on the situation.
       // @todo: find a better way eventually ?
       if (key) {
         if (data.length) {
