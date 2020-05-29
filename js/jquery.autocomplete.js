@@ -195,6 +195,12 @@
     var terms = autocomplete.splitValues(event.target.value);
     // Remove the current input.
     terms.pop();
+
+    // Trick here to handle encoded characters (see #2936846).
+    const helper = document.createElement("textarea");
+    helper.innerHTML = ui.item.value;
+    ui.item.value = helper.value;
+
     // Add the selected item.
     if (ui.item.value.search(",") > 0) {
       terms.push('"' + ui.item.value + '"');
