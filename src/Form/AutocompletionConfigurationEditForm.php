@@ -263,7 +263,7 @@ class AutocompletionConfigurationEditForm extends AutocompletionConfigurationFor
     elseif (UrlHelper::isExternal($source)) {
       return;
     }
-    // Finally, if the source is not a Drupal path: we hav not found the nature
+    // Finally, if the source is not a Drupal path: we have not found the nature
     // of it, so send an error.
     else {
       if (!Drupal::service('path.validator')->isValid($source)) {
