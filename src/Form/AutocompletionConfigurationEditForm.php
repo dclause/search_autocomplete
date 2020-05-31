@@ -5,7 +5,6 @@ namespace Drupal\search_autocomplete\Form;
 use Drupal;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\search_autocomplete\Suggestion;
 use Drupal\views\Views;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -183,7 +182,6 @@ class AutocompletionConfigurationEditForm extends AutocompletionConfigurationFor
       '#collapsible' => TRUE,
       '#open' => TRUE,
     ];
-    $source = $this->entity->getSource();
     $form['search_autocomplete_what']['source'] = [
       '#type' => 'textfield',
       '#autocomplete_route_name' => 'search_autocomplete.view_autocomplete',
@@ -201,7 +199,7 @@ class AutocompletionConfigurationEditForm extends AutocompletionConfigurationFor
 
     // Template to use.
     $themes = [];
-    $files = file_scan_directory(drupal_get_path('module', 'search_autocomplete') . '/css/themes', '/.*\.css\z/', ['recurse' => FALSE]);
+    $files = \Drupal::service('file_system')->scanDirectory(drupal_get_path('module', 'search_autocomplete') . '/css/themes', '/.*\.css\z/', ['recurse' => FALSE]);
     foreach ($files as $file) {
       $themes[$file->filename] = $file->name;
     }

@@ -180,13 +180,17 @@ class AutocompletionConfigurationFormBase extends EntityForm {
 
     if ($status == SAVED_UPDATED) {
       // If we edited an existing entity...
-      drupal_set_message($this->t('Autocompletion Configuration %label has been updated.', ['%label' => $autocompletion_configuration->label()]));
+      $this->messenger->addMessage(
+        $this->t('Autocompletion Configuration %label has been updated.',
+          ['%label' => $autocompletion_configuration->label()]
+        )
+      );
       $this->logger('search_autocomplete')
         ->notice('Autocompletion Configuration %label has been updated.', ['%label' => $autocompletion_configuration->label()]);
     }
     else {
       // If we created a new entity...
-      drupal_set_message($this->t('Autocompletion Configuration %label has been added.', ['%label' => $autocompletion_configuration->label()]));
+      $this->messenger->addMessage($this->t('Autocompletion Configuration %label has been added.', ['%label' => $autocompletion_configuration->label()]));
       $this->logger('search_autocomplete')
         ->notice('Autocompletion Configuration %label has been added.', ['%label' => $autocompletion_configuration->label()]);
     }

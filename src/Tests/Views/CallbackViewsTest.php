@@ -6,7 +6,7 @@ use Drupal;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\Html;
 use Drupal\node\Entity\Node;
-use Drupal\views\Tests\ViewTestBase;
+use Drupal\Tests\views\Functional\ViewTestBase;
 
 /**
  * Test callback view configurations.
@@ -161,7 +161,7 @@ class CallbackViewsTest extends ViewTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp($import_test_views = TRUE) {
+  protected function setUp($import_test_views = TRUE): void {
     parent::setUp();
 
     // Log with admin permissions.

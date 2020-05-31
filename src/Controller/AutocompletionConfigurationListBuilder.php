@@ -62,7 +62,6 @@ class AutocompletionConfigurationListBuilder extends ConfigEntityListBuilder imp
     $entities = $this->storage->loadMultiple($entity_ids);
 
     // Build blocks first for each region.
-    $configs = [];
     foreach ($entities as $entity_id => $entity) {
       $editable = $entity->getEditable() ? 'editable' : '';
       $deletable = $entity->getEditable() ? 'deletable' : '';
@@ -103,6 +102,8 @@ class AutocompletionConfigurationListBuilder extends ConfigEntityListBuilder imp
 
   /**
    * Implements \Drupal\Core\Form\FormInterface::validateForm().
+   * @param array $form
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
     // No validation.
@@ -128,7 +129,7 @@ class AutocompletionConfigurationListBuilder extends ConfigEntityListBuilder imp
       $entity->setStatus($entity_values['enabled']);
       $entity->save();
     }
-    drupal_set_message($this->t('Data have been saved.'));
+    $this->messenger->addMessage($this->t('Data have been saved.'));
   }
 
   /**
