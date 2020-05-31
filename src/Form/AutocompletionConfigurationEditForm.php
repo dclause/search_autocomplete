@@ -114,7 +114,7 @@ class AutocompletionConfigurationEditForm extends AutocompletionConfigurationFor
     $form['search_autocomplete_how']['moreResultsSuggestion']['moreResultsLabel'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Custom "view all results" message label'),
-      '#description' => $this->t('This message is going to be displayed at the end of suggestion list when suggestions are found.') . $this->t('Leave empty to disable this functionality.') . '<br/>' . $this->t('You can use HTML tags as well as the token [search-phrase] to replace user input.'),
+      '#description' => $this->t('This message is going to be displayed at the end of suggestion list when suggestions are found.') . $this->t('Leave empty to disable this functionality.') . '<br/>' . $this->t('You can use HTML tags as well as the token [search-phrase] to replace user input or [search-count] to replace the number of matching results.'),
       '#default_value' => $this->t($this->entity->getMoreResultsLabel()),
       '#maxlength' => 255,
       '#required' => FALSE,

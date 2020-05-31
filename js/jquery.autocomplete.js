@@ -125,6 +125,7 @@
       autocomplete.cache[elementId][term] = data;
 
       // Reduce number to limit.
+      const length = data.length;
       if (key) {
         data = data.slice(0, autocomplete.options.forms[key].maxSuggestions);
       }
@@ -133,6 +134,7 @@
       if (key) {
         if (data.length) {
           var moreResults = replaceInObject(autocomplete.options.forms[key].moreResults, '\\[search-phrase\\]', request.term);
+          moreResults = replaceInObject(moreResults, '\\[search-count\\]', length);
           data.push(moreResults);
         }
         else {
@@ -295,7 +297,7 @@
   function replaceInObject(stash, needle, replacement) {
     var regex = new RegExp(needle, "g");
     var input = Drupal.checkPlain(replacement);
-    var result = [];
+    var result = {};
     $.each(stash, function (index, value) {
       if ($.type(value) === "string") {
         result[index] = value.replace(regex, input);
