@@ -163,7 +163,9 @@ function attach_configuration_to_element(&$element, $config_id) {
  * Display a notice to user for cache rebuild after install.
  */
 function search_autocomplete_install() {
-  drupal_set_message(t('To finish install of Search Autocomplete, you must %clear_caches.', array('%clear_caches' => Link::fromTextAndUrl(t('Clear all caches'), new Url('system.performance_settings')))));
+  drupal_set_message(t('To finish install of Search Autocomplete, you must %clear_caches.', [
+    '%clear_caches' => Link::fromTextAndUrl(t('Clear all caches'), Url::fromRoute('system.performance_settings'))
+  ]));
 }
 
 /**
