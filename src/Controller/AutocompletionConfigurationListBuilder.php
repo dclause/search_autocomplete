@@ -5,6 +5,8 @@ namespace Drupal\search_autocomplete\Controller;
 use Drupal;
 use Drupal\Component\Render\HtmlEscapedText;
 use Drupal\Core\Config\Entity\ConfigEntityListBuilder;
+use Drupal\Core\Link;
+use Drupal\Core\Url;
 use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Form\FormStateInterface;
 
@@ -129,7 +131,10 @@ class AutocompletionConfigurationListBuilder extends ConfigEntityListBuilder imp
       $entity->setStatus($entity_values['enabled']);
       $entity->save();
     }
-    $this->messenger()->addMessage($this->t('Data have been saved.'));
+    $this->messenger()->addMessage($this->t('Data have been saved. You may have to %clear_caches for theses changes to apply.', [
+      '%clear_caches' => Link::fromTextAndUrl(t('Clear all caches'),
+        Url::fromRoute('system.performance_settings'))->toString()
+    ]));
   }
 
   /**
