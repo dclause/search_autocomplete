@@ -129,7 +129,7 @@ class AutocompletionConfigurationListBuilder extends ConfigEntityListBuilder imp
       $entity->setStatus($entity_values['enabled']);
       $entity->save();
     }
-    $this->messenger->addMessage($this->t('Data have been saved.'));
+    $this->messenger()->addMessage($this->t('Data have been saved.'));
   }
 
   /**

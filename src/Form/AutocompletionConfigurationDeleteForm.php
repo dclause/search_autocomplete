@@ -67,7 +67,7 @@ class AutocompletionConfigurationDeleteForm extends EntityConfirmFormBase {
     $this->entity->delete();
 
     // Set a message that the entity was deleted.
-    $this->messenger->addMessage(
+    $this->messenger()->addMessage(
       $this->t('The autocompletion configuration %label is deleted.',
       ['%label' => $this->entity->label()])
     );

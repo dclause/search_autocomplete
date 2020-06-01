@@ -180,7 +180,7 @@ class AutocompletionConfigurationFormBase extends EntityForm {
 
     if ($status == SAVED_UPDATED) {
       // If we edited an existing entity...
-      $this->messenger->addMessage(
+      $this->messenger()->addMessage(
         $this->t('Autocompletion Configuration %label has been updated.',
           ['%label' => $autocompletion_configuration->label()]
         )
@@ -190,7 +190,7 @@ class AutocompletionConfigurationFormBase extends EntityForm {
     }
     else {
       // If we created a new entity...
-      $this->messenger->addMessage($this->t('Autocompletion Configuration %label has been added.', ['%label' => $autocompletion_configuration->label()]));
+      $this->messenger()->addMessage($this->t('Autocompletion Configuration %label has been added.', ['%label' => $autocompletion_configuration->label()]));
       $this->logger('search_autocomplete')
         ->notice('Autocompletion Configuration %label has been added.', ['%label' => $autocompletion_configuration->label()]);
     }
