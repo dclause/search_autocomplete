@@ -173,7 +173,7 @@ class CallbackViewsTest extends ViewTestBase {
     $this->drupalLogin($this->adminUser);
 
     // Get the node manager.
-    $this->nodeStorage = $this->container->get('entity.manager')
+    $this->nodeStorage = $this->container->get('entity_type.manager')
       ->getStorage('node');
   }
 
