@@ -247,7 +247,7 @@ class AutocompletionConfigurationEditForm extends AutocompletionConfigurationFor
     // Check if source input is a valid View display.
     $input_source = explode('::', $source);
     if (count($input_source) == 2) {
-      $entity_ids = Drupal::service('entity.query')->get('view')
+      $entity_ids = \Drupal::entityTypeManager()->getStorage('view')->getQuery()
         ->condition('status', TRUE)
         ->condition('id', $input_source[0])
         ->condition("display.*.id", $input_source[1])
