@@ -54,6 +54,9 @@ function search_autocomplete_element_info_alter(&$types) {
 function process_search_autocomplete(&$element) {
   if (!empty($element['#autocomplete_configuration'])) {
     attach_configuration_to_element($element, $element['#autocomplete_configuration']);
+    $element['#attributes']['class'][] = 'form-autocomplete';
+    $element['#attached']['library'][] = 'core/drupal.autocomplete';
+    $element['#attributes']['data-key'] = $element['#autocomplete_configuration'];
   }
   return $element;
 }
@@ -82,10 +85,6 @@ function attach_configuration_to_element(&$element, $config_id) {
   if ($config == NULL || !$config->getStatus()) {
     return;
   }
-
-  $element['#attributes']['class'][] = 'form-autocomplete';
-  $element['#attached']['library'][] = 'core/drupal.autocomplete';
-  $element['#attributes']['data-key'] = $element['#autocomplete_configuration'];
 
   $source = $config->getSource();
   $exposed_filters = [];
@@ -245,12 +244,10 @@ function search_autocomplete_page_attachments(array &$attachments) {
   }
 
   // Add the settings to be pass to JS:
-  $autocomplete_configurations = [];
   foreach ($autocomplete_configuration_entities as $config_id) {
     attach_configuration_to_element($attachments, $config_id);
   }
 
-  //$view = \Drupal::entityManager()->getStorage('view')->load(EntityAutocomplete::extractEntityIdFromAutocompleteInput($config->getSource()));
   $attachments['#attached']['library'][] = 'core/drupal.autocomplete';
 }
 
@@ -261,18 +258,28 @@ function search_autocomplete_page_attachments(array &$attachments) {
  * This is an example on how to use configurations from code.
  */
 function search_autocomplete_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+
+  // Prevent a useless query to configurations.
+  if ($form_id != $form_id && $form_id != 'search_form') {
+    return;
+  }
+
+  // Load the default activated configurations.
+  $autocomplete_configuration_entities = Drupal::entityQuery('autocompletion_configuration')
+    ->condition('status', TRUE)
+    ->condition('id', ['search_block', 'search_form_users', 'search_form_content'], 'IN')
+    ->execute();
+
   // Autocomplete the default search block.
-  if ($form_id == 'search_block_form') {
+  if ($form_id == 'search_block_form' && isset($autocomplete_configuration_entities['search_block'])) {
     $form['keys']['#autocomplete_configuration'] = 'search_block';
   }
-  else {
-    if ($form_id == 'search_form') {
-      if (Drupal::routeMatch()->getRouteName() == 'search.view_user_search') {
-        $form['basic']['keys']['#autocomplete_configuration'] = 'search_form_users';
-      }
-      else {
-        $form['basic']['keys']['#autocomplete_configuration'] = 'search_form_content';
-      }
+  else if ($form_id == 'search_form') {
+    if (Drupal::routeMatch()->getRouteName() == 'search.view_user_search' && isset($autocomplete_configuration_entities['search_form_users'])) {
+      $form['basic']['keys']['#autocomplete_configuration'] = 'search_form_users';
+    }
+    else if (isset($autocomplete_configuration_entities['search_form_users'])) {
+      $form['basic']['keys']['#autocomplete_configuration'] = 'search_form_content';
     }
   }
   return $form;
