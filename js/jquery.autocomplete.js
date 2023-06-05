@@ -120,10 +120,6 @@
      * @param {Object} data
      */
     function sourceCallbackHandler(data) {
-
-      // Cache the results.
-      autocomplete.cache[elementId][term] = data;
-
       // Reduce number to limit.
       const length = data.length;
       if (key) {
@@ -142,6 +138,9 @@
           data.push(noResult);
         }
       }
+
+      // Cache the results.
+      autocomplete.cache[elementId][term] = data;
 
       // Send the new string array of terms to the jQuery UI list.
       showSuggestions(data);
