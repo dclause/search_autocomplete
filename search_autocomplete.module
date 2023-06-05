@@ -184,7 +184,7 @@ function search_autocomplete_library_info_build() {
 
   // Find all available themes.
   $themes = [];
-  $files = \Drupal::service('file_system')->scanDirectory(drupal_get_path('module', 'search_autocomplete') . '/css/themes', '/.*\.css\z/', ['recurse' => FALSE]);
+  $files = \Drupal::service('file_system')->scanDirectory(\Drupal::service('extension.list.module')->getPath('search_autocomplete') . '/css/themes', '/.*\.css\z/', ['recurse' => FALSE]);
 
   // Create a new library for all themes.
   foreach ($files as $file) {
@@ -206,7 +206,7 @@ function search_autocomplete_library_info_build() {
 function search_autocomplete_library_info_alter(array &$libraries, $extension) {
   if ($extension == 'core' && isset($libraries['drupal.autocomplete'])) {
     $libraries['drupal.autocomplete']['js'] = array_merge($libraries['drupal.autocomplete']['js'], [
-      '/' . drupal_get_path('module', 'search_autocomplete') . '/js/jquery.autocomplete.js' => ['weight' => 0],
+      '/' . \Drupal::service('extension.list.module')->getPath('search_autocomplete') . '/js/jquery.autocomplete.js' => ['weight' => 0],
     ]);
   }
 }

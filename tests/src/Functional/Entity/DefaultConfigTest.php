@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\search_autocomplete\Tests\Entity;
+namespace Drupal\Tests\search_autocomplete\Functional\Entity;
 
 use Drupal\search_autocomplete\Entity\AutocompletionConfiguration;
 use Drupal\Tests\BrowserTestBase;
@@ -15,11 +15,16 @@ use Drupal\Tests\BrowserTestBase;
 class DefaultConfigTest extends BrowserTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Modules to enable.
    *
    * @var array
    */
-  public static $modules = ['node', 'search_autocomplete'];
+  protected static $modules = ['node', 'search_autocomplete'];
 
   /**
    * {@inheritdoc}
@@ -66,24 +71,24 @@ class DefaultConfigTest extends BrowserTestBase {
     $entity = AutocompletionConfiguration::load($config['id']);
     $this->assertNotNull($entity, 'Default configuration search_block created during installation process.');
 
-    $this->assertEqual($entity->id(), $config['id']);
-    $this->assertEqual($entity->label(), $config['label']);
-    $this->assertEqual($entity->getStatus(), $config['status']);
-    $this->assertEqual($entity->getSelector(), $config['selector']);
-    $this->assertEqual($entity->getMinChar(), $config['minChar']);
-    $this->assertEqual($entity->getMaxSuggestions(), $config['maxSuggestions']);
-    $this->assertEqual($entity->getAutoSubmit(), $config['autoSubmit']);
-    $this->assertEqual($entity->getAutoRedirect(), $config['autoRedirect']);
-    $this->assertEqual($entity->getNoResultLabel(), $config['noResultLabel']);
-    $this->assertEqual($entity->getNoResultValue(), $config['noResultValue']);
-    $this->assertEqual($entity->getNoResultLink(), $config['noResultLink']);
-    $this->assertEqual($entity->getMoreResultsLabel(), $config['moreResultsLabel']);
-    $this->assertEqual($entity->getMoreResultsValue(), $config['moreResultsValue']);
-    $this->assertEqual($entity->getMoreResultsLink(), $config['moreResultsLink']);
-    $this->assertEqual($entity->getSource(), $config['source']);
-    $this->assertEqual($entity->getTheme(), $config['theme']);
-    $this->assertEqual($entity->getEditable(), $config['editable']);
-    $this->assertEqual($entity->getDeletable(), $config['deletable']);
+    $this->assertEquals($entity->id(), $config['id']);
+    $this->assertEquals($entity->label(), $config['label']);
+    $this->assertEquals($entity->getStatus(), $config['status']);
+    $this->assertEquals($entity->getSelector(), $config['selector']);
+    $this->assertEquals($entity->getMinChar(), $config['minChar']);
+    $this->assertEquals($entity->getMaxSuggestions(), $config['maxSuggestions']);
+    $this->assertEquals($entity->getAutoSubmit(), $config['autoSubmit']);
+    $this->assertEquals($entity->getAutoRedirect(), $config['autoRedirect']);
+    $this->assertEquals($entity->getNoResultLabel(), $config['noResultLabel']);
+    $this->assertEquals($entity->getNoResultValue(), $config['noResultValue']);
+    $this->assertEquals($entity->getNoResultLink(), $config['noResultLink']);
+    $this->assertEquals($entity->getMoreResultsLabel(), $config['moreResultsLabel']);
+    $this->assertEquals($entity->getMoreResultsValue(), $config['moreResultsValue']);
+    $this->assertEquals($entity->getMoreResultsLink(), $config['moreResultsLink']);
+    $this->assertEquals($entity->getSource(), $config['source']);
+    $this->assertEquals($entity->getTheme(), $config['theme']);
+    $this->assertEquals($entity->getEditable(), $config['editable']);
+    $this->assertEquals($entity->getDeletable(), $config['deletable']);
   }
 
 }

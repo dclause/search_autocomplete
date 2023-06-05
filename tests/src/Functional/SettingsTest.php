@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\search_autocomplete\Tests;
+namespace Drupal\Tests\search_autocomplete\Functional;
 
 use Drupal\Tests\BrowserTestBase;
 
@@ -14,11 +14,16 @@ use Drupal\Tests\BrowserTestBase;
 class SettingsTest extends BrowserTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Modules to enable.
    *
    * @var array
    */
-  public static $modules = ['node', 'search_autocomplete'];
+  protected static $modules = ['node', 'search_autocomplete'];
 
   /**
    * {@inheritdoc}
@@ -51,8 +56,8 @@ class SettingsTest extends BrowserTestBase {
     // ----------------------------------------------------------------------
     // 1) Check the default settings value : configs are activated,
     // admin_helper is FALSE.
-    $this->assertFieldChecked('edit-configs-search-block-enabled', 'Default config search_block is activated.');
-    $this->assertNoFieldChecked('edit-admin-helper', 'Admin helper tool is disabled.');
+    $this->assertSession()->checkboxChecked('edit-configs-search-block-enabled');
+    $this->assertSession()->checkboxNotChecked('edit-admin-helper');
 
     // ----------------------------------------------------------------------
     // 2) Desactivate all available configurations and reverse settings.
@@ -60,12 +65,12 @@ class SettingsTest extends BrowserTestBase {
       'configs[search_block][enabled]' => FALSE,
       'admin_helper' => TRUE,
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save changes');
+    $this->submitForm($edit, 'Save changes');
 
     // 3) Check that all default configurations are desactivate,
     // and settings are toogled.
-    $this->assertNoFieldChecked('edit-configs-search-block-enabled', 'Default config search_block is disabled.');
-    $this->assertFieldChecked('edit-admin-helper', 'Admin helper tool is activated.');
+    $this->assertSession()->checkboxNotChecked('edit-configs-search-block-enabled');
+    $this->assertSession()->checkboxChecked('edit-admin-helper');
   }
 
   /**

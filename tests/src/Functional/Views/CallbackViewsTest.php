@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\search_autocomplete\Tests\Views;
+namespace Drupal\Tests\search_autocomplete\Functional\Views;
 
 use Drupal;
 use Drupal\Component\Render\FormattableMarkup;
@@ -17,13 +17,17 @@ use Drupal\Tests\views\Functional\ViewTestBase;
  */
 class CallbackViewsTest extends ViewTestBase {
 
-  // Temporary fix suggested here: https://www.drupal.org/node/2391795
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
   /**
    * Modules to enable.
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'search',
     'image',
     'user',
@@ -38,8 +42,6 @@ class CallbackViewsTest extends ViewTestBase {
    * @var \Drupal\user\Entity\User
    */
   public $adminUser;
-
-  protected $strictConfigSchema = FALSE;
 
   /**
    * The entity storage for nodes.
@@ -67,12 +69,12 @@ class CallbackViewsTest extends ViewTestBase {
     $this->drupalGet("admin/structure/views");
 
     // Nodes callback view.
-    $this->assertRaw(t('Nodes Autocompletion Callbacks'));
-    $this->assertRaw(t('autocompletion_callbacks_nodes'));
+    $this->assertSession()->responseContains(t('Nodes Autocompletion Callbacks'));
+    $this->assertSession()->responseContains(t('autocompletion_callbacks_nodes'));
 
     // Words callback view.
-    $this->assertRaw(t('Words Autocompletion Callbacks'));
-    $this->assertRaw(t('autocompletion_callbacks_words'));
+    $this->assertSession()->responseContains(t('Words Autocompletion Callbacks'));
+    $this->assertSession()->responseContains(t('autocompletion_callbacks_words'));
   }
 
   /**
@@ -83,7 +85,7 @@ class CallbackViewsTest extends ViewTestBase {
     // Retrieve node default view.
     $actual_json = $this->drupalGet("callback/nodes");
     $expected = [];
-    $this->assertIdentical($actual_json, json_encode($expected), 'The expected JSON output was found.');
+    $this->assertSame(json_encode($expected), $actual_json, 'The expected JSON output was found.');
 
     // Create some published nodes of type article and page.
     $this->createNodes(5, "article", $expected);
@@ -97,11 +99,11 @@ class CallbackViewsTest extends ViewTestBase {
 
     // Check the view result using serializer service.
     $expected_string = json_encode($expected);
-    $this->assertIdentical($actual_json, $expected_string);
+    $this->assertSame($expected_string, $actual_json);
 
     // Re-test as anonymous user.
     $actual_json = $this->drupalGet("callback/nodes");
-    $this->assertIdentical($actual_json, $expected_string);
+    $this->assertSame($expected_string, $actual_json);
   }
 
   /**
@@ -135,13 +137,13 @@ class CallbackViewsTest extends ViewTestBase {
       ];
       $node = Node::create($settings);
       $status = $node->save();
-      $this->assertEqual($status, SAVED_NEW, new FormattableMarkup('Created node %title.', ['%title' => $node->label()]));
+      $this->assertEquals($status, SAVED_NEW, new FormattableMarkup('Created node %title.', ['%title' => $node->label()]));
 
       $result = [
         'value' => $type->id() . ' ' . $i,
         'fields' => [
           'title' => $type->id() . ' ' . $i,
-          'created' => 'by ' . $this->adminUser->getUsername() . ' | Thu, 11/29/1973 - 21:33',
+          'created' => 'by ' . $this->adminUser->getAccountName() . ' | Thu, 11/29/1973 - 21:33',
         ],
         'link' => $node->toUrl('canonical', ['absolute' => TRUE])->toString(),
       ];
@@ -149,7 +151,7 @@ class CallbackViewsTest extends ViewTestBase {
         $result += [
           'group' => [
             'group_id' => strtolower(Html::cleanCssIdentifier($type->label())),
-            'group_name' => $type->label() . "s",
+            'group_name' => $type->label(),
           ],
         ];
       }
@@ -161,8 +163,8 @@ class CallbackViewsTest extends ViewTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp($import_test_views = TRUE): void {
-    parent::setUp();
+  protected function setUp($import_test_views = TRUE, $modules = []): void {
+    parent::setUp($import_test_views, $modules);
 
     // Log with admin permissions.
     $this->adminUser = $this->drupalCreateUser([

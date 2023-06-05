@@ -3,7 +3,7 @@
  * SEARCH AUTOCOMPLETE javascript mechanism for D8.
  */
 
-(function ($, Drupal, drupalSettings) {
+(function ($, Drupal, drupalSettings, once) {
 
   "use strict";
 
@@ -328,7 +328,7 @@
         var key = value.data("key");
 
         // Run only once on found elements
-        value.once('autocomplete');
+        once('autocomplete', value);
 
         // If present: autocomplete those fields
         if (value.length) {
@@ -355,9 +355,8 @@
     },
     detach: function (context, settings, trigger) {
       if (trigger === 'unload') {
-        $(context).find('input.form-autocomplete')
-        .removeOnce('autocomplete')
-        .autocomplete('destroy');
+        $(once.remove('autocomplete', 'input.form-autocomplete', context))
+          .autocomplete('destroy');
       }
     }
   };
@@ -390,4 +389,4 @@
 
   Drupal.autocomplete = autocomplete;
 
-})(jQuery, Drupal, drupalSettings);
+})(jQuery, Drupal, drupalSettings, once);

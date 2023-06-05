@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\search_autocomplete\Tests\Entity;
+namespace Drupal\Tests\search_autocomplete\Functional\Entity;
 
 use Drupal\Tests\BrowserTestBase;
 
@@ -14,11 +14,16 @@ use Drupal\Tests\BrowserTestBase;
 class NoSelectorConfigTest extends BrowserTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Modules to enable.
    *
    * @var array
    */
-  public static $modules = ['node', 'search_autocomplete'];
+  protected static $modules = ['node', 'search_autocomplete'];
 
   public $adminUser;
 
@@ -66,40 +71,36 @@ class NoSelectorConfigTest extends BrowserTestBase {
     ];
 
     // Check fields.
-    $this->assertFieldByName('label', $config['label']);
-    $this->assertFieldByName('selector', $config['selector']);
+    $this->assertSession()->fieldValueEquals('label', $config['label']);
+    $this->assertSession()->fieldValueEquals('selector', $config['selector']);
 
     // Click Add new button.
-    $this->drupalPostForm(
-      NULL,
-      [
-        'label' => $config['label'],
-        'id' => $config_name,
-        'selector' => $config['selector'],
-      ],
-      'Create Autocompletion Configuration'
-    );
+    $this->submitForm([
+      'label' => $config['label'],
+      'id' => $config_name,
+      'selector' => $config['selector'],
+    ], 'Create Autocompletion Configuration');
 
     // ----------------------------------------------------------------------
     // 2) Verify that add redirect to edit page.
-    $this->assertUrl('/admin/config/search/search_autocomplete/manage/' . $config_name);
+    $this->assertSession()->addressEquals('/admin/config/search/search_autocomplete/manage/' . $config_name);
 
     // ----------------------------------------------------------------------
     // 3) Verify that default add configuration values are inserted.
-    $this->assertFieldByName('label', $config['label']);
-    $this->assertFieldByName('selector', $config['selector']);
-    $this->assertFieldByName('minChar', $config['minChar']);
-    $this->assertFieldByName('maxSuggestions', $config['maxSuggestions']);
-    $this->assertFieldByName('autoSubmit', $config['autoSubmit']);
-    $this->assertFieldByName('autoRedirect', $config['autoRedirect']);
-    $this->assertFieldByName('noResultLabel', $config['noResultLabel']);
-    $this->assertFieldByName('noResultValue', $config['noResultValue']);
-    $this->assertFieldByName('noResultLink', $config['noResultLink']);
-    $this->assertFieldByName('moreResultsLabel', $config['moreResultsLabel']);
-    $this->assertFieldByName('moreResultsValue', $config['moreResultsValue']);
-    $this->assertFieldByName('moreResultsLink', $config['moreResultsLink']);
-    $this->assertFieldByName('source', $config['source']);
-    $this->assertOptionSelected('edit-theme', $config['theme']);
+    $this->assertSession()->fieldValueEquals('label', $config['label']);
+    $this->assertSession()->fieldValueEquals('selector', $config['selector']);
+    $this->assertSession()->fieldValueEquals('minChar', $config['minChar']);
+    $this->assertSession()->fieldValueEquals('maxSuggestions', $config['maxSuggestions']);
+    $this->assertSession()->fieldValueEquals('autoSubmit', $config['autoSubmit']);
+    $this->assertSession()->fieldValueEquals('autoRedirect', $config['autoRedirect']);
+    $this->assertSession()->fieldValueEquals('noResultLabel', $config['noResultLabel']);
+    $this->assertSession()->fieldValueEquals('noResultValue', $config['noResultValue']);
+    $this->assertSession()->fieldValueEquals('noResultLink', $config['noResultLink']);
+    $this->assertSession()->fieldValueEquals('moreResultsLabel', $config['moreResultsLabel']);
+    $this->assertSession()->fieldValueEquals('moreResultsValue', $config['moreResultsValue']);
+    $this->assertSession()->fieldValueEquals('moreResultsLink', $config['moreResultsLink']);
+    $this->assertSession()->fieldValueEquals('source', $config['source']);
+    $this->assertTrue($this->assertSession()->optionExists('edit-theme', $config['theme'])->hasAttribute('selected'));
 
   }
 

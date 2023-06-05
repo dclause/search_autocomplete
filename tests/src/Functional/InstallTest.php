@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\search_autocomplete\Tests;
+namespace Drupal\Tests\search_autocomplete\Functional;
 
 use Drupal\search_autocomplete\Entity\AutocompletionConfiguration;
 use Drupal\Tests\BrowserTestBase;
@@ -15,11 +15,16 @@ use Drupal\Tests\BrowserTestBase;
 class InstallTest extends BrowserTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Modules to enable.
    *
    * @var array
    */
-  public static $modules = ['node', 'search_autocomplete'];
+  protected static $modules = ['node', 'search_autocomplete'];
 
   /**
    * {@inheritdoc}
@@ -62,7 +67,7 @@ class InstallTest extends BrowserTestBase {
     // we haven't logged in any users, so the client is anonymous.
     foreach ($admin_paths as $path) {
       $this->drupalGet($path);
-      $this->assertResponse(403, "Access denied to anonymous for path: $path");
+      $this->assertSession()->statusCodeEquals(403, "Access denied to anonymous for path: $path");
     }
 
     /* ----------------------------------------------------------------------
@@ -76,7 +81,7 @@ class InstallTest extends BrowserTestBase {
     // special permissions for these paths.
     foreach ($admin_paths as $path) {
       $this->drupalGet($path);
-      $this->assertResponse(403, "Access denied to generic user for path: $path");
+      $this->assertSession()->statusCodeEquals(403, "Access denied to generic user for path: $path");
     }
 
     /* ----------------------------------------------------------------------
@@ -89,7 +94,7 @@ class InstallTest extends BrowserTestBase {
     // Forbidden paths aren't forbidden any more.
     foreach ($admin_paths as $unforbidden) {
       $this->drupalGet($unforbidden);
-      $this->assertResponse(200, "Access not granted to admin user for path: $unforbidden");
+      $this->assertSession()->statusCodeEquals(200, "Access not granted to admin user for path: $unforbidden");
     }
 
     /* ----------------------------------------------------------------------
@@ -105,7 +110,7 @@ class InstallTest extends BrowserTestBase {
     $this->drupalLogin($admin_user);
     // Now that we have the admin user logged in, check the menu links.
     $this->drupalGet('/admin/config');
-    $this->assertLinkByHref("admin/config/search/search_autocomplete");
+    $this->assertSession()->linkByHrefExists("admin/config/search/search_autocomplete");
   }
 
   /**

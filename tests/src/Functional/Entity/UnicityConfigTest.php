@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\search_autocomplete\Tests\Entity;
+namespace Drupal\Tests\search_autocomplete\Functional\Entity;
 
 use Drupal\Tests\BrowserTestBase;
 
@@ -14,11 +14,16 @@ use Drupal\Tests\BrowserTestBase;
 class UnicityConfigTest extends BrowserTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Modules to enable.
    *
    * @var array
    */
-  public static $modules = ['node', 'search_autocomplete'];
+  protected static $modules = ['node', 'search_autocomplete'];
 
   public $adminUser;
 
@@ -51,15 +56,11 @@ class UnicityConfigTest extends BrowserTestBase {
     ];
 
     // Click Add new button.
-    $this->drupalPostForm(
-      NULL,
-      [
-        'label' => $config['label'],
-        'id' => $config_name,
-        'selector' => $config['selector'],
-      ],
-      'Create Autocompletion Configuration'
-    );
+    $this->submitForm([
+      'label' => $config['label'],
+      'id' => $config_name,
+      'selector' => $config['selector'],
+    ], 'Create Autocompletion Configuration');
 
     // ----------------------------------------------------------------------
     // 2) Create the configuration again.
@@ -74,16 +75,12 @@ class UnicityConfigTest extends BrowserTestBase {
     ];
 
     // Click Add new button.
-    $this->drupalPostForm(
-      NULL,
-      [
-        'label' => $config['label'],
-        'id' => $config_name,
-        'selector' => $config['selector'],
-      ],
-      'Create Autocompletion Configuration'
-    );
-    $this->assertRaw(t('The machine-readable name is already in use. It must be unique.'));
+    $this->submitForm([
+      'label' => $config['label'],
+      'id' => $config_name,
+      'selector' => $config['selector'],
+    ], 'Create Autocompletion Configuration');
+    $this->assertSession()->responseContains(t('The machine-readable name is already in use. It must be unique.'));
   }
 
   /**
@@ -104,15 +101,11 @@ class UnicityConfigTest extends BrowserTestBase {
     ];
 
     // Click Add new button.
-    $this->drupalPostForm(
-      NULL,
-      [
-        'label' => $config['label'],
-        'id' => $config_name,
-        'selector' => $config['selector'],
-      ],
-      'Create Autocompletion Configuration'
-    );
+    $this->submitForm([
+      'label' => $config['label'],
+      'id' => $config_name,
+      'selector' => $config['selector'],
+    ], 'Create Autocompletion Configuration');
 
     // ----------------------------------------------------------------------
     // 2) Create the configuration again.
@@ -127,16 +120,12 @@ class UnicityConfigTest extends BrowserTestBase {
     ];
 
     // Click Add new button.
-    $this->drupalPostForm(
-      NULL,
-      [
-        'label' => $config['label'],
-        'id' => $config_name,
-        'selector' => $config['selector'],
-      ],
-      'Create Autocompletion Configuration'
-    );
-    $this->assertRaw('The selector ID must be unique.');
+    $this->submitForm([
+      'label' => $config['label'],
+      'id' => $config_name,
+      'selector' => $config['selector'],
+    ], 'Create Autocompletion Configuration');
+    $this->assertSession()->responseContains('The selector ID must be unique.');
   }
 
   /**
