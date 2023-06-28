@@ -7,6 +7,16 @@
 
   "use strict";
 
+  if (typeof DOMPurify !== 'undefined') {
+    // Add a hook to keep script tag but sanitize it via Drupal.checkPlain().
+    DOMPurify.addHook('uponSanitizeElement', function (node, data) {
+      if (data.tagName === 'script') {
+        node.outerHTML = Drupal.checkPlain(node.outerHTML);
+        return node;
+      }
+    });
+  }
+
   var autocomplete;
 
   // Escape characters in pattern before creating regexp.
@@ -250,10 +260,17 @@
       var helper = document.createElement("textarea");
       $.each(item.fields, function (key, value) {
         helper.innerHTML = value;
-        value = helper.value;
-        var output = value;
-        if (value.indexOf('src=') == -1 && value.indexOf('href=') == -1) {
-          output = value.replace(regex, "<span class='ui-autocomplete-field-term'>$1</span>");
+        let output = value;
+        if (typeof DOMPurify !== 'undefined') {
+          output = DOMPurify.sanitize(helper.value, {ADD_TAGS: ['script']});
+        }
+        else {
+           let parser = new DOMParser();
+           let doc = parser.parseFromString(helper.value, 'text/html');
+           output = doc.body.textContent;
+        }
+        if (output.indexOf('src=') == -1 && output.indexOf('href=') == -1) {
+          output = output.replace(regex, "<span class='ui-autocomplete-field-term'>$1</span>");
         }
         innerHTML += ('<div class="ui-autocomplete-field-' + key + '">' + output + '</div>');
       });
