@@ -338,7 +338,7 @@
         $autocomplete = $.merge($autocomplete, elem);
       });
 
-      $.each($autocomplete, function (key, value) {
+      $.each($autocomplete, function (_, value) {
         value = $(value);
         // Retrieve the key for this element.
         var key = value.data("key");
@@ -359,13 +359,11 @@
           });
 
           // Use jQuery UI Autocomplete on the textfield.
-          value.autocomplete(autocomplete.options)
-          .data("ui-autocomplete")
-            ._renderItem = autocomplete.options.renderItem;
+          value.autocomplete(autocomplete.options).data('ui-autocomplete')._renderItem = autocomplete.options.renderItem;
           // Add theme id to suggestion list.
-          if (value.data("key")) {
-            value.autocomplete("widget").attr("data-sa-theme", autocomplete.options.forms[value.data("key")].theme);
-          }
+          value.autocomplete('widget').attr('data-sa-theme', autocomplete.options.forms[key].theme);
+          // Add unique key (helpfull for styling differently multiple instances on a single form).
+          value.autocomplete('widget').attr('data-input-ref', key);
         }
       });
     },
