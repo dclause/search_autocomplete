@@ -101,11 +101,19 @@ function attach_configuration_to_element(&$element, $config_id) {
       $display = $view->getDisplay();
       $source = '/' . $display->getPath();
 
-      // Build filters
+      // Build exposed filters
       $filters = $view->getHandlers('filter');
       foreach ($filters as $filter) {
         if (isset($filter['exposed']) && $filter['exposed'] && isset($filter['expose'])) {
           $exposed_filters[] = $filter['expose']['identifier'];
+        }
+      }
+
+      // Build contextual filters
+      $contextual_filters = $view->getHandlers('argument');
+      foreach ($contextual_filters as $filter) {
+        if (isset($filter['default_argument_options']['query_param']) && $filter['default_argument_type'] === 'query_parameter') {
+          $exposed_filters[] = $filter['default_argument_options']['query_param'];
         }
       }
     }
