@@ -223,7 +223,9 @@
 
     // Add our own handling on submission if needed
     if (key && autocomplete.options.forms[key].autoRedirect == 1 && ui.item.link) {
-      document.location.href = ui.item.link;
+      // Decode '&' characters in links: #3240117.
+      helper.innerHTML = ui.item.link;
+      document.location.href = helper.value;
     }
     else if (key && autocomplete.options.forms[key].autoSubmit == 1 && ui.item.value) {
       $(this).val(ui.item.value);
