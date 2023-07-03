@@ -1,10 +1,10 @@
 /*
  * SEARCH AUTOCOMPLETE
- * Basic blue theme.
+ * Basic theme.
  */
 
 /**
- * THEME BASIC BLUE
+ * THEME BASIC
  */
 
 /* Input box */
@@ -21,13 +21,11 @@ ul[data-sa-theme="basic"] {
   font-family: 'Lucida Grande', Helvetica, Arial, Verdana, sans-serif;
   min-width: 350px;
 }
-ul[data-sa-theme="basic"] .ui-state-active,
-ul[data-sa-theme="basic"] .ui-menu-item-wrapper,
-ul[data-sa-theme="basic"] .ui-menu-item-wrapper.ui-state-active {
+ul[data-sa-theme="basic"] a.ui-menu-item-wrapper,
+ul[data-sa-theme="basic"] a.ui-menu-item-wrapper.ui-state-active {
   display: block;
   background: none;
   border: none;
-  margin: 0;
 }
 
 /* Suggestion menu elements */
@@ -55,8 +53,7 @@ ul[data-sa-theme="basic"] > div.ui-autocomplete-field-group {
 }
 
 /* Suggestion menu items */
-ul[data-sa-theme="basic"] > li.ui-menu-item,
-ul[data-sa-theme="basic"] > li.ui-menu-item:hover {
+ul[data-sa-theme="basic"] > li.ui-menu-item {
   background: white;
 }
 /* Suggestion menu items hovering */

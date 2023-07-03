@@ -47,3 +47,18 @@ function search_autocomplete_requirements($phase) {
  */
 function search_autocomplete_update_8102() {
 }
+
+/**
+ * Rename basic-blue to basic.
+ */
+function search_autocomplete_update_8300() {
+  $configs = \Drupal::entityTypeManager()->getStorage('autocompletion_configuration')->loadMultiple();
+
+  foreach ($configs as $config) {
+    if ($config->get('theme') === 'basic-blue.css') {
+      $config->set('theme', 'basic.css');
+      $config->save();
+    }
+  }
+  return t('Renamed basic-blue theme to basic.');
+}

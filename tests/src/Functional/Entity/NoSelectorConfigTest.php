@@ -67,7 +67,7 @@ class NoSelectorConfigTest extends BrowserTestBase {
       'moreResultsValue' => '[search-phrase]',
       'moreResultsLink' => '',
       'source' => 'autocompletion_callbacks_nodes::nodes_autocompletion_callback',
-      'theme' => 'basic-blue.css',
+      'theme' => 'basic.css',
     ];
 
     // Check fields.

@@ -83,7 +83,7 @@ class BasicCRUDConfigTest extends BrowserTestBase {
       'moreResultsValue' => '[search-phrase]',
       'moreResultsLink' => '',
       'source' => 'autocompletion_callbacks_nodes::nodes_autocompletion_callback',
-      'theme' => 'basic-blue.css',
+      'theme' => 'basic.css',
     ];
 
     $this->submitForm([
@@ -187,7 +187,7 @@ class BasicCRUDConfigTest extends BrowserTestBase {
       'moreResultsValue' => '[search-phrase]',
       'moreResultsLink' => '',
       'source' => 'autocompletion_callbacks_nodes::nodes_autocompletion_callback',
-      'theme' => 'basic-blue.css',
+      'theme' => 'basic.css',
     ];
 
     $this->submitForm([
