@@ -87,7 +87,7 @@ function attach_configuration_to_element(&$element, $config_id) {
   }
 
   $source = $config->getSource();
-  $exposed_filters = [];
+  $exposed_filters = ['q'];
 
   // Build the callback URL.
   $input_source = explode('::', $source);
