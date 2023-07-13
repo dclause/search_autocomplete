@@ -362,8 +362,11 @@
 
           // Use jQuery UI Autocomplete on the textfield.
           value.autocomplete(autocomplete.options).data('ui-autocomplete')._renderItem = autocomplete.options.renderItem;
-          // Add theme id to suggestion list.
-          value.autocomplete('widget').attr('data-sa-theme', autocomplete.options.forms[key].theme);
+
+          if (key) {
+            // Add theme id to suggestion list.
+            value.autocomplete('widget').attr('data-sa-theme', autocomplete.options.forms[key].theme);
+          }
           // Add unique key (helpfull for styling differently multiple instances on a single form).
           value.autocomplete('widget').attr('data-input-ref', key);
         }
