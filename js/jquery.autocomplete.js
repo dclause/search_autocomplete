@@ -3,7 +3,7 @@
  * SEARCH AUTOCOMPLETE javascript mechanism.
  */
 
-(function ($, Drupal, drupalSettings, once) {
+(function ($, Drupal, drupalSettings, once, DOMPurify) {
 
   'use strict';
 
@@ -426,4 +426,4 @@
 
   Drupal.autocomplete = autocomplete;
 
-})(jQuery, Drupal, drupalSettings, once);
+})(jQuery, Drupal, drupalSettings, once, DOMPurify);
