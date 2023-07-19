@@ -245,6 +245,24 @@
     return false;
   }
 
+  function renderMenu(ul, items) {
+    var that = this;
+    let currentGroup = null;
+    const content = $('<div class="ui-autocomplete-content"></div>')
+    ul.append(content);
+    $.each( items, function( index, item ) {
+      if ('group' in item) {
+        currentGroup = $('<div class="ui-autocomplete-container ui-autocomplete-container-' + item.group.group_id + '"></div>');
+        if (item.group.group_id === 'more_results' || item.group.group_id === 'no_results') {
+          ul.append(currentGroup);
+        } else {
+          content.append(currentGroup)
+        }
+      }
+      that._renderItemData(currentGroup, item);
+    });
+  }
+
   /**
    * Override jQuery UI _renderItem function to output HTML by default.
    *
@@ -256,34 +274,32 @@
   function renderItem(ul, item) {
     var term = this.term;
     var first = ('group' in item) ? 'first' : '';
-    var innerHTML = '<div class="ui-autocomplete-fields ' + first + '">';
+    let innerHTML = '';
     var regex = new RegExp('(' + escapeRegExp(term) + ')', 'gi');
-    if (item.fields) {
-      var helper = document.createElement('textarea');
-      $.each(item.fields, function (key, value) {
-        helper.innerHTML = value;
-        let output = value;
-        if (typeof DOMPurify !== 'undefined') {
-          output = DOMPurify.sanitize(helper.value, {ADD_TAGS: ['script']});
-        }
-        else {
-           let parser = new DOMParser();
-           let doc = parser.parseFromString(helper.value, 'text/html');
-           output = doc.body.textContent;
-        }
-        if (output.indexOf('src=') === -1 && output.indexOf('href=') === -1) {
-          output = output.replace(regex, '<span class="ui-autocomplete-field-term">$1</span>');
-        }
-        innerHTML += ('<div class="ui-autocomplete-field-' + key + '">' + output + '</div>');
-      });
+
+    // Move everything to fields if none defined.
+    if (!item.fields) {
+      item.fields = [item.label];
     }
-    else {
-      var output = item.label;
-      if (item.group && item.group.group_id !== 'more_results' && item.group.group_id !== 'no_results') {
-        output = item.label.replace(regex, "<span class='ui-autocomplete-field-term'>$1</span>");
+
+    var helper = document.createElement('textarea');
+    innerHTML = '<div class="ui-autocomplete-fields ' + first + '">';
+    $.each(item.fields, function (key, value) {
+      helper.innerHTML = value;
+      let output = value;
+      if (typeof DOMPurify !== 'undefined') {
+        output = DOMPurify.sanitize(helper.value, {ADD_TAGS: ['script']});
       }
-      innerHTML += ('<div class="ui-autocomplete-field">' + output + '</div>');
-    }
+      else {
+        let parser = new DOMParser();
+        let doc = parser.parseFromString(helper.value, 'text/html');
+        output = doc.body.textContent;
+      }
+      if (output.indexOf('src=') === -1 && output.indexOf('href=') === -1) {
+        output = output.replace(regex, '<span class="ui-autocomplete-field-term">$1</span>');
+      }
+      innerHTML += ('<div class="ui-autocomplete-field-' + key + '">' + output + '</div>');
+    });
     innerHTML += '</div>';
 
     if ('group' in item) {
@@ -291,8 +307,7 @@
       var groupName = typeof (item.group.group_name) !== 'undefined' ? item.group.group_name : '';
       $('<div class="ui-autocomplete-field-group ui-state-disabled ' + groupId + '">' + groupName + '</div>').appendTo(ul);
     }
-    var elem = $('<li class="ui-menu-item-' + first + '"></li>')
-    .append('<a>' + innerHTML + '</a>');
+    var elem = $('<li class="ui-menu-item-' + first + ' ui-menu-item"></li>').append('<a>' + innerHTML + '</a>');
     if (item.value === '') {
       elem = $('<li class="ui-state-disabled ui-menu-item-' + first + ' ui-menu-item">' + item.label + '</li>');
     }
@@ -361,14 +376,16 @@
           });
 
           // Use jQuery UI Autocomplete on the textfield.
+          value.autocomplete(autocomplete.options).autocomplete('widget').menu( 'option', 'items', '.ui-autocomplete-container > *' );
           value.autocomplete(autocomplete.options).data('ui-autocomplete')._renderItem = autocomplete.options.renderItem;
+          value.autocomplete(autocomplete.options).data('ui-autocomplete')._renderMenu = autocomplete.options.renderMenu;
 
           if (key) {
             // Add theme id to suggestion list.
             value.autocomplete('widget').attr('data-sa-theme', autocomplete.options.forms[key].theme);
+            // Add unique key (helpfull for styling differently multiple instances on a single form).
+            value.autocomplete('widget').attr('data-input-ref', key);
           }
-          // Add unique key (helpfull for styling differently multiple instances on a single form).
-          value.autocomplete('widget').attr('data-input-ref', key);
         }
       });
     },
@@ -395,6 +412,7 @@
       search: searchHandler,
       select: selectHandler,
       renderItem: renderItem,
+      renderMenu: renderMenu,
       resizeMenu: resizeMenu,
       minLength: 1,
       // Custom options, used by Drupal.autocomplete.
