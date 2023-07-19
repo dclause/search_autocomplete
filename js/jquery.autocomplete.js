@@ -316,16 +316,17 @@
   }
 
   /**
-   * This methods resize the suggestion panel property.
-   * Not used currently.
+   * This method resizes the suggestion panel property.
    */
   function resizeMenu() {
     var ul = this.menu.element;
     ul.outerWidth(Math.max(ul.width('').outerWidth() + 5, this.options.position.of == null ? this.element.outerWidth() : this.options.position.of.outerWidth()));
+    const parent = ul.parent()[0];
+    ul.css({"maxHeight": (window.innerHeight - parent.offsetHeight - parent.getBoundingClientRect().top) + 'px'});
   }
 
   /**
-   * This methods replaces needle by replacement in stash.
+   * This method replaces needle by replacement in stash.
    */
   function replaceInObject(stash, needle, replacement) {
     var regex = new RegExp(needle, 'g');
@@ -379,6 +380,7 @@
           value.autocomplete(autocomplete.options).autocomplete('widget').menu( 'option', 'items', '.ui-autocomplete-container > *' );
           value.autocomplete(autocomplete.options).data('ui-autocomplete')._renderItem = autocomplete.options.renderItem;
           value.autocomplete(autocomplete.options).data('ui-autocomplete')._renderMenu = autocomplete.options.renderMenu;
+          value.autocomplete(autocomplete.options).data('ui-autocomplete')._resizeMenu = autocomplete.options.resizeMenu;
 
           if (key) {
             // Add theme id to suggestion list.
