@@ -165,18 +165,6 @@ function attach_configuration_to_element(&$element, $config_id) {
 }
 
 /**
- * Implements hook_install().
- *
- * Display a notice to user for cache rebuild after install.
- */
-function search_autocomplete_install() {
-  \Drupal::messenger()->addMessage(t('To finish install of Search Autocomplete, you must %clear_caches.', [
-    '%clear_caches' => Link::fromTextAndUrl(t('Clear all caches'),
-      Url::fromRoute('system.performance_settings'))->toString()
-  ]));
-}
-
-/**
  * Implements hook_library_info_build().
  *
  * Add dynamic library definitions.
