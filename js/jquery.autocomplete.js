@@ -259,7 +259,7 @@
           content.append(currentGroup)
         }
       }
-      that._renderItemData(currentGroup, item);
+      that._renderItemData(currentGroup || ul, item);
     });
   }
 
