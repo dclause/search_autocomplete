@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\search_autocomplete\Functional\Entity;
 
+use Drupal\Core\Cache\Cache;
 use Drupal\search_autocomplete\Entity\AutocompletionConfiguration;
 use Drupal\Tests\BrowserTestBase;
 
@@ -26,6 +27,13 @@ class EditableDeletableConfigTest extends BrowserTestBase {
    */
   protected static $modules = ['node', 'search_autocomplete'];
 
+  /**
+   * The configuration factory used in this test.
+   *
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
+   */
+  protected $configFactory;
+
   public $adminUser;
 
   /**
@@ -40,13 +48,23 @@ class EditableDeletableConfigTest extends BrowserTestBase {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  protected function setUp(): void {
+    parent::setUp();
+    $this->adminUser = $this->drupalCreateUser(['administer search autocomplete']);
+    $this->drupalLogin($this->adminUser);
+    $this->configFactory = $this->container->get('config.factory');
+  }
+
+  /**
    * Check access authorizations over editable configurations.
    */
   public function testEditableEntity() {
 
     // Get config setup.
     $config_id = 'search_block';
-    $config = AutocompletionConfiguration::load($config_id);
+    $config = $this->configFactory->getEditable($config_id);
 
     // Verify that editable configuration can be edited on GUI.
     $this->drupalGet('/admin/config/search/search_autocomplete');
@@ -60,6 +78,7 @@ class EditableDeletableConfigTest extends BrowserTestBase {
     $config = AutocompletionConfiguration::load('search_block');
     $config->setEditable(FALSE);
     $config->save();
+    \Drupal::service('cache.config')->deleteALl();
 
     // Verify that none editable configuration cannot be edited on GUI.
     $this->drupalGet('/admin/config/search/search_autocomplete');
@@ -79,6 +98,7 @@ class EditableDeletableConfigTest extends BrowserTestBase {
     // Get config setup.
     $config_id = 'search_block';
     $config = AutocompletionConfiguration::load($config_id);
+    // $config = $this->configFactory->getEditable("search_autocomplete.autocompletion_configuration:$config_id");
 
     // Verify that default configuration search_block cannot be edited on GUI.
     $this->drupalGet('/admin/config/search/search_autocomplete');
@@ -93,6 +113,7 @@ class EditableDeletableConfigTest extends BrowserTestBase {
     // Remove editability for this configuration.
     $config->setDeletable(TRUE);
     $config->save();
+    \Drupal::service('cache.config')->deleteALl();
 
     // Verify that deletable configuration can be deleted from GUI.
     $this->drupalGet('/admin/config/search/search_autocomplete');
@@ -104,15 +125,4 @@ class EditableDeletableConfigTest extends BrowserTestBase {
     $this->drupalGet('/admin/config/search/search_autocomplete/manage/' . $config_id . '/delete');
     $this->assertSession()->statusCodeEquals(200, "Deletable configuration can be deleted from GUI");
   }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function setUp(): void {
-    parent::setUp();
-    $this->adminUser = $this->drupalCreateUser(['administer search autocomplete']);
-    $this->drupalLogin($this->adminUser);
-  }
-
-
 }
