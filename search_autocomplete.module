@@ -161,6 +161,10 @@ function attach_configuration_to_element(&$element, $config_id) {
     ->getLibraryByName('search_autocomplete', 'theme.' . $config->getTheme())) {
     $element['#attached']['library'][] = 'search_autocomplete/theme.' . $config->getTheme();
   }
+
+  // Add configuration cache tag:
+  $element['#cache']['tags'][] = "config:search_autocomplete.autocompletion_configuration:$config_id";
+
   return $element;
 }
 
