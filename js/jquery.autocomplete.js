@@ -347,9 +347,11 @@
       var groupName = typeof (item.group.group_name) !== 'undefined' ? item.group.group_name : '';
       $('<div class="ui-autocomplete-field-group ui-state-disabled ' + groupId + '">' + groupName + '</div>').appendTo(ul);
     }
-    var elem = $('<li class="ui-menu-item-' + first + '"></li>').append('<a>' + innerHTML + '</a>');
+    var isSearchAutoComplete = ul.closest('ul[data-input-ref]').data('input-ref');
+    var uiMenuItemClass = (isSearchAutoComplete ? '' : ' ui-menu-item');
+    var elem = $('<li class="ui-menu-item-' + first + uiMenuItemClass + '"></li>').append('<a>' + innerHTML + '</a>');
     if (item.value === '') {
-      elem = $('<li class="ui-state-disabled ui-menu-item-' + first + '">' + item.label + '</li>');
+      elem = $('<li class="ui-state-disabled ui-menu-item-' + first + uiMenuItemClass + '">' + item.label + '</li>');
     }
     elem.data('item.autocomplete', item).appendTo(ul);
     return elem;
