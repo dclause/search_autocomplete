@@ -16,7 +16,7 @@ function search_autocomplete_install() {
   \Drupal::cache('render')->deleteAll();
   \Drupal::service('asset.css.collection_optimizer')->deleteAll();
   \Drupal::service('asset.js.collection_optimizer')->deleteAll();
-  _custom_flush_css_js();
+  \Drupal::service('asset.query_string')->reset();
 }
 
 /**
