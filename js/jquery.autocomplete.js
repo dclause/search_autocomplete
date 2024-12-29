@@ -3,10 +3,11 @@
  * SEARCH AUTOCOMPLETE javascript mechanism.
  */
 
-(function ($, Drupal, drupalSettings, once, DOMPurify) {
+(function ($, Drupal, drupalSettings, once) {
 
   'use strict';
 
+  var DOMPurify = window.DOMPurify;
   if (typeof DOMPurify !== 'undefined') {
     // Add a hook to keep script tag but sanitize it via Drupal.checkPlain().
     DOMPurify.addHook('uponSanitizeElement', function (node, data) {
@@ -428,4 +429,4 @@
 
   Drupal.autocomplete = autocomplete;
 
-})(jQuery, Drupal, drupalSettings, once, DOMPurify);
+})(jQuery, Drupal, drupalSettings, once);
