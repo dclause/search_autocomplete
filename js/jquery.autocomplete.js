@@ -203,11 +203,11 @@
    * @return {String}
    */
   function modifyHtml(html, mode, regex) {
-    html = html.replaceAll(/\s+/g, ' ').trim();
     let regexHtml = /(<("[^"]*"|\'[^\']*\'|[^\'">])*>)/g;
     switch (mode) {
       case 'remove_html_tags':
-        return html.replace(regexHtml, '');
+        html = html.replace(regexHtml, '');
+        break;
 
       case 'highlight':
         // Our goal here is to highlight only the text without destroying the
@@ -218,7 +218,7 @@
         // tags we saved in the separate variable and we're done.
         let nullStrings = '';
         let detachedTags = {};
-        return html.replace(regexHtml, match => {
+        html = html.replace(regexHtml, match => {
           // The string used for marking should be a special string that a user
           // would not normally be able to enter in order to restore the tag
           // correctly.
@@ -227,10 +227,9 @@
           detachedTags[detachedMark] = match;
           return detachedMark;
         }).replace(regex, '<span class="ui-autocomplete-field-term">$1</span>').replace(/(\v\0+\v)/g, match => detachedTags[match]);
-
-      default:
-        return string;
+        break;
     }
+    return html.replaceAll(/\s+/g, ' ').trim();
   }
 
   /**
