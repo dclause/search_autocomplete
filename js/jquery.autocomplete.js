@@ -194,6 +194,46 @@
   }
 
   /**
+   * Modify HTML.
+   *
+   * @param {String} html
+   * @param {String} mode
+   * @param {RegExp} regex
+   *
+   * @return {String}
+   */
+  function modifyHtml(html, mode, regex) {
+    html = html.replaceAll(/\s+/g, ' ').trim();
+    let regexHtml = /(<("[^"]*"|\'[^\']*\'|[^\'">])*>)/g;
+    switch (mode) {
+      case 'remove_html_tags':
+        return html.replace(regexHtml, '');
+
+      case 'highlight':
+        // Our goal here is to highlight only the text without destroying the
+        // tags in the HTML.
+        // To do this, we first save the tags in the outputted HTML in a
+        // separate variable and mark them so that we can restore them later.
+        // Then we apply the highlighting process, and finally we restore the
+        // tags we saved in the separate variable and we're done.
+        let nullStrings = '';
+        let detachedTags = {};
+        return html.replace(regexHtml, match => {
+          // The string used for marking should be a special string that a user
+          // would not normally be able to enter in order to restore the tag
+          // correctly.
+          nullStrings += `\0`;
+          let detachedMark = `\v${nullStrings}\v`;
+          detachedTags[detachedMark] = match;
+          return detachedMark;
+        }).replace(regex, '<span class="ui-autocomplete-field-term">$1</span>').replace(/(\v\0+\v)/g, match => detachedTags[match]);
+
+      default:
+        return string;
+    }
+  }
+
+  /**
    * Handles an autocompleteselect event.
    *
    * @param {Object} event
@@ -209,7 +249,7 @@
     // Trick here to handle encoded characters (see #2936846).
     const helper = document.createElement('textarea');
     helper.innerHTML = ui.item.value;
-    ui.item.value = helper.value;
+    ui.item.value = modifyHtml(helper.value, 'remove_html_tags');
 
     // Add the selected item.
     if (ui.item.value.search(',') > 0) {
@@ -296,23 +336,7 @@
         output = doc.body.textContent;
       }
       if (output.indexOf('src=') === -1 && output.indexOf('href=') === -1) {
-        // Our goal here is to highlight only the text without destroying the
-        // tags in the HTML.
-        // To do this, we first save the tags in the outputted HTML in a
-        // separate variable and mark them so that we can restore them later.
-        // Then we apply the highlighting process, and finally we restore the
-        // tags we saved in the separate variable and we're done.
-        let nullStrings = '';
-        let detachedTags = {};
-        output = output.replace(/(<("[^"]*"|\'[^\']*\'|[^\'">])*>)/g, match => {
-          // The string used for marking should be a special string that a user
-          // would not normally be able to enter in order to restore the tag
-          // correctly.
-          nullStrings += `\0`;
-          let detachedMark = `\v${nullStrings}\v`;
-          detachedTags[detachedMark] = match;
-          return detachedMark;
-        }).replace(regex, '<span class="ui-autocomplete-field-term">$1</span>').replace(/(\v\0+\v)/g, match => detachedTags[match]);
+        output = modifyHtml(output, 'highlight', regex);
       }
       innerHTML += ('<div class="ui-autocomplete-field-' + key + '">' + output + '</div>');
     });
