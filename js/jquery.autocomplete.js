@@ -375,7 +375,7 @@
     var input = Drupal.checkPlain(replacement);
     var result = {};
     $.each(stash, function (index, value) {
-      if ($.type(value) === 'string') {
+      if (typeof(value) === 'string') {
         result[index] = value.replace(regex, input);
       }
       else {
