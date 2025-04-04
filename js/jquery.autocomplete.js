@@ -22,7 +22,7 @@
 
   // Escape characters in pattern before creating regexp.
   function escapeRegExp(str) {
-    str = $.trim(str);
+    str = str.trim();
     return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&');
   }
 
@@ -56,7 +56,7 @@
       }
     }
     if (value.length > 0) {
-      result.push($.trim(current));
+      result.push(current.trim());
     }
 
     return result;
@@ -375,7 +375,7 @@
     var input = Drupal.checkPlain(replacement);
     var result = {};
     $.each(stash, function (index, value) {
-      if ($.type(value) === 'string') {
+      if (typeof(value) === 'string') {
         result[index] = value.replace(regex, input);
       }
       else {
