@@ -22,7 +22,7 @@
 
   // Escape characters in pattern before creating regexp.
   function escapeRegExp(str) {
-    str = $.trim(str);
+    str = str.trim();
     return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&');
   }
 
@@ -56,7 +56,7 @@
       }
     }
     if (value.length > 0) {
-      result.push($.trim(current));
+      result.push(current.trim());
     }
 
     return result;
