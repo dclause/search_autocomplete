@@ -388,7 +388,7 @@
   /**
    * Attaches the autocomplete behavior to all required fields.
    */
-  Drupal.behaviors.autocomplete = {
+  Drupal.behaviors.search_autocomplete = {
     attach: function (context) {
       // Act on textfields with the "form-autocomplete" class.
       var $autocomplete = $(context).find('input.form-autocomplete');
@@ -468,6 +468,6 @@
     }
   };
 
-  Drupal.autocomplete = autocomplete;
+  Drupal.search_autocomplete = autocomplete;
 
 })(jQuery, Drupal, drupalSettings, once);
